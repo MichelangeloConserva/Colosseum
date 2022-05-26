@@ -1,0 +1,24 @@
+MDP name: SimpleGridEpisodic
+MDP parameters:
+  communication_type: COMMUNICATING
+  seed: 2
+  randomize_actions: false
+  make_reward_stochastic: false
+  lazy: null
+  random_action_p: null
+  size: 13
+  reward_type: XOR
+  n_starting_states: 1
+  optimal_mean_reward: 0.9
+  sub_optimal_mean_reward: 0.2
+  sub_optimal_distribution: Deterministic(0.0)
+  optimal_distribution: Deterministic(1.0)
+  other_distribution: Deterministic(0.5)
+  H: 22
+MDP graph metrics:
+  '# nodes': 2626
+  '# edges': 11842
+MDP measure of hardness:
+  diameter: 13.0
+  suboptimal_gaps: 7.48481
+  value_norm: 0.0

@@ -1,0 +1,22 @@
+MDP name: RiverSwimEpisodic
+MDP parameters:
+  communication_type: COMMUNICATING
+  seed: 3
+  randomize_actions: false
+  make_reward_stochastic: false
+  lazy: null
+  random_action_p: null
+  size: 40
+  optimal_mean_reward: 0.9
+  sub_optimal_mean_reward: 0.2
+  sub_optimal_distribution: Deterministic(0.0)
+  optimal_distribution: Deterministic(1.0)
+  other_distribution: Deterministic(0.0)
+  H: 40
+MDP graph metrics:
+  '# nodes': 820
+  '# edges': 1600
+MDP measure of hardness:
+  diameter: 40.0
+  suboptimal_gaps: 3683.3720703125
+  value_norm: 0.0

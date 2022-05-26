@@ -1,0 +1,2 @@
+from colosseum.mdps.minigrid_rooms.continuous import MiniGridRoomsContinuous
+from colosseum.mdps.minigrid_rooms.episodic import MiniGridRoomsEpisodic

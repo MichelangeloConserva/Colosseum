@@ -1,0 +1,49 @@
+prms_0/MiniGridEmptyContinuous.size=12
+prms_0/MiniGridEmptyContinuous.make_reward_stochastic=True
+prms_0/MiniGridEmptyContinuous.randomize_actions=False
+prms_0/MiniGridEmptyContinuous.lazy=0.25
+prms_0/MiniGridEmptyContinuous.random_action_p=None
+prms_0/MiniGridEmptyContinuous.n_starting_states=3
+prms_0/MiniGridEmptyContinuous.sub_optimal_distribution=("beta",1.0, 49.0)
+prms_0/MiniGridEmptyContinuous.optimal_distribution=("beta",1.0, 0.11)
+prms_0/MiniGridEmptyContinuous.other_distribution=("beta",1.0, 4.0)
+
+prms_1/MiniGridEmptyContinuous.size=12
+prms_1/MiniGridEmptyContinuous.make_reward_stochastic=False
+prms_1/MiniGridEmptyContinuous.randomize_actions=False
+prms_1/MiniGridEmptyContinuous.lazy=0.3
+prms_1/MiniGridEmptyContinuous.random_action_p=None
+prms_1/MiniGridEmptyContinuous.n_starting_states=3
+prms_1/MiniGridEmptyContinuous.sub_optimal_distribution=None
+prms_1/MiniGridEmptyContinuous.optimal_distribution=None
+prms_1/MiniGridEmptyContinuous.other_distribution=None
+
+prms_2/MiniGridEmptyContinuous.size=8
+prms_2/MiniGridEmptyContinuous.make_reward_stochastic=False
+prms_2/MiniGridEmptyContinuous.randomize_actions=False
+prms_2/MiniGridEmptyContinuous.lazy=0.3
+prms_2/MiniGridEmptyContinuous.random_action_p=None
+prms_2/MiniGridEmptyContinuous.n_starting_states=3
+prms_2/MiniGridEmptyContinuous.sub_optimal_distribution=None
+prms_2/MiniGridEmptyContinuous.optimal_distribution=None
+prms_2/MiniGridEmptyContinuous.other_distribution=None
+
+prms_3/MiniGridEmptyContinuous.size=8
+prms_3/MiniGridEmptyContinuous.make_reward_stochastic=True
+prms_3/MiniGridEmptyContinuous.randomize_actions=False
+prms_3/MiniGridEmptyContinuous.lazy=0.7
+prms_3/MiniGridEmptyContinuous.random_action_p=None
+prms_3/MiniGridEmptyContinuous.n_starting_states=3
+prms_3/MiniGridEmptyContinuous.sub_optimal_distribution=("beta",1.0, 49.0)
+prms_3/MiniGridEmptyContinuous.optimal_distribution=("beta",1.0, 0.11)
+prms_3/MiniGridEmptyContinuous.other_distribution=("beta",1.0, 4.0)
+
+prms_4/MiniGridEmptyContinuous.size=12
+prms_4/MiniGridEmptyContinuous.make_reward_stochastic=True
+prms_4/MiniGridEmptyContinuous.randomize_actions=False
+prms_4/MiniGridEmptyContinuous.lazy=0.7
+prms_4/MiniGridEmptyContinuous.random_action_p=None
+prms_4/MiniGridEmptyContinuous.n_starting_states=3
+prms_4/MiniGridEmptyContinuous.sub_optimal_distribution=("beta",1.0, 49.0)
+prms_4/MiniGridEmptyContinuous.optimal_distribution=("beta",1.0, 0.11)
+prms_4/MiniGridEmptyContinuous.other_distribution=("beta",1.0, 4.0)

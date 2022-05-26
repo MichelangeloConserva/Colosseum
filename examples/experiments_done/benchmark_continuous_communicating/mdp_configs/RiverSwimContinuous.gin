@@ -1,0 +1,11 @@
+prms_0/RiverSwimContinuous.make_reward_stochastic=True
+prms_0/RiverSwimContinuous.randomize_actions=False
+prms_0/RiverSwimContinuous.size=25
+prms_0/RiverSwimContinuous.lazy=0.1
+prms_0/RiverSwimContinuous.random_action_p=None
+
+prms_1/RiverSwimContinuous.make_reward_stochastic=True
+prms_1/RiverSwimContinuous.randomize_actions=False
+prms_1/RiverSwimContinuous.size=90
+prms_1/RiverSwimContinuous.lazy=0.03
+prms_1/RiverSwimContinuous.random_action_p=None

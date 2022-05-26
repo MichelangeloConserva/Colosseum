@@ -1,0 +1,2 @@
+from colosseum.mdps.minigrid_doorkey.continuous import MiniGridDoorKeyContinuous
+from colosseum.mdps.minigrid_doorkey.episodic import MiniGridDoorKeyEpisodic

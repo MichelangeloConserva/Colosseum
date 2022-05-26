@@ -1,0 +1,4 @@
+last training step at (22947) for experiments_done/benchmark_continuous_ergodic/logs/prms_1-MiniGridRoomsContinuous____prms_1-UCRL2Continuous/seed3_logs.csv
+last training step at (32189) for experiments_done/benchmark_continuous_ergodic/logs/prms_1-MiniGridRoomsContinuous____prms_1-UCRL2Continuous/seed4_logs.csv
+last training step at (16513) for experiments_done/benchmark_continuous_ergodic/logs/prms_1-MiniGridRoomsContinuous____prms_1-UCRL2Continuous/seed2_logs.csv
+last training step at (16780) for experiments_done/benchmark_continuous_ergodic/logs/prms_1-MiniGridRoomsContinuous____prms_1-UCRL2Continuous/seed1_logs.csv

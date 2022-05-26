@@ -1,0 +1,22 @@
+MDP name: DeepSeaEpisodic
+MDP parameters:
+  communication_type: ERGODIC
+  seed: 0
+  randomize_actions: false
+  make_reward_stochastic: true
+  lazy: null
+  random_action_p: 0.3
+  size: 13
+  suboptimal_return: 0.5
+  optimal_return: 1.0
+  sub_optimal_distribution: Beta(1.0, 25.0)
+  optimal_distribution: Beta(12.0, 1.0)
+  other_distribution: Beta(1.0, 250.0)
+  H: 13
+MDP graph metrics:
+  '# nodes': 91
+  '# edges': 169
+MDP measure of hardness:
+  diameter: 91.38807
+  suboptimal_gaps: 11.85803
+  value_norm: 0.816290020942688

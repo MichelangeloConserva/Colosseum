@@ -1,0 +1,4 @@
+prms_0/DeepSeaContinuous.size=20
+prms_0/DeepSeaContinuous.random_action_p=0.1
+prms_0/DeepSeaContinuous.make_reward_stochastic=False
+prms_0/DeepSeaContinuous.randomize_actions=False

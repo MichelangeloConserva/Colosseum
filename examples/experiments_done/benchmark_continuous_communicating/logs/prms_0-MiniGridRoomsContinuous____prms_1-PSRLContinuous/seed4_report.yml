@@ -1,0 +1,20 @@
+MDP name: MiniGridRoomsContinuous
+MDP parameters:
+  communication_type: COMMUNICATING
+  seed: 4
+  randomize_actions: false
+  make_reward_stochastic: true
+  lazy: 0.3
+  random_action_p: null
+  room_size: 5
+  n_rooms: 9
+  n_starting_states: 2
+  optimal_distribution: Beta(224.0, 1.0)
+  other_distribution: Beta(1.0, 224.0)
+MDP graph metrics:
+  '# nodes': 948
+  '# edges': 3612
+MDP measure of hardness:
+  diameter: 54.2847785949707
+  suboptimal_gaps: 1130.8695068359375
+  value_norm: 2.285550117492676

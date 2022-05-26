@@ -1,0 +1,21 @@
+MDP name: DeepSeaContinuous
+MDP parameters:
+  communication_type: COMMUNICATING
+  seed: 3
+  randomize_actions: false
+  make_reward_stochastic: true
+  lazy: null
+  random_action_p: null
+  size: 35
+  suboptimal_return: 0.5
+  optimal_return: 1.0
+  sub_optimal_distribution: Beta(1.0, 69.0)
+  optimal_distribution: Beta(34.0, 1.0)
+  other_distribution: Beta(1.0, 690.0)
+MDP graph metrics:
+  '# nodes': 630
+  '# edges': 1225
+MDP measure of hardness:
+  diameter: 68.0
+  suboptimal_gaps: 1192.623291015625
+  value_norm: 0.9467999935150146

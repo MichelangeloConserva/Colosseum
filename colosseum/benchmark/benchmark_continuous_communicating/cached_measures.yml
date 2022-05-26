@@ -1,0 +1,120 @@
+? !!python/tuple
+- DeepSeaContinuous
+- prms_0
+: diameter: 78.0
+  suboptimal_gaps: 625.89195753125
+  value_norm: 0.9539099931716919
+? !!python/tuple
+- DeepSeaContinuous
+- prms_1
+: diameter: 78.0
+  suboptimal_gaps: 636.0572025625
+  value_norm: 0.0
+? !!python/tuple
+- DeepSeaContinuous
+- prms_2
+: diameter: 68.0
+  suboptimal_gaps: 477.61723440624996
+  value_norm: 0.9467999935150146
+? !!python/tuple
+- FrozenLakeContinuous
+- prms_0
+: diameter: 17.361396026611327
+  suboptimal_gaps: 70.06353149414063
+  value_norm: 0.29521200656890867
+? !!python/tuple
+- FrozenLakeContinuous
+- prms_1
+: diameter: 58.08193054199219
+  suboptimal_gaps: 112.19156188964843
+  value_norm: 0.28257600367069247
+? !!python/tuple
+- MiniGridEmptyContinuous
+- prms_0
+: diameter: 34.66610946655273
+  suboptimal_gaps: 328.8950511953125
+  value_norm: 1.2770140290260317
+? !!python/tuple
+- MiniGridEmptyContinuous
+- prms_1
+: diameter: 37.14195022583008
+  suboptimal_gaps: 262.8738602148437
+  value_norm: 1.8198379993438718
+? !!python/tuple
+- MiniGridEmptyContinuous
+- prms_2
+: diameter: 25.7137393951416
+  suboptimal_gaps: 113.97998512890625
+  value_norm: 1.6506660223007201
+? !!python/tuple
+- MiniGridEmptyContinuous
+- prms_3
+: diameter: 59.99604110717774
+  suboptimal_gaps: 157.71949304296874
+  value_norm: 1.54179003238678
+? !!python/tuple
+- MiniGridEmptyContinuous
+- prms_4
+: diameter: 86.6620101928711
+  suboptimal_gaps: 372.7514983359375
+  value_norm: 1.5416900396347044
+? !!python/tuple
+- MiniGridRoomsContinuous
+- prms_0
+: diameter: 54.284767150878906
+  suboptimal_gaps: 451.9164529765625
+  value_norm: 2.3062320232391356
+? !!python/tuple
+- MiniGridRoomsContinuous
+- prms_1
+: diameter: 51.998199462890625
+  suboptimal_gaps: 162.94895287499997
+  value_norm: 2.026363968849182
+? !!python/tuple
+- MiniGridRoomsContinuous
+- prms_2
+: diameter: 75.99773559570312
+  suboptimal_gaps: 475.2335879921875
+  value_norm: 1.9197280406951907
+? !!python/tuple
+- RiverSwimContinuous
+- prms_0
+: diameter: 26.66655921936035
+  suboptimal_gaps: 5.270886120483398
+  value_norm: 0.878059983253479
+? !!python/tuple
+- RiverSwimContinuous
+- prms_1
+: diameter: 91.75264739990234
+  suboptimal_gaps: 23.114862125000002
+  value_norm: 0.8794599771499634
+? !!python/tuple
+- SimpleGridContinuous
+- prms_0
+: diameter: 34.99966812133789
+  suboptimal_gaps: 276.0109566171875
+  value_norm: 0.873740017414093
+? !!python/tuple
+- SimpleGridContinuous
+- prms_1
+: diameter: 32.085472106933594
+  suboptimal_gaps: 391.0934513359375
+  value_norm: 0.4993099868297577
+? !!python/tuple
+- SimpleGridContinuous
+- prms_2
+: diameter: 53.333160400390625
+  suboptimal_gaps: 765.9874218750001
+  value_norm: 0.8761500120162964
+? !!python/tuple
+- SimpleGridContinuous
+- prms_3
+: diameter: 68.57066345214844
+  suboptimal_gaps: 979.9726014062501
+  value_norm: 0.4957500100135803
+? !!python/tuple
+- TaxiContinuous
+- prms_0
+: diameter: 84.5371795654297
+  suboptimal_gaps: 365.58840853125
+  value_norm: 0.08631599992513658

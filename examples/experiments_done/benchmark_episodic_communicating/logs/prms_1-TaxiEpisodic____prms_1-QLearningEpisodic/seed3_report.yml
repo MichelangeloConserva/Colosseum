@@ -1,0 +1,26 @@
+MDP name: TaxiEpisodic
+MDP parameters:
+  communication_type: COMMUNICATING
+  seed: 3
+  randomize_actions: false
+  make_reward_stochastic: true
+  lazy: 0.2
+  random_action_p: null
+  size: 5
+  length: 1
+  width: 1
+  space: 1
+  n_locations: 3
+  optimal_mean_reward: 0.9
+  sub_optimal_mean_reward: 0.2
+  default_r: Beta(0.7, 30.0)
+  successfully_delivery_r: Beta(0.4, 0.1)
+  failure_delivery_r: Beta(0.8, 50.0)
+  H: 37
+MDP graph metrics:
+  '# nodes': 5766
+  '# edges': 34878
+MDP measure of hardness:
+  diameter: 103.86076
+  suboptimal_gaps: 156199.34375
+  value_norm: 0.5887500047683716

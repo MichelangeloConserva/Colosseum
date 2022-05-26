@@ -1,0 +1,21 @@
+MDP name: RiverSwimContinuous
+MDP parameters:
+  communication_type: COMMUNICATING
+  seed: 3
+  randomize_actions: false
+  make_reward_stochastic: true
+  lazy: 0.03
+  random_action_p: null
+  size: 90
+  optimal_mean_reward: 0.9
+  sub_optimal_mean_reward: 0.2
+  sub_optimal_distribution: Beta(1.0, 4.0)
+  optimal_distribution: Beta(1.0, 0.11)
+  other_distribution: Beta(1.0, 49.0)
+MDP graph metrics:
+  '# nodes': 90
+  '# edges': 268
+MDP measure of hardness:
+  diameter: 91.75264739990234
+  suboptimal_gaps: 57.3095703125
+  value_norm: 0.8794599771499634

@@ -1,0 +1,25 @@
+prms_0/TaxiEpisodic.randomize_actions=False
+prms_0/TaxiEpisodic.make_reward_stochastic=True
+prms_0/TaxiEpisodic.lazy=0.01
+prms_0/TaxiEpisodic.size=4
+prms_0/TaxiEpisodic.length=1
+prms_0/TaxiEpisodic.width=1
+prms_0/TaxiEpisodic.space=1
+prms_0/TaxiEpisodic.n_locations=3
+prms_0/TaxiEpisodic.random_action_p=None
+prms_0/TaxiEpisodic.default_r=("beta",0.7, 30.0)
+prms_0/TaxiEpisodic.successfully_delivery_r=("beta",0.4, 0.1)
+prms_0/TaxiEpisodic.failure_delivery_r=("beta",0.8, 50.0)
+
+prms_1/TaxiEpisodic.randomize_actions=False
+prms_1/TaxiEpisodic.make_reward_stochastic=True
+prms_1/TaxiEpisodic.lazy=0.2
+prms_1/TaxiEpisodic.size=5
+prms_1/TaxiEpisodic.length=1
+prms_1/TaxiEpisodic.width=1
+prms_1/TaxiEpisodic.space=1
+prms_1/TaxiEpisodic.n_locations=3
+prms_1/TaxiEpisodic.random_action_p=None
+prms_1/TaxiEpisodic.default_r=("beta",0.7, 30.0)
+prms_1/TaxiEpisodic.successfully_delivery_r=("beta",0.4, 0.1)
+prms_1/TaxiEpisodic.failure_delivery_r=("beta",0.8, 50.0)

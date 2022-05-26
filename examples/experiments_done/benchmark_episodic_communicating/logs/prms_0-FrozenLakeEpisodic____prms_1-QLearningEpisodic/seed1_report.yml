@@ -1,0 +1,23 @@
+MDP name: FrozenLakeEpisodic
+MDP parameters:
+  communication_type: COMMUNICATING
+  seed: 1
+  randomize_actions: false
+  make_reward_stochastic: true
+  lazy: null
+  random_action_p: null
+  size: 3
+  optimal_return: 1.0
+  suboptimal_return: 0.1
+  is_slippery: true
+  p_frozen: 0.9
+  goal_r: Beta(8.0, 1.0)
+  default_r: Beta(1.0, 89.0)
+  H: 5
+MDP graph metrics:
+  '# nodes': 25
+  '# edges': 68
+MDP measure of hardness:
+  diameter: 39.99337
+  suboptimal_gaps: 112.4371566772461
+  value_norm: 0.284280002117157

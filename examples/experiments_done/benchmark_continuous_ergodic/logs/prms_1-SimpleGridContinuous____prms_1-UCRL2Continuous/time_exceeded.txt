@@ -1,0 +1,2 @@
+last training step at (46544) for experiments_done/benchmark_continuous_ergodic/logs/prms_1-SimpleGridContinuous____prms_1-UCRL2Continuous/seed0_logs.csv
+last training step at (276269) for experiments_done/benchmark_continuous_ergodic/logs/prms_1-SimpleGridContinuous____prms_1-UCRL2Continuous/seed4_logs.csv

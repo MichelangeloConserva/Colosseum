@@ -1,0 +1,20 @@
+MDP name: MiniGridEmptyEpisodic
+MDP parameters:
+  communication_type: ERGODIC
+  seed: 4
+  randomize_actions: false
+  make_reward_stochastic: true
+  lazy: null
+  random_action_p: 0.3
+  size: 10
+  n_starting_states: 3
+  optimal_distribution: Beta(99.0, 1.0)
+  other_distribution: Beta(1.0, 99.0)
+  H: 23
+MDP graph metrics:
+  '# nodes': 5922
+  '# edges': 17766
+MDP measure of hardness:
+  diameter: 57.88667
+  suboptimal_gaps: 11624.263671875
+  value_norm: 2.7036099433898926

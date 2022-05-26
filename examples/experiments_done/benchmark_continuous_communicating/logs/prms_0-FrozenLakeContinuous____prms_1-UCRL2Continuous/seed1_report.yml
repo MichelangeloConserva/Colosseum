@@ -1,0 +1,22 @@
+MDP name: FrozenLakeContinuous
+MDP parameters:
+  communication_type: COMMUNICATING
+  seed: 1
+  randomize_actions: false
+  make_reward_stochastic: true
+  lazy: 0.01
+  random_action_p: null
+  size: 4
+  optimal_return: 1.0
+  suboptimal_return: 0.1
+  is_slippery: true
+  p_frozen: 0.95
+  goal_r: Beta(15.0, 1.0)
+  default_r: Beta(1.0, 159.0)
+MDP graph metrics:
+  '# nodes': 14
+  '# edges': 51
+MDP measure of hardness:
+  diameter: 22.49410057067871
+  suboptimal_gaps: 65.30699920654297
+  value_norm: 0.2866399884223938

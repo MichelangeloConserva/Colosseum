@@ -1,0 +1,5 @@
+prms_1/QLearningEpisodic.c_1=0.84
+prms_1/QLearningEpisodic.c_2=0.019
+prms_1/QLearningEpisodic.min_at=0.14
+prms_1/QLearningEpisodic.p=0.05
+prms_1/QLearningEpisodic.UCB_type="Bernstein"

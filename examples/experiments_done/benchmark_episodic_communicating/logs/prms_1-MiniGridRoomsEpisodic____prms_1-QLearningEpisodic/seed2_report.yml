@@ -1,0 +1,21 @@
+MDP name: MiniGridRoomsEpisodic
+MDP parameters:
+  communication_type: COMMUNICATING
+  seed: 2
+  randomize_actions: false
+  make_reward_stochastic: false
+  lazy: 0.05
+  random_action_p: null
+  room_size: 3
+  n_rooms: 9
+  n_starting_states: 2
+  optimal_distribution: Deterministic(1.0)
+  other_distribution: Deterministic(0.0)
+  H: 27
+MDP graph metrics:
+  '# nodes': 5338
+  '# edges': 19158
+MDP measure of hardness:
+  diameter: 47.17371
+  suboptimal_gaps: 5.04462
+  value_norm: 3.298769950866699

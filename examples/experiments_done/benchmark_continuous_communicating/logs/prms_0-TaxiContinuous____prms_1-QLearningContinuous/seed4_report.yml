@@ -1,0 +1,25 @@
+MDP name: TaxiContinuous
+MDP parameters:
+  communication_type: COMMUNICATING
+  seed: 4
+  randomize_actions: false
+  make_reward_stochastic: true
+  lazy: 0.01
+  random_action_p: null
+  size: 4
+  length: 1
+  width: 1
+  space: 1
+  n_locations: 3
+  optimal_mean_reward: 0.9
+  sub_optimal_mean_reward: 0.2
+  default_r: Beta(0.7, 30.0)
+  successfully_delivery_r: Beta(0.4, 0.1)
+  failure_delivery_r: Beta(0.8, 50.0)
+MDP graph metrics:
+  '# nodes': 108
+  '# edges': 342
+MDP measure of hardness:
+  diameter: 77.40328216552734
+  suboptimal_gaps: 893.8077392578125
+  value_norm: 0.09277000278234482

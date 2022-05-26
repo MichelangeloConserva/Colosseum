@@ -1,0 +1,23 @@
+MDP name: SimpleGridContinuous
+MDP parameters:
+  communication_type: ERGODIC
+  seed: 4
+  randomize_actions: false
+  make_reward_stochastic: false
+  lazy: 0.2
+  random_action_p: 0.01
+  size: 10
+  reward_type: XOR
+  n_starting_states: 1
+  optimal_mean_reward: 0.9
+  sub_optimal_mean_reward: 0.2
+  sub_optimal_distribution: Deterministic(0.0)
+  optimal_distribution: Deterministic(1.0)
+  other_distribution: Deterministic(0.5)
+MDP graph metrics:
+  '# nodes': 100
+  '# edges': 460
+MDP measure of hardness:
+  diameter: 22.70442008972168
+  suboptimal_gaps: 423.02423095703125
+  value_norm: 0.5296800136566162

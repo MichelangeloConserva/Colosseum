@@ -1,0 +1,5 @@
+last training step at (52818) for experiments_done/benchmark_continuous_ergodic/logs/prms_0-TaxiContinuous____prms_1-UCRL2Continuous/seed1_logs.csv
+last training step at (42296) for experiments_done/benchmark_continuous_ergodic/logs/prms_0-TaxiContinuous____prms_1-UCRL2Continuous/seed2_logs.csv
+last training step at (41669) for experiments_done/benchmark_continuous_ergodic/logs/prms_0-TaxiContinuous____prms_1-UCRL2Continuous/seed0_logs.csv
+last training step at (52390) for experiments_done/benchmark_continuous_ergodic/logs/prms_0-TaxiContinuous____prms_1-UCRL2Continuous/seed4_logs.csv
+last training step at (34856) for experiments_done/benchmark_continuous_ergodic/logs/prms_0-TaxiContinuous____prms_1-UCRL2Continuous/seed3_logs.csv

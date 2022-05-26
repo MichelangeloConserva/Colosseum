@@ -1,0 +1,22 @@
+MDP name: FrozenLakeContinuous
+MDP parameters:
+  communication_type: ERGODIC
+  seed: 4
+  randomize_actions: false
+  make_reward_stochastic: true
+  lazy: 0.01
+  random_action_p: 0.05
+  size: 5
+  optimal_return: 1.0
+  suboptimal_return: 0.1
+  is_slippery: true
+  p_frozen: 0.95
+  goal_r: Beta(24.0, 1.0)
+  default_r: Beta(1.0, 249.0)
+MDP graph metrics:
+  '# nodes': 23
+  '# edges': 93
+MDP measure of hardness:
+  diameter: 26.03264045715332
+  suboptimal_gaps: 118.42999267578125
+  value_norm: 0.2928900122642517
