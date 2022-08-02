@@ -1,0 +1,4 @@
+prms_0/DeepSeaEpisodic.size=10
+prms_0/DeepSeaEpisodic.p_rand=0.05
+prms_0/DeepSeaEpisodic.make_reward_stochastic=False
+prms_0/DeepSeaEpisodic.randomize_actions=False

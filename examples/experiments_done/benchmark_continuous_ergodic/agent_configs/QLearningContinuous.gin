@@ -1,3 +1,3 @@
-prms_1/QLearningContinuous.min_at = 0.0093377469858
-prms_1/QLearningContinuous.h_weigh = 0.46681267
-prms_1/QLearningContinuous.span_approx_weight = 0.038976305
+prms_0/QLearningContinuous.h_weigh = 0.942
+prms_0/QLearningContinuous.span_approx_weight = 0.014
+prms_0/QLearningContinuous.min_at = 0.073

@@ -1,6 +1,6 @@
 prms_0/FrozenLakeEpisodic.size=4
 prms_0/FrozenLakeEpisodic.make_reward_stochastic=True
 prms_0/FrozenLakeEpisodic.randomize_actions=True
-prms_0/FrozenLakeEpisodic.lazy=0.03
+prms_0/FrozenLakeEpisodic.p_lazy=0.03
 prms_0/FrozenLakeEpisodic.p_frozen=0.98
-prms_0/FrozenLakeEpisodic.random_action_p=0.001
+prms_0/FrozenLakeEpisodic.p_rand=0.001

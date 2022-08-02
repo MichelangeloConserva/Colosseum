@@ -1,0 +1,3 @@
+prms_0/SimpleGridContinuous.size=8
+prms_0/SimpleGridContinuous.make_reward_stochastic=True
+prms_0/SimpleGridContinuous.p_lazy=0.15

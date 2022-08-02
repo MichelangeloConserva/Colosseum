@@ -1,13 +1,13 @@
 prms_0/DeepSeaContinuous.size=40
-prms_0/DeepSeaContinuous.random_action_p=None
+prms_0/DeepSeaContinuous.p_rand=None
 prms_0/DeepSeaContinuous.make_reward_stochastic=True
 prms_0/DeepSeaContinuous.randomize_actions=False
 
 prms_1/DeepSeaContinuous.size=40
-prms_1/DeepSeaContinuous.random_action_p=None
+prms_1/DeepSeaContinuous.p_rand=None
 prms_1/DeepSeaContinuous.make_reward_stochastic=False
 prms_1/DeepSeaContinuous.randomize_actions=False
 prms_2/DeepSeaContinuous.size=35
-prms_2/DeepSeaContinuous.random_action_p=None
+prms_2/DeepSeaContinuous.p_rand=None
 prms_2/DeepSeaContinuous.make_reward_stochastic=True
 prms_2/DeepSeaContinuous.randomize_actions=False

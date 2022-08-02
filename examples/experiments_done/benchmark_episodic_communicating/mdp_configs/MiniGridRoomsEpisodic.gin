@@ -2,26 +2,26 @@ prms_0/MiniGridRoomsEpisodic.randomize_actions=False
 prms_0/MiniGridRoomsEpisodic.make_reward_stochastic=True
 prms_0/MiniGridRoomsEpisodic.room_size=4
 prms_0/MiniGridRoomsEpisodic.n_rooms=4
-prms_0/MiniGridRoomsEpisodic.random_action_p=None
-prms_0/MiniGridRoomsEpisodic.lazy=None
+prms_0/MiniGridRoomsEpisodic.p_rand=None
+prms_0/MiniGridRoomsEpisodic.p_lazy=None
 
 prms_1/MiniGridRoomsEpisodic.randomize_actions=False
 prms_1/MiniGridRoomsEpisodic.make_reward_stochastic=False
 prms_1/MiniGridRoomsEpisodic.room_size=3
 prms_1/MiniGridRoomsEpisodic.n_rooms=9
-prms_1/MiniGridRoomsEpisodic.random_action_p=None
-prms_1/MiniGridRoomsEpisodic.lazy=0.05
+prms_1/MiniGridRoomsEpisodic.p_rand=None
+prms_1/MiniGridRoomsEpisodic.p_lazy=0.05
 
 prms_2/MiniGridRoomsEpisodic.randomize_actions=False
 prms_2/MiniGridRoomsEpisodic.make_reward_stochastic=False
 prms_2/MiniGridRoomsEpisodic.room_size=3
 prms_2/MiniGridRoomsEpisodic.n_rooms=9
-prms_2/MiniGridRoomsEpisodic.random_action_p=None
-prms_2/MiniGridRoomsEpisodic.lazy=0.1
+prms_2/MiniGridRoomsEpisodic.p_rand=None
+prms_2/MiniGridRoomsEpisodic.p_lazy=0.1
 
 prms_3/MiniGridRoomsEpisodic.randomize_actions=False
 prms_3/MiniGridRoomsEpisodic.make_reward_stochastic=False
 prms_3/MiniGridRoomsEpisodic.room_size=3
 prms_3/MiniGridRoomsEpisodic.n_rooms=4
-prms_3/MiniGridRoomsEpisodic.random_action_p=None
-prms_3/MiniGridRoomsEpisodic.lazy=0.15
+prms_3/MiniGridRoomsEpisodic.p_rand=None
+prms_3/MiniGridRoomsEpisodic.p_lazy=0.15

@@ -1,0 +1,6 @@
+prms_0/MiniGridRoomsEpisodic.randomize_actions=False
+prms_0/MiniGridRoomsEpisodic.make_reward_stochastic=True
+prms_0/MiniGridRoomsEpisodic.room_size=3
+prms_0/MiniGridRoomsEpisodic.n_rooms=4
+prms_0/MiniGridRoomsEpisodic.p_rand=0.001
+prms_0/MiniGridRoomsEpisodic.p_lazy=None

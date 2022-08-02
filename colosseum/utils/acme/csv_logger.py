@@ -46,6 +46,8 @@ class CSVLogger(Logger):
         self._flush_every = flush_every
         self._add_uid = add_uid
 
+        self.reset()
+
         if flush_every <= 0:
             raise ValueError(
                 f"`flush_every` must be a positive integer (got {flush_every})."
@@ -80,7 +82,6 @@ class CSVLogger(Logger):
         # Only log if `time_delta` seconds have passed since last logging event.
         now = time.time()
 
-        # TODO(b/192227744): Remove this in favour of filters.TimeFilter.
         elapsed = now - self._last_log_time
         if elapsed < self._time_delta:
             logging.debug(

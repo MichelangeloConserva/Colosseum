@@ -1,0 +1,5 @@
+prms_0/SimpleGridEpisodic.reward_type=3
+prms_0/SimpleGridEpisodic.size=10
+prms_0/SimpleGridEpisodic.randomize_actions=False
+prms_0/SimpleGridEpisodic.make_reward_stochastic=True
+prms_0/SimpleGridEpisodic.p_lazy=0.2

@@ -1,0 +1,1 @@
+from colosseum.experiment.hyperopt.ray.regret_hps_opt import RayRegretOptimizer

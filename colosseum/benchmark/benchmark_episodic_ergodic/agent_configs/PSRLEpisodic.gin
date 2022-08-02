@@ -1,7 +1,0 @@
-from colosseum.agents.bayes_tools import conjugate_rewards
-from colosseum.agents.bayes_tools import conjugate_transitions
-
-prms_1/PSRLEpisodic.reward_prior_model = %conjugate_rewards.RewardsConjugateModel.N_NIG
-prms_1/PSRLEpisodic.transitions_prior_model = %conjugate_transitions.TransitionsConjugateModel.M_DIR
-prms_1/PSRLEpisodic.rewards_prior_prms = [0.0615, 1, 1, 1]
-prms_1/PSRLEpisodic.transitions_prior_prms = [0.0197]

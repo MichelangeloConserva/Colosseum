@@ -1,0 +1,6 @@
+prms_0/MiniGridEmptyEpisodic.size=7
+prms_0/MiniGridEmptyEpisodic.make_reward_stochastic=False
+prms_0/MiniGridEmptyEpisodic.randomize_actions=False
+prms_0/MiniGridEmptyEpisodic.p_lazy=0.05
+prms_0/MiniGridEmptyEpisodic.p_rand=0.05
+prms_0/MiniGridEmptyEpisodic.n_starting_states=3

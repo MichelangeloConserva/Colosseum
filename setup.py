@@ -5,7 +5,7 @@ import setuptools
 
 HERE = pathlib.Path(__file__).parent
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 DESCRIPTION = "Research-oriented library for tabular reinforcement learning."
 LICENSE = "MIT License"
 PACKAGE_NAME = "colosseum"
@@ -36,29 +36,33 @@ setuptools.setup(
         "adjustText",
         "timeout-decorator",
         "dm-env",
+        "dm-sonnet",
         "gin-config",
-        "backports.cached-property",
         "gym",
         "matplotlib",
         "networkx",
         "numpy",
         "pandas",
+        "pebble",
         "pygraphviz",
         "pydtmc",
         "pygame",
         "pyyaml",
         "ray[tune]",
         "seaborn",
+        "tensorflow",
+        "bsuite",
         "scipy>=1.7.3",
         "sparse",
         "toolz",
         "tqdm",
         "PyYAML>=6.0",
+        "wrapt_timeout_decorator",
+        "frozendict"
     ],
     # scripts=glob("bin" + os.sep + "*"),
     classifiers=[
         "Development Status :: 3 - Alpha",
-        "DeepSea :: Console",
         "Intended Audience :: Science/Research",
         # 'License :: OSI Approved :: Apache Software License',
         "Operating System :: POSIX :: Linux",

@@ -1,0 +1,6 @@
+remove_experiment_configuration_folder: False
+overwrite_previous_experiment: False
+n_seeds: 5
+n_steps: 100000
+max_agent_mdp_interaction_time_s: 90
+log_performance_indicators_every: 5000

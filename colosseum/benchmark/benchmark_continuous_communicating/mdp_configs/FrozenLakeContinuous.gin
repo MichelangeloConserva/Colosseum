@@ -1,13 +1,13 @@
 prms_0/FrozenLakeContinuous.size=4
 prms_0/FrozenLakeContinuous.make_reward_stochastic=True
 prms_0/FrozenLakeContinuous.randomize_actions=False
-prms_0/FrozenLakeContinuous.lazy=0.01
+prms_0/FrozenLakeContinuous.p_lazy=0.01
 prms_0/FrozenLakeContinuous.p_frozen=0.95
-prms_0/FrozenLakeContinuous.random_action_p=None
+prms_0/FrozenLakeContinuous.p_rand=None
 
 prms_1/FrozenLakeContinuous.size=5
 prms_1/FrozenLakeContinuous.make_reward_stochastic=True
 prms_1/FrozenLakeContinuous.randomize_actions=False
-prms_1/FrozenLakeContinuous.lazy=0.35
+prms_1/FrozenLakeContinuous.p_lazy=0.35
 prms_1/FrozenLakeContinuous.p_frozen=0.9
-prms_1/FrozenLakeContinuous.random_action_p=None
+prms_1/FrozenLakeContinuous.p_rand=None

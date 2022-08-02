@@ -34,7 +34,6 @@ def process_path(
     del backups, ttl_seconds
 
     path = os.path.expanduser(path)
-    # TODO(b/145460917): consider replacing this---e.g. with a timestamp.
     if add_uid:
         path = os.path.join(path, *get_unique_id())
     path = os.path.join(path, *subpaths)

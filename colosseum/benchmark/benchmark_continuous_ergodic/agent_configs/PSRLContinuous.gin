@@ -1,9 +1,0 @@
-from colosseum.agents.bayes_tools import conjugate_rewards
-from colosseum.agents.bayes_tools import conjugate_transitions
-
-prms_1/PSRLContinuous.reward_prior_model = %conjugate_rewards.RewardsConjugateModel.N_NIG
-prms_1/PSRLContinuous.rewards_prior_prms = [0.29568628, 1, 1, 1]
-prms_1/PSRLContinuous.psi_weight = 0.007710888
-prms_1/PSRLContinuous.omega_weight = 0.546218761
-prms_1/PSRLContinuous.kappa_weight = 3.7199009296
-prms_1/PSRLContinuous.eta_weight = 2.2512298684130788e-07

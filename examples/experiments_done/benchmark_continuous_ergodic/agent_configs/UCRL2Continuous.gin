@@ -1,3 +1,3 @@
-prms_1/UCRL2Continuous.alpha_p = 0.057067313
-prms_1/UCRL2Continuous.alpha_r = 0.024716369241
-prms_1/UCRL2Continuous.bound_type_p="bernstein"
+prms_0/UCRL2Continuous.bound_type_p='bernstein'
+prms_0/UCRL2Continuous.alpha_p = 0.9883750006754203
+prms_0/UCRL2Continuous.alpha_r = 0.10294276593728004

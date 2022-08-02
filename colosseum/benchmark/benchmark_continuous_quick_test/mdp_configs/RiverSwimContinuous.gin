@@ -1,0 +1,4 @@
+prms_0/RiverSwimContinuous.make_reward_stochastic=False
+prms_0/RiverSwimContinuous.size=15
+prms_0/RiverSwimContinuous.p_lazy=0.1
+prms_0/RiverSwimContinuous.p_rand=0.2
