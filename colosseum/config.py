@@ -1,5 +1,6 @@
 import os
 import shutil
+from collections import namedtuple
 from glob import glob
 from typing import Type, TYPE_CHECKING, List
 
@@ -25,7 +26,7 @@ EXPERIMENT_SEPARATOR_MDP_AGENT = "____"
 _REGISTERED_EXTERNAL_AGENT_CLASSES = list()
 
 
-def register_agent_class(agent_class : Type["BaseAgent"]):
+def register_agent_class(agent_class: Type["BaseAgent"]):
     _REGISTERED_EXTERNAL_AGENT_CLASSES.append(agent_class)
 
 def get_external_agent_classes() -> List[Type["BaseAgent"]]:

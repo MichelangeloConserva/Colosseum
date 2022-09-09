@@ -27,7 +27,7 @@ class DeepSeaNode:
 
 
 class DeepSeaAction(IntEnum):
-    """The action available in the Chain MDP."""
+    """The action available in the DeepSea MDP."""
 
     LEFT = 0
     RIGHT = 1

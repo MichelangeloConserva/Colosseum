@@ -210,6 +210,7 @@ class BaseMDP(dm_env.Environment, abc.ABC):
         representation_mapping_kwargs: Dict[str, Any] = dict(),
         hardness_reports_folder="hardness_reports" + os.sep,
         instantiate_mdp: bool = True,
+        force_sparse_transition : bool = False
     ):
         """
         instantiates the MDP.
@@ -253,6 +254,7 @@ class BaseMDP(dm_env.Environment, abc.ABC):
             )
         self._representation_mapping = representation_mapping
         self._hardness_reports_folder = hardness_reports_folder
+        self._force_sparse_transition = force_sparse_transition
         self._p_rand = p_rand if p_rand is None or p_rand > 0.0 else None
         self._p_lazy = p_lazy if p_lazy is None or p_lazy > 0.0 else None
         self.rewards_range = self._rewards_range = (
@@ -667,6 +669,7 @@ class BaseMDP(dm_env.Environment, abc.ABC):
                 self.get_info_class,
                 self.get_reward_distribution,
                 self.node_to_index,
+                self._force_sparse_transition
             )
         return self._transition_matrix_and_rewards
 
@@ -1011,7 +1014,7 @@ class BaseMDP(dm_env.Environment, abc.ABC):
                 h, d = V.shape
                 assert h == self.H and d == self.n_states
             else:
-                assert len(V) == self.num_states
+                assert len(V) == self.n_states
         return {
             node: np.round(
                 V[0, self.node_to_index[node]]

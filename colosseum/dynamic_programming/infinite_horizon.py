@@ -12,7 +12,7 @@ from colosseum.dynamic_programming.utils import (
 
 
 def discounted_value_iteration(
-    T: np.ndarray,
+    T: Union[np.ndarray, sparse.COO],
     R: np.ndarray,
     gamma=0.99,
     epsilon=1e-3,
@@ -21,12 +21,17 @@ def discounted_value_iteration(
     sparse_nnz_per_threshold: float = 0.2,
 ) -> Tuple[np.ndarray, np.ndarray]:
     num_states, num_actions, _ = T.shape
+
+    if type(T) == sparse.COO:
+        return _discounted_value_iteration_sparse(T, R, gamma, epsilon, max_abs_value)
+
     if T.size > sparse_n_states_threshold:
         T_sparse = sparse.COO(T)
         if T_sparse.nnz / T.size < sparse_nnz_per_threshold:
             return _discounted_value_iteration_sparse(
                 T_sparse, R, gamma, epsilon, max_abs_value
             )
+
     try:
         res = _discounted_value_iteration(T, R, gamma, epsilon, max_abs_value)
     except:
@@ -40,7 +45,7 @@ def discounted_value_iteration(
 
 
 def discounted_policy_evaluation(
-    T: np.ndarray,
+    T: Union[np.ndarray, sparse.COO],
     R: np.ndarray,
     pi: np.ndarray,
     gamma=0.99,
@@ -49,10 +54,13 @@ def discounted_policy_evaluation(
     sparse_nnz_per_threshold: float = 0.2,
 ) -> Tuple[np.ndarray, np.ndarray]:
     num_states, num_actions, _ = T.shape
+
+    if type(T) == sparse.COO:
+        return _discounted_policy_evaluation_sparse(T, R, pi, gamma, epsilon)
     if num_states > sparse_n_states_threshold:
         T_sparse = sparse.COO(T)
         if T_sparse.nnz / T.size < sparse_nnz_per_threshold:
-            return _discounted_policy_evaluation_sparse(T, R, pi, gamma, epsilon)
+            return _discounted_policy_evaluation_sparse(T_sparse, R, pi, gamma, epsilon)
     return _discounted_policy_evaluation(T, R, pi, gamma, epsilon)
 
 
@@ -150,7 +158,7 @@ def _discounted_value_iteration_sparse(
             if V.abs() > max_abs_value:
                 return None
 
-        diff = np.abs(V_old - V).max()
+        diff = np.abs(V_old.squeeze() - V.squeeze()).max()
         if diff < epsilon:
             return Q, V.squeeze()
     raise DynamicProgrammingMaxIterationExceeded()
@@ -170,14 +178,14 @@ def _discounted_policy_evaluation(
         for s in range(num_states):
             Q[s] = R[s] + gamma * T[s] @ V
             V[s] = (Q[s] * pi[s]).sum()
-        diff = np.abs(V_old - V).max()
+        diff = np.abs(V_old.squeeze() - V.squeeze()).max()
         if diff < epsilon:
             return Q, V
     raise DynamicProgrammingMaxIterationExceeded()
 
 
 def _discounted_policy_evaluation_sparse(
-    T: np.ndarray, R: np.ndarray, pi: np.ndarray, gamma=0.99, epsilon=1e-7
+    T: Union[np.ndarray, sparse.COO], R: np.ndarray, pi: np.ndarray, gamma=0.99, epsilon=1e-7
 ) -> Tuple[np.ndarray, np.ndarray]:
     num_states, num_actions, _ = T.shape
     gamma = np.array([gamma], dtype=np.float32)

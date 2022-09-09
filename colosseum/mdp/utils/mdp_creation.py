@@ -1,8 +1,10 @@
+import os
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Callable, Dict, List, Tuple
 
 import networkx as nx
 import numpy as np
+import sparse
 from numpy.core._exceptions import _ArrayMemoryError
 from scipy.stats import rv_continuous
 from tqdm import tqdm
@@ -38,20 +40,42 @@ def get_transition_matrix_and_rewards(
         ["NODE_TYPE", "ACTION_TYPE", "NODE_TYPE"], rv_continuous
     ],
     node_to_index: Dict["NODE_TYPE", int],
+    is_sparse: bool = False,
 ) -> Tuple[np.ndarray, np.ndarray]:
-    T = np.zeros(
-        (n_states, n_actions, n_states),
-        dtype=np.float32,
-    )
+    if not is_sparse:
+        mem_bytes = os.sysconf("SC_PAGE_SIZE") * os.sysconf("SC_PHYS_PAGES")
+        is_sparse = n_states ** 2 * n_actions * np.float32().itemsize > 0.1 * mem_bytes
+    if is_sparse:
+        T = dict()
+    else:
+        T = np.zeros(
+            (n_states, n_actions, n_states),
+            dtype=np.float32,
+        )
+
     R = np.zeros((n_states, n_actions), dtype=np.float32)
     for i, node in enumerate(G.nodes()):
         for action, td in get_info_class(node).transition_distributions.items():
             r = 0
             for next_state, prob in zip(td.next_nodes, td.probs):
-                T[i, action, node_to_index[next_state]] += prob
                 r += prob * get_reward_distribution(node, action, next_state).mean()
+                if is_sparse and (i, action, node_to_index[next_state]) not in T:
+                    T[i, action, node_to_index[next_state]] = prob
+                    continue
+                T[i, action, node_to_index[next_state]] += prob
             R[i, action] = r
-        assert np.isclose(T[i, action].sum(), 1)
+
+    if is_sparse:
+        coords = [[], [], []]
+        data = []
+        for k, v in T.items():
+            coords[0].append(k[0])
+            coords[1].append(k[1])
+            coords[2].append(k[2])
+            data.append(np.float32(v))
+        T = sparse.COO(coords, data, shape=(n_states, n_actions, n_states))
+
+    assert np.isclose(T.sum(-1).todense() if is_sparse else T.sum(-1), 1).all()
     assert np.isnan(R).sum() == 0
     return T, R
 
@@ -158,6 +182,8 @@ def get_episodic_graph(
     return G_epi
 
 
+import time
+start = time.time()
 def instantiate_transitions(mdp: "BaseMDP", node: "NODE_TYPE"):
     if not mdp.G.has_node(node) or len(list(mdp.G.successors(node))) == 0:
         transition_distributions = dict()
@@ -175,6 +201,11 @@ def instantiate_transitions(mdp: "BaseMDP", node: "NODE_TYPE"):
             action in transition_distributions.keys() for action in range(mdp.n_actions)
         )
         _add_node_info_class(mdp, node, transition_distributions)
+
+    global start
+    if time.time() - start > 5:
+        start = time.time()
+        print(len(mdp.G.nodes))
 
 
 def _compute_transition(mdp: "BaseMDP", next_states, probs, node, action, next_node, p):
