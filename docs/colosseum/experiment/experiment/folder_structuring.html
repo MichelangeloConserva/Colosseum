@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>colosseum.experiment.experiment.folder_structuring API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>colosseum.experiment.experiment.folder_structuring</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import os
+import re
+import shutil
+import warnings
+from glob import glob
+from tempfile import gettempdir
+from typing import Dict, List, Optional, Set, Tuple, Type
+
+import numpy as np
+import pandas as pd
+import yaml
+
+from colosseum import config
+from colosseum.experiment.experiment import ExperimentConfig, ExperimentInstance
+from colosseum.experiment.experiment.utils import check_same_experiment
+from colosseum.mdp import BaseMDP
+from colosseum.agent.agents.base import BaseAgent
+from colosseum.utils import ensure_folder
+from colosseum.utils.miscellanea import (
+    get_agent_class_from_name,
+    get_mdp_class_from_name,
+)
+
+
+def retrieve_experiment_instances(
+    experiment_configs: Dict[str, ExperimentConfig] = None
+) -&gt; List[ExperimentInstance]:
+    &#34;&#34;&#34;
+    returns a list of ExperimentInstance that can be processed independently. If experiment_configs are not provided, it
+    is assumed that an experiment_config.yml file is provided inside the experiment configuration folders.
+    &#34;&#34;&#34;
+    assert len(glob(config.get_experiment_to_run_folder() + &#34;**&#34;)) &gt; 0, (
+        &#34;No experiment configuration folder has been found in&#34;
+        f&#34;{config.get_experiment_to_run_folder()}&#34;
+    )
+
+    print(&#34;Retrieving experiments:&#34;)
+    experiments_prms = []
+    for experiment_folder in glob(config.get_experiment_to_run_folder() + &#34;**&#34;):
+        experiment_name = experiment_folder[experiment_folder.rfind(os.sep) + 1 :]
+        if experiment_name[0] == &#34;_&#34;:
+            continue
+        experiment_config = get_experiment_config(experiment_folder, experiment_configs)
+        experiment_results_folder = (
+            config.get_experiment_result_folder() + experiment_name
+        )
+
+        print(f&#34;\t- {experiment_name}&#34;)
+
+        is_merging = _prepare_result_folder(
+            experiment_folder, experiment_results_folder, experiment_config
+        )
+
+        (
+            mdp_classes_scopes,
+            agent_classes_scopes,
+            gin_config_files_paths,
+        ) = retrieve_mdp_classes_agent_classes_gin_config(
+            experiment_folder, experiment_results_folder
+        )
+        experiments_prms += _get_experiment_mdp_agent_couples(
+            experiment_config,
+            experiment_results_folder,
+            mdp_classes_scopes,
+            agent_classes_scopes,
+            gin_config_files_paths,
+            is_merging,
+        )
+
+        if experiment_config.remove_experiment_configuration_folder:
+            shutil.rmtree(experiment_folder)
+
+    return experiments_prms
+
+
+def retrieve_mdp_classes_agent_classes_gin_config(
+    experiment_folder: str, result_folder: str = None
+) -&gt; Tuple[
+    Dict[Type[&#34;BaseMDP&#34;], Set[str]], Dict[Type[&#34;BaseAgent&#34;], Set[str]], List[str]
+]:
+    &#34;&#34;&#34;
+    returns the mdp classes, the agent classes and the gin configuration file that correspond to the experiments in the
+    given folder.
+    &#34;&#34;&#34;
+    if result_folder is None:
+        result_folder = experiment_folder
+
+    gin_config_files_paths = []
+
+    mdp_classes_scopes = dict()
+    for mdp_config_file in glob(
+        f&#34;{ensure_folder(experiment_folder)}mdp_configs{os.sep}*&#34;
+    ):
+        with open(mdp_config_file, &#34;r&#34;) as f:
+            f_ = f.read()
+        mdp_scopes = set(re.findall(r&#34;prms_\d+&#34;, f_))
+        mdp_class_name = re.findall(r&#34;prms_\d+/(.*?)\.&#34;, f_)[0]
+        mdp_class = get_mdp_class_from_name(mdp_class_name)
+        mdp_classes_scopes[mdp_class] = mdp_scopes
+        gin_config_files_paths.append(
+            mdp_config_file.replace(experiment_folder, result_folder)
+        )
+
+    agent_classes_scopes = dict()
+    for agent_config_file in glob(
+        f&#34;{ensure_folder(experiment_folder)}agent_configs{os.sep}*&#34;
+    ):
+        with open(agent_config_file, &#34;r&#34;) as f:
+            f_ = f.read()
+        agent_scopes = set(re.findall(r&#34;prms_\d+&#34;, f_))
+        agent_class_name = re.findall(r&#34;prms_\d+/(.*?)\.&#34;, f_)[0]
+        agent_class = get_agent_class_from_name(agent_class_name)
+        agent_classes_scopes[agent_class] = agent_scopes
+        gin_config_files_paths.append(
+            agent_config_file.replace(experiment_folder, result_folder)
+        )
+
+    classes = list(mdp_classes_scopes.keys()) + list(agent_classes_scopes.keys())
+    assert sum([c.is_episodic() for c in classes]) in [0, len(classes)], (
+        f&#34;Episodic and infinite horizon agents and/or MDP instances should not be mixed.&#34;
+        f&#34;Please check the configuration files of {experiment_folder}.&#34;
+    )
+
+    return mdp_classes_scopes, agent_classes_scopes, gin_config_files_paths
+
+
+def _get_experiment_mdp_agent_couples(
+    experiment_config: ExperimentConfig,
+    result_folder: str,
+    mdp_classes_scopes: Dict[Type[&#34;BaseMDP&#34;], Set[str]],
+    agent_classes_scopes: Dict[Type[&#34;BaseAgent&#34;], Set[str]],
+    gin_config_files_paths: List[str],
+    is_merging: bool,
+) -&gt; List[ExperimentInstance]:
+    &#34;&#34;&#34;
+    returns all the ExperimentInstances that corresponds to the experiment to be run. If an ExperimentInstance has been
+    previously run then it is not added to the returned list.
+    &#34;&#34;&#34;
+    experiment_mdp_agent_couples = []
+    for seed in range(experiment_config.n_seeds):
+        for mdp_class, mdp_scopes in mdp_classes_scopes.items():
+            for mdp_scope in mdp_scopes:
+                for (
+                    agent_class,
+                    agent_scopes,
+                ) in agent_classes_scopes.items():
+                    for agent_scope in agent_scopes:
+                        exp_inst = ExperimentInstance(
+                            seed,
+                            mdp_class,
+                            mdp_scope,
+                            agent_class,
+                            agent_scope,
+                            result_folder,
+                            gin_config_files_paths,
+                            experiment_config,
+                        )
+                        if not is_merging or not exp_inst.does_log_file_exists:
+                            experiment_mdp_agent_couples.append(exp_inst)
+    return experiment_mdp_agent_couples
+
+
+def _prepare_result_folder(
+    experiment_folder, experiment_results_folder, experiment_config: ExperimentConfig
+) -&gt; bool:
+    &#34;&#34;&#34;
+    creates the folder structure in the config.get_experiment_results_folder() and returns whether a merging with logs
+    already available in the folder is possible.
+    &#34;&#34;&#34;
+    is_merging = False
+    if os.path.isdir(experiment_results_folder):
+        if experiment_config.overwrite_previous_experiment:
+            shutil.rmtree(experiment_results_folder)
+        else:
+            # We need to check whether the current experiment correspond to the previously run one
+            is_same_experiment = check_same_experiment(
+                experiment_folder, experiment_results_folder
+            )
+            if not is_same_experiment:
+                raise ValueError(
+                    &#34;When overwrite_experiment is set to False and there is a previously run experiment with the same &#34;
+                    &#34;name in the results folder, they must be the same. This allows to save experiment running progress.&#34;
+                )
+
+            # If they are the same then, it may be the case that we are resuming the benchmark evaluation so we
+            # need to remove possible corrupted log files.
+            _remove_corrupted_log_files(experiment_results_folder, experiment_config)
+            is_merging = True
+    if not is_merging:
+        shutil.copytree(experiment_folder, experiment_results_folder)
+    return is_merging
+
+
+def get_experiment_config(
+    experiment_folder: str, experiment_configs: Optional[Dict[str, ExperimentConfig]]
+) -&gt; ExperimentConfig:
+    &#34;&#34;&#34;
+    returns a ExperimentConfig corresponding to the experiment folder. If it is not provided in the given dictionary, it
+    is looked for in the folder as experiment_config.yml file.
+    &#34;&#34;&#34;
+    experiment_name = experiment_folder[experiment_folder.rfind(os.sep) + 1 :]
+    if experiment_configs and experiment_name in experiment_configs:
+        return experiment_configs[experiment_name]
+    config_file = ensure_folder(experiment_folder) + &#34;experiment_config.yml&#34;
+    with open(config_file, &#34;r&#34;) as f:
+        experiment_config = yaml.load(f, yaml.Loader)
+    return ExperimentConfig(
+        remove_experiment_configuration_folder=experiment_config[
+            &#34;remove_experiment_configuration_folder&#34;
+        ],
+        n_seeds=experiment_config[&#34;n_seeds&#34;],
+        overwrite_previous_experiment=experiment_config[
+            &#34;overwrite_previous_experiment&#34;
+        ],
+        n_steps=experiment_config[&#34;n_steps&#34;],
+        max_agent_mdp_interaction_time_s=experiment_config[
+            &#34;max_agent_mdp_interaction_time_s&#34;
+        ],
+        log_performance_indicator_every=experiment_config[
+            &#34;log_performance_indicators_every&#34;
+        ],
+    )
+
+
+def _clean_time_exceeded_records(log_file: str):
+    &#34;&#34;&#34;
+    checks if the log file has been classified as an experiment that exceeded the time limit and, if so, it cleans the
+    record.
+    &#34;&#34;&#34;
+    time_exceeded_experiment_record = (
+        log_file[: log_file.rfind(os.sep)] + os.sep + &#34;time_exceeded.txt&#34;
+    )
+    if os.path.exists(time_exceeded_experiment_record):
+        with open(time_exceeded_experiment_record, &#34;r&#34;) as ff:
+            te = ff.readlines()
+        for tee in te:
+            if log_file in tee:
+                te.remove(tee)
+                break
+        if len(te) &gt; 0:
+            with open(time_exceeded_experiment_record, &#34;w&#34;) as ff:
+                ff.write(&#34;&#34;.join(te))
+        else:
+            os.remove(time_exceeded_experiment_record)
+
+
+def _remove_corrupted_log_files(
+    experiment_results_folder: str,
+    experiment_config: ExperimentConfig,
+):
+    &#34;&#34;&#34;
+    checks if there are any inconsistencies in the log files of an experiment and removes them.
+    &#34;&#34;&#34;
+    o = 0
+    for f in glob(
+        f&#34;{experiment_results_folder}{os.sep}**{os.sep}*.csv&#34;, recursive=True
+    ):
+        with open(f, &#34;r&#34;) as ff:
+            len_f = len(ff.readlines())
+        logged_steps = [] if len_f &lt;= 1 else pd.read_csv(f).steps.tolist()
+        if (
+            len_f &lt;= 1
+            or
+            # checks whether there are any inconsistencies in the order of the logs
+            any(np.diff(pd.read_csv(f).steps) &lt; 0)
+            # checks that all the steps have been logged
+            or not (
+                all(
+                    t in logged_steps
+                    for t in range(1, experiment_config.n_steps)
+                    if t % experiment_config.log_performance_indicators_every == 0
+                )
+                and (experiment_config.n_steps - 1) in logged_steps
+            )
+        ):
+            # If it was registered that this instance failed due to the time constrain, we remove that record since we
+            # are going to run this agent/MDP interaction from scratch.
+            _clean_time_exceeded_records(f)
+
+            # Moving the file to the temporary file folder just in case we want to double-check the formatting error.
+            shutil.move(f, gettempdir() + f&#34;{os.sep}_{o}_&#34; + f[f.rfind(os.sep) + 1 :])
+            o += 1
+            warnings.warn(
+                f&#34;The file {f} has been moved to tmp as it has some formatting errors.&#34;
+            )</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="colosseum.experiment.experiment.folder_structuring.get_experiment_config"><code class="name flex">
+<span>def <span class="ident">get_experiment_config</span></span>(<span>experiment_folder: str, experiment_configs: Optional[Dict[str, <a title="colosseum.experiment.experiment.dataclasses.ExperimentConfig" href="dataclasses.html#colosseum.experiment.experiment.dataclasses.ExperimentConfig">ExperimentConfig</a>]]) ‑> <a title="colosseum.experiment.experiment.dataclasses.ExperimentConfig" href="dataclasses.html#colosseum.experiment.experiment.dataclasses.ExperimentConfig">ExperimentConfig</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>returns a ExperimentConfig corresponding to the experiment folder. If it is not provided in the given dictionary, it
+is looked for in the folder as experiment_config.yml file.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_experiment_config(
+    experiment_folder: str, experiment_configs: Optional[Dict[str, ExperimentConfig]]
+) -&gt; ExperimentConfig:
+    &#34;&#34;&#34;
+    returns a ExperimentConfig corresponding to the experiment folder. If it is not provided in the given dictionary, it
+    is looked for in the folder as experiment_config.yml file.
+    &#34;&#34;&#34;
+    experiment_name = experiment_folder[experiment_folder.rfind(os.sep) + 1 :]
+    if experiment_configs and experiment_name in experiment_configs:
+        return experiment_configs[experiment_name]
+    config_file = ensure_folder(experiment_folder) + &#34;experiment_config.yml&#34;
+    with open(config_file, &#34;r&#34;) as f:
+        experiment_config = yaml.load(f, yaml.Loader)
+    return ExperimentConfig(
+        remove_experiment_configuration_folder=experiment_config[
+            &#34;remove_experiment_configuration_folder&#34;
+        ],
+        n_seeds=experiment_config[&#34;n_seeds&#34;],
+        overwrite_previous_experiment=experiment_config[
+            &#34;overwrite_previous_experiment&#34;
+        ],
+        n_steps=experiment_config[&#34;n_steps&#34;],
+        max_agent_mdp_interaction_time_s=experiment_config[
+            &#34;max_agent_mdp_interaction_time_s&#34;
+        ],
+        log_performance_indicator_every=experiment_config[
+            &#34;log_performance_indicators_every&#34;
+        ],
+    )</code></pre>
+</details>
+</dd>
+<dt id="colosseum.experiment.experiment.folder_structuring.retrieve_experiment_instances"><code class="name flex">
+<span>def <span class="ident">retrieve_experiment_instances</span></span>(<span>experiment_configs: Dict[str, <a title="colosseum.experiment.experiment.dataclasses.ExperimentConfig" href="dataclasses.html#colosseum.experiment.experiment.dataclasses.ExperimentConfig">ExperimentConfig</a>] = None) ‑> List[<a title="colosseum.experiment.experiment.dataclasses.ExperimentInstance" href="dataclasses.html#colosseum.experiment.experiment.dataclasses.ExperimentInstance">ExperimentInstance</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>returns a list of ExperimentInstance that can be processed independently. If experiment_configs are not provided, it
+is assumed that an experiment_config.yml file is provided inside the experiment configuration folders.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def retrieve_experiment_instances(
+    experiment_configs: Dict[str, ExperimentConfig] = None
+) -&gt; List[ExperimentInstance]:
+    &#34;&#34;&#34;
+    returns a list of ExperimentInstance that can be processed independently. If experiment_configs are not provided, it
+    is assumed that an experiment_config.yml file is provided inside the experiment configuration folders.
+    &#34;&#34;&#34;
+    assert len(glob(config.get_experiment_to_run_folder() + &#34;**&#34;)) &gt; 0, (
+        &#34;No experiment configuration folder has been found in&#34;
+        f&#34;{config.get_experiment_to_run_folder()}&#34;
+    )
+
+    print(&#34;Retrieving experiments:&#34;)
+    experiments_prms = []
+    for experiment_folder in glob(config.get_experiment_to_run_folder() + &#34;**&#34;):
+        experiment_name = experiment_folder[experiment_folder.rfind(os.sep) + 1 :]
+        if experiment_name[0] == &#34;_&#34;:
+            continue
+        experiment_config = get_experiment_config(experiment_folder, experiment_configs)
+        experiment_results_folder = (
+            config.get_experiment_result_folder() + experiment_name
+        )
+
+        print(f&#34;\t- {experiment_name}&#34;)
+
+        is_merging = _prepare_result_folder(
+            experiment_folder, experiment_results_folder, experiment_config
+        )
+
+        (
+            mdp_classes_scopes,
+            agent_classes_scopes,
+            gin_config_files_paths,
+        ) = retrieve_mdp_classes_agent_classes_gin_config(
+            experiment_folder, experiment_results_folder
+        )
+        experiments_prms += _get_experiment_mdp_agent_couples(
+            experiment_config,
+            experiment_results_folder,
+            mdp_classes_scopes,
+            agent_classes_scopes,
+            gin_config_files_paths,
+            is_merging,
+        )
+
+        if experiment_config.remove_experiment_configuration_folder:
+            shutil.rmtree(experiment_folder)
+
+    return experiments_prms</code></pre>
+</details>
+</dd>
+<dt id="colosseum.experiment.experiment.folder_structuring.retrieve_mdp_classes_agent_classes_gin_config"><code class="name flex">
+<span>def <span class="ident">retrieve_mdp_classes_agent_classes_gin_config</span></span>(<span>experiment_folder: str, result_folder: str = None) ‑> Tuple[Dict[Type[<a title="colosseum.mdp.base.BaseMDP" href="../../mdp/base.html#colosseum.mdp.base.BaseMDP">BaseMDP</a>], Set[str]], Dict[Type[<a title="colosseum.agent.agents.base.BaseAgent" href="../../agent/agents/base.html#colosseum.agent.agents.base.BaseAgent">BaseAgent</a>], Set[str]], List[str]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>returns the mdp classes, the agent classes and the gin configuration file that correspond to the experiments in the
+given folder.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def retrieve_mdp_classes_agent_classes_gin_config(
+    experiment_folder: str, result_folder: str = None
+) -&gt; Tuple[
+    Dict[Type[&#34;BaseMDP&#34;], Set[str]], Dict[Type[&#34;BaseAgent&#34;], Set[str]], List[str]
+]:
+    &#34;&#34;&#34;
+    returns the mdp classes, the agent classes and the gin configuration file that correspond to the experiments in the
+    given folder.
+    &#34;&#34;&#34;
+    if result_folder is None:
+        result_folder = experiment_folder
+
+    gin_config_files_paths = []
+
+    mdp_classes_scopes = dict()
+    for mdp_config_file in glob(
+        f&#34;{ensure_folder(experiment_folder)}mdp_configs{os.sep}*&#34;
+    ):
+        with open(mdp_config_file, &#34;r&#34;) as f:
+            f_ = f.read()
+        mdp_scopes = set(re.findall(r&#34;prms_\d+&#34;, f_))
+        mdp_class_name = re.findall(r&#34;prms_\d+/(.*?)\.&#34;, f_)[0]
+        mdp_class = get_mdp_class_from_name(mdp_class_name)
+        mdp_classes_scopes[mdp_class] = mdp_scopes
+        gin_config_files_paths.append(
+            mdp_config_file.replace(experiment_folder, result_folder)
+        )
+
+    agent_classes_scopes = dict()
+    for agent_config_file in glob(
+        f&#34;{ensure_folder(experiment_folder)}agent_configs{os.sep}*&#34;
+    ):
+        with open(agent_config_file, &#34;r&#34;) as f:
+            f_ = f.read()
+        agent_scopes = set(re.findall(r&#34;prms_\d+&#34;, f_))
+        agent_class_name = re.findall(r&#34;prms_\d+/(.*?)\.&#34;, f_)[0]
+        agent_class = get_agent_class_from_name(agent_class_name)
+        agent_classes_scopes[agent_class] = agent_scopes
+        gin_config_files_paths.append(
+            agent_config_file.replace(experiment_folder, result_folder)
+        )
+
+    classes = list(mdp_classes_scopes.keys()) + list(agent_classes_scopes.keys())
+    assert sum([c.is_episodic() for c in classes]) in [0, len(classes)], (
+        f&#34;Episodic and infinite horizon agents and/or MDP instances should not be mixed.&#34;
+        f&#34;Please check the configuration files of {experiment_folder}.&#34;
+    )
+
+    return mdp_classes_scopes, agent_classes_scopes, gin_config_files_paths</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="colosseum.experiment.experiment" href="index.html">colosseum.experiment.experiment</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="colosseum.experiment.experiment.folder_structuring.get_experiment_config" href="#colosseum.experiment.experiment.folder_structuring.get_experiment_config">get_experiment_config</a></code></li>
+<li><code><a title="colosseum.experiment.experiment.folder_structuring.retrieve_experiment_instances" href="#colosseum.experiment.experiment.folder_structuring.retrieve_experiment_instances">retrieve_experiment_instances</a></code></li>
+<li><code><a title="colosseum.experiment.experiment.folder_structuring.retrieve_mdp_classes_agent_classes_gin_config" href="#colosseum.experiment.experiment.folder_structuring.retrieve_mdp_classes_agent_classes_gin_config">retrieve_mdp_classes_agent_classes_gin_config</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

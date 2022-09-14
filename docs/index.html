@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="jemdoc.css" type="text/css" />
+<title>Colosseum</title>
+<!-- MathJax -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async>
+</script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+	  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+<!-- End MathJax -->
+<link rel="icon" href="icons/qm.ico" type="image/x-icon" />
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-item"><a href="index.html" class="current">Home</a></div>
+<div class="menu-category">Documentation</div>
+<div class="menu-item"><a href="quickstart.html">Quick&nbsp;start</a></div>
+<div class="menu-item"><a href="tutorials.html">Tutorials</a></div>
+<div class="menu-category">External resources</div>
+<div class="menu-item"><a href="colosseum/index.html" class="current">Pydoc&nbsp;generated&nbsp;API</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>Colosseum</h1>
+</div>
+<div style="width:80%;max-height:550px;height: expression(this.height > 550 ? 550: true);text-align: left">
+<img src="../imgs/colosseum_banner.svg" width="80%">
+</div>
+&nbsp;
+<p>Colosseum is a pioneering Python package that creates a bridge between theory and practice in tabular reinforcement
+learning with an eye on the non-tabular setting.
+</p>
+<h2>Colosseum principal capabilities</h2>
+<h3>Hardness analysis</h3>
+<p>Colosseum provides practical tools to investigate the theoretical hardness of the reinforcement learning problem in Markov Decision 
+Processes.
+Concretely, Colosseum implements the following functionalities.
+</p>
+<ul>
+<li><p>The computation of three theoretical measures of hardness, the <i>diameter</i> [1], the <i>sum of the reciprocals of the sub-optimality
+gaps</i> [2] and the <i>environmental value norm</i> [3].
+</p>
+</li>
+<li><p>The first efficient implementations of the algorithms to identify the communication class of MDPs [4].
+</p>
+</li>
+<li><p>The computation of the exact expected regret in the continuous and episodic settings.
+</p>
+</li>
+<li><p>Visual representations of the MDPs, such as state<i>state-action pairs visitation counts and state</i>state-action pairs value functions.
+</p>
+</li>
+</ul>
+<h3>Principled benchmarks</h3>
+<p>Colosseum implements principled benchmarks for the four most widely studied tabular reinforcement learning settings,
+<i>episodic ergodic</i>, <i>episodic communicating</i>, <i>continuous ergodic</i> and <i>continuous communicating</i>.
+The environments were selected to maximize diversity with respect to two important measures of hardness,
+the <i>diameter</i> and the <i>environmental value norm</i>, thus providing a varied set of challenges for which a 
+<i>precise</i> characterization of hardness is available.
+</p>
+<h2>Acknowledgements</h2>
+<p>We are grateful for the extraordinary tools developed by the open-source Python community.
+We particularly thank the authors of Jupyter Notebook, Matplotlib, NetworkX, Numba, Numpy, Pandas, Scipy, and Seaborn.
+</p>
+<h2>References</h2>
+<p><a href="http://www.jmlr.org/papers/volume11/jaksch10a/jaksch10a.pdf" target=&ldquo;blank&rdquo;>[1]</a> Jaksch, Ortner, and Auer. Near-optimal regret bounds for reinforcement learning. Journal of Machine Learning Research, 11:1563–1600, 2010.
+</p>
+<p><a href="https://proceedings.neurips.cc/paper/2019/file/10a5ab2db37feedfdeaab192ead4ac0e-Paper.pdf" target=&ldquo;blank&rdquo;>[2]</a>
+Simchowitz, Max, and Kevin G. Jamieson. &ldquo;Non-asymptotic gap-dependent regret bounds for tabular mdps.&rdquo; Advances in Neural Information Processing Systems 32 (2019).
+</p>
+<p><a href="https://proceedings.neurips.cc/paper/2014/file/2ab56412b1163ee131e1246da0955bd1-Paper.pdf" target=&ldquo;blank&rdquo;>[3]</a>
+Maillard, Odalric-Ambrym, Timothy A. Mann, and Shie Mannor. &ldquo;How hard is my MDP?&rdquo; The distribution-norm to the rescue&ldquo;.&rdquo; Advances in Neural Information Processing Systems 27 (2014): 1835-1843.
+</p>
+<p><a href="https://link.springer.com/chapter/10.1007/978-1-4613-0265-0_9" target=&ldquo;blank&rdquo;>[4]</a>
+Kallenberg, L. C. M. &ldquo;Classification problems in MDPs.&rdquo; Markov processes and controlled Markov chains. Springer, Boston, MA, 2002. 151-165.
+</p>
+<div id="footer">
+<div id="footer-text">
+Page generated 2022-09-14 17:50:44 BST, by <a href="https://github.com/wsshin/jemdoc_mathjax" target="blank">jemdoc+MathJax</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>

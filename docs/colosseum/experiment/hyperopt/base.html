@@ -1,0 +1,1026 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>colosseum.experiment.hyperopt.base API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>colosseum.experiment.hyperopt.base</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import abc
+import datetime
+import os
+import shutil
+import time
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any, Callable, Dict, Generator, List, Tuple, Type
+
+import numpy as np
+import toolz
+
+from colosseum.utils import clean_for_storing, ensure_folder, get_colosseum_mdp_classes
+
+if TYPE_CHECKING:
+    from ray.tune.sample import Domain
+
+    from colosseum.mdp import BaseMDP
+    from colosseum.agent.agents.base import BaseAgent
+
+
+class HyperparametersOptimizationFailed(Exception):
+    pass
+
+
+def agent_hyperparameters_generator(
+    seed: int, agent_hyperparameters_sampler: Dict[str, &#34;Domain&#34;]
+) -&gt; Generator:
+    &#34;&#34;&#34;
+    returns a generator that yields a dictionary containing an instance of agent hyperparameters sampled from the
+    agent hyperparameters sampler given in input.
+    &#34;&#34;&#34;
+    np.random.seed(seed)
+    while True:
+        yield toolz.valmap(lambda x: x.sample(), agent_hyperparameters_sampler)
+
+
+@dataclass()
+class HyperparameterOptimizationConfiguration:
+    optimization_horizon: int
+    max_agent_interaction_s: float
+    max_optimization_time_budget_s: float
+    n_seeds_per_agent_mdp_interaction: int
+    n_mdp_parameter_samples_from_mdp_classes: int
+    log_every: int
+
+
+DEFAULT_HYPERPARAMETERS_OPTIMIZATION_CONFIGURATION = (
+    HyperparameterOptimizationConfiguration(
+        optimization_horizon=250_000,
+        max_agent_interaction_s=2 * 60,
+        max_optimization_time_budget_s=3 * 60 * 60,
+        n_seeds_per_agent_mdp_interaction=3,
+        n_mdp_parameter_samples_from_mdp_classes=3,
+        log_every=100_000,
+    )
+)
+
+SMALL_HYPERPARAMETERS_OPTIMIZATION_CONFIGURATION = (
+    HyperparameterOptimizationConfiguration(
+        optimization_horizon=30_000,
+        max_agent_interaction_s=0.7 * 60,
+        max_optimization_time_budget_s=2 * 60,
+        n_seeds_per_agent_mdp_interaction=2,
+        n_mdp_parameter_samples_from_mdp_classes=1,
+        log_every=10_000,
+    )
+)
+
+
+class BaseAgentHyperparametersOptimizer:
+    def __init__(
+        self,
+        agent_class: Type[&#34;BaseAgent&#34;],
+        hpoc: HyperparameterOptimizationConfiguration = DEFAULT_HYPERPARAMETERS_OPTIMIZATION_CONFIGURATION,
+        seed: int = 0,
+        log_folder: str = f&#34;tmp{os.sep}hyperopt{os.sep}&#34;,
+        overwrite_previous_logs: bool = True,
+        mdp_classes: List[&#34;BaseMDP&#34;] = None,
+    ):
+        &#34;&#34;&#34;
+        is the base class for the agent hyperparameter optimizer.
+
+        Parameters
+        ----------
+        agent_class : Type[&#34;BaseAgent&#34;]
+            is the agent class for which the hyperparameters will be optimized.
+        hpoc : HyperparameterOptimizationConfiguration
+            is the hyperparameter optimization configuration with the following parameters:
+            optimization_horizon : int, optional
+                is the optimization horizon that will be used in the agent/MDP interactions.
+            max_agent_interaction_s : float, optional
+                is the maximum amount of training time given to the agent for each agent/MDp interaction.
+            max_optimization_time_budget_s : float, optional
+                is the maximum amount of time to search the best hyperparameters.
+            n_seeds_per_agent_mdp_interaction : int, optional
+                is the number of seeds for which each agent/MDP interaction is repeated.
+            n_mdp_parameter_samples_from_mdp_classes : int, optional
+                is the number of parameters sampled from the MDP classes and that results in MDP instance that the agent.
+                will interact with during the hyperparameter optimization.
+        seed : int, optional
+            is the seed used for sampling the MDP parameters and the agent hyperparameters.
+        log_folder : str, optional
+            is the folder where the logs from the hyperparameter optimization procedure can be stored.
+        overwrite_previous_logs : bool, optional
+            checks whether to remove the previous logs in the given folder.
+        &#34;&#34;&#34;
+
+        assert (
+            0.7 * hpoc.max_optimization_time_budget_s
+            &gt;= hpoc.max_agent_interaction_s
+            * hpoc.n_seeds_per_agent_mdp_interaction
+            * hpoc.n_mdp_parameter_samples_from_mdp_classes
+        ), (
+            &#34;You are not giving enough total optimization time for the selected number of interactions. &#34;
+            &#34;Make sure that at least 0.5 * max_optimization_time_budget_s &gt; max_agent_interaction_s * &#34;
+            &#34;n_seeds_per_agent_mdp_interaction * n_mdp_parameter_samples_from_mdp_classes so that you can obtain two&#34;
+            &#34;full samples of the regrets from all the MDPs for each of your cores.&#34;
+        )
+
+        # We add 30 seconds to allow for computing the quantities related to the final score like the optimal
+        # average reward
+        hpoc.max_agent_interaction_s += 30
+
+        # The total time necessary to compute a measure given the number of seeds and the number of MDP parameters to be
+        # sampled
+        total_time_to_compute_single_measure = (
+            hpoc.max_agent_interaction_s
+            * hpoc.n_seeds_per_agent_mdp_interaction
+            * hpoc.n_mdp_parameter_samples_from_mdp_classes
+        )
+
+        # The effective amount of time required to compute the maximum number of scores given the total time constraint.
+        # All the additional time would be wasted since it would not be possible to compute the score.
+        max_optimization_time_budget_s = total_time_to_compute_single_measure * max(
+            1,
+            int(
+                hpoc.max_optimization_time_budget_s
+                / total_time_to_compute_single_measure
+            ),
+        )
+
+        self._agent_class = agent_class
+        self._mdp_classes = (
+            get_colosseum_mdp_classes(self._agent_class.is_episodic())
+            if mdp_classes is None
+            else mdp_classes
+        )
+        self._optimization_horizon = hpoc.optimization_horizon
+        self._max_agent_interaction_s = hpoc.max_agent_interaction_s
+        self._max_optimization_time_budget_s = max_optimization_time_budget_s
+        self._n_seeds_per_agent_mdp_interaction = hpoc.n_seeds_per_agent_mdp_interaction
+        self._n_mdp_parameter_samples_from_mdp_classes = (
+            hpoc.n_mdp_parameter_samples_from_mdp_classes
+        )
+        self._seed = seed
+        self._log_every = hpoc.log_every
+
+        self._rng = np.random.RandomState(seed)
+        self._log_folder = ensure_folder(log_folder) + agent_class.__name__ + os.sep
+        self._rng.shuffle(self._mdp_classes)
+
+        if overwrite_previous_logs and os.path.isdir(self._log_folder):
+            shutil.rmtree(self._log_folder)
+        os.makedirs(self._log_folder, exist_ok=True)
+
+    def _get_debug_file(self, agent_next_hyperparams: Dict[str, Any]) -&gt; str:
+        &#34;&#34;&#34;
+        returns a txt file path corresponding to the given agent hyperparameter instance where the logs can be stored.
+        &#34;&#34;&#34;
+        agent_next_hyperparams_str = map(
+            lambda x: &#34;_&#34;.join(map(str, x[0])),
+            zip(clean_for_storing(agent_next_hyperparams).items()),
+        )
+        agent_next_hyperparams_str = &#34;__&#34;.join(agent_next_hyperparams_str)
+        debug_file_path = self._log_folder + agent_next_hyperparams_str + &#34;.txt&#34;
+        if os.path.isfile(debug_file_path):
+            os.remove(debug_file_path)
+        return debug_file_path
+
+    @abc.abstractmethod
+    def _multi_process_optimization(
+        self,
+        n_cores: int,
+        gen: Generator[Dict[str, &#34;Domain&#34;], None, None],
+        compute_measure: Callable[
+            [
+                Dict[str, Any],
+                str,
+                List[Type[&#34;BaseMDP&#34;]],
+                int,
+                int,
+                int,
+                int,
+                Type[&#34;BaseAgent&#34;],
+                float,
+                bool,
+                bool,
+                int,
+            ],
+            Tuple[Dict[str, Any], float],
+        ],
+        verbose: bool,
+    ) -&gt; List[Tuple[Dict[str, Any], float]]:
+        &#34;&#34;&#34;
+        performs the hyperparameter optimization procedure using n_cores.
+
+        Parameters
+        ----------
+        n_cores : int
+            is the number of processes available for the hyperparameters optimization procedure.
+        gen : Generator[Dict[str, &#34;Domain&#34;], None, None]
+            is a generator that yield instances of agent hyperparameters.
+        compute_measure : Callable
+            is the function that is optimized in the hyperparameter optimization procedure. See &#34;compute_regret&#34; in
+            colosseum.experiments.hyperopt.utils for an example of such function.
+        Returns
+        -------
+        returns a list of tuples containing hyperparameters and their corresponding scores.
+        &#34;&#34;&#34;
+
+    def single_process_optimization(
+        self,
+        gen: Generator[Dict[str, &#34;Domain&#34;], None, None],
+        compute_measure: Callable[
+            [
+                Dict[str, Any],
+                str,
+                List[Type[&#34;BaseMDP&#34;]],
+                int,
+                int,
+                int,
+                int,
+                Type[&#34;BaseAgent&#34;],
+                float,
+                bool,
+                bool,
+                int,
+            ],
+            Tuple[Dict[str, Any], float],
+        ],
+    ) -&gt; List[Tuple[Dict[str, Any], float]]:
+        &#34;&#34;&#34;
+        performs the hyperparameter optimization procedure in single thread.
+
+        Parameters
+        ----------
+        gen : Generator[Dict[str, &#34;Domain&#34;], None, None]
+            is a generator that yield instances of agent hyperparameters.
+        compute_measure : Callable
+            is the function that is optimized in the hyperparameter optimization procedure. See &#34;compute_regret&#34; in
+            colosseum.experiments.hyperopt.utils for an example of such function.
+        Returns
+        -------
+        returns a list of tuples containing hyperparameters and their corresponding scores.
+        &#34;&#34;&#34;
+
+        results = []
+        start = time.time()
+        remaining_time = self._max_optimization_time_budget_s - (time.time() - start)
+        while remaining_time &gt; 0:
+            print(
+                &#34;\r&#34;,
+                f&#34;{datetime.timedelta(seconds=int(remaining_time))} time left with {len(results)} completed measures.&#34;,
+                end=&#34;&#34;,
+            )
+            agent_next_hyperparams = next(gen)
+            agent_hyperparameters, score = compute_measure(
+                agent_next_hyperparams,
+                self._get_debug_file(agent_next_hyperparams),
+                self._mdp_classes,
+                self._n_mdp_parameter_samples_from_mdp_classes,
+                self._seed,
+                self._optimization_horizon,
+                self._n_seeds_per_agent_mdp_interaction,
+                self._agent_class,
+                self._max_agent_interaction_s,
+                False,
+                False,
+                self._log_every,
+            )
+            results.append((agent_hyperparameters, score))
+            remaining_time = self._max_optimization_time_budget_s - (
+                time.time() - start
+            )
+        return results
+
+    @abc.abstractmethod
+    def optimize(
+        self, n_cores: int, verbose: bool
+    ) -&gt; List[Tuple[Dict[str, Any], float]]:
+        &#34;&#34;&#34;
+        returns a tuples containing the best hyperparameters and the corresponding score. When implementing this function,
+        you should internally define the function that computes the score and call the self._optimize function.
+
+        Parameters
+        ----------
+        n_cores : int
+            is the number of processes available for the hyperparameters optimization procedure. Value less than one
+            correspond to single thread execution.
+        verbose : bool
+            checks whether the progress in the hyperparameters optimization procedure are printed in the console.
+        &#34;&#34;&#34;
+
+    def _optimize(
+        self,
+        n_cores: int,
+        compute_measure: Callable[
+            [
+                Dict[str, Any],
+                str,
+                List[Type[&#34;BaseMDP&#34;]],
+                int,
+                int,
+                int,
+                int,
+                Type[&#34;BaseAgent&#34;],
+                float,
+            ],
+            Tuple[Dict[str, Any], float],
+        ],
+        verbose: bool,
+    ) -&gt; Tuple[Dict[str, Any], float]:
+        &#34;&#34;&#34;
+        returns a tuples containing the best hyperparameters and the corresponding score.
+        &#34;&#34;&#34;
+        agent_hyperparams_gen = agent_hyperparameters_generator(
+            self._seed, self._agent_class.get_hyperparameters_search_spaces()
+        )
+
+        from colosseum import (
+            disable_multiprocessing,
+            get_available_cores,
+            set_available_cores,
+        )
+
+        # Ensure that Colosseum does not use multiprocessing while we perform hyperparameter optimization
+        colosseum_cores_config = get_available_cores()
+        disable_multiprocessing()
+
+        if verbose:
+            print(f&#34;Random search started for {self._agent_class.__name__}.&#34;)
+        start = time.time()
+        if n_cores &gt; 1:
+            results = self._multi_process_optimization(
+                n_cores, agent_hyperparams_gen, compute_measure, verbose
+            )
+        else:
+            results = self.single_process_optimization(
+                agent_hyperparams_gen, compute_measure
+            )
+
+        # Reactive previous multiprocessing configuration
+        set_available_cores(colosseum_cores_config)
+
+        if len(results) == 0:
+            raise HyperparametersOptimizationFailed()
+
+        best_hyperparams_and_score = max(results, key=lambda x: -x[1])
+        if verbose:
+            print(
+                f&#34;Search took {datetime.timedelta(seconds=int(time.time() - start))} &#34;
+                f&#34;and computed {len(results)} full agent/MDP interactions.&#34;
+            )
+            print(
+                f&#34;The best hyperparameters are: {toolz.valmap(lambda x: np.round(x, 3), best_hyperparams_and_score[0])} &#34;
+                f&#34;with a total regret of {min(x[1] for x in results):.5f}&#34;
+            )
+            print(
+                f&#34;The worst hyperparameters obtained {max(x[1] for x in results):.5f} regret &#34;
+                f&#34;and the average over all the regrets is &#34;
+                f&#34;{np.mean([x[1] for x in results]):.5f} plus minus {np.std([x[1] for x in results]):.5f}.&#34;
+            )
+        return best_hyperparams_and_score</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="colosseum.experiment.hyperopt.base.agent_hyperparameters_generator"><code class="name flex">
+<span>def <span class="ident">agent_hyperparameters_generator</span></span>(<span>seed: int, agent_hyperparameters_sampler: Dict[str, ForwardRef('Domain')]) ‑> Generator[+T_co, -T_contra, +V_co]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>returns a generator that yields a dictionary containing an instance of agent hyperparameters sampled from the
+agent hyperparameters sampler given in input.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def agent_hyperparameters_generator(
+    seed: int, agent_hyperparameters_sampler: Dict[str, &#34;Domain&#34;]
+) -&gt; Generator:
+    &#34;&#34;&#34;
+    returns a generator that yields a dictionary containing an instance of agent hyperparameters sampled from the
+    agent hyperparameters sampler given in input.
+    &#34;&#34;&#34;
+    np.random.seed(seed)
+    while True:
+        yield toolz.valmap(lambda x: x.sample(), agent_hyperparameters_sampler)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="colosseum.experiment.hyperopt.base.BaseAgentHyperparametersOptimizer"><code class="flex name class">
+<span>class <span class="ident">BaseAgentHyperparametersOptimizer</span></span>
+<span>(</span><span>agent_class: Type[ForwardRef('BaseAgent')], hpoc: <a title="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration" href="#colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration">HyperparameterOptimizationConfiguration</a> = HyperparameterOptimizationConfiguration(optimization_horizon=250000, max_agent_interaction_s=120, max_optimization_time_budget_s=10800, n_seeds_per_agent_mdp_interaction=3, n_mdp_parameter_samples_from_mdp_classes=3, log_every=100000), seed: int = 0, log_folder: str = 'tmp/hyperopt/', overwrite_previous_logs: bool = True, mdp_classes: List[ForwardRef('BaseMDP')] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>is the base class for the agent hyperparameter optimizer.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>agent_class</code></strong> :&ensp;<code>Type["BaseAgent"]</code></dt>
+<dd>is the agent class for which the hyperparameters will be optimized.</dd>
+<dt><strong><code>hpoc</code></strong> :&ensp;<code><a title="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration" href="#colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration">HyperparameterOptimizationConfiguration</a></code></dt>
+<dd>is the hyperparameter optimization configuration with the following parameters:
+optimization_horizon : int, optional
+is the optimization horizon that will be used in the agent/MDP interactions.
+max_agent_interaction_s : float, optional
+is the maximum amount of training time given to the agent for each agent/MDp interaction.
+max_optimization_time_budget_s : float, optional
+is the maximum amount of time to search the best hyperparameters.
+n_seeds_per_agent_mdp_interaction : int, optional
+is the number of seeds for which each agent/MDP interaction is repeated.
+n_mdp_parameter_samples_from_mdp_classes : int, optional
+is the number of parameters sampled from the MDP classes and that results in MDP instance that the agent.
+will interact with during the hyperparameter optimization.</dd>
+<dt><strong><code>seed</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>is the seed used for sampling the MDP parameters and the agent hyperparameters.</dd>
+<dt><strong><code>log_folder</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>is the folder where the logs from the hyperparameter optimization procedure can be stored.</dd>
+<dt><strong><code>overwrite_previous_logs</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>checks whether to remove the previous logs in the given folder.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BaseAgentHyperparametersOptimizer:
+    def __init__(
+        self,
+        agent_class: Type[&#34;BaseAgent&#34;],
+        hpoc: HyperparameterOptimizationConfiguration = DEFAULT_HYPERPARAMETERS_OPTIMIZATION_CONFIGURATION,
+        seed: int = 0,
+        log_folder: str = f&#34;tmp{os.sep}hyperopt{os.sep}&#34;,
+        overwrite_previous_logs: bool = True,
+        mdp_classes: List[&#34;BaseMDP&#34;] = None,
+    ):
+        &#34;&#34;&#34;
+        is the base class for the agent hyperparameter optimizer.
+
+        Parameters
+        ----------
+        agent_class : Type[&#34;BaseAgent&#34;]
+            is the agent class for which the hyperparameters will be optimized.
+        hpoc : HyperparameterOptimizationConfiguration
+            is the hyperparameter optimization configuration with the following parameters:
+            optimization_horizon : int, optional
+                is the optimization horizon that will be used in the agent/MDP interactions.
+            max_agent_interaction_s : float, optional
+                is the maximum amount of training time given to the agent for each agent/MDp interaction.
+            max_optimization_time_budget_s : float, optional
+                is the maximum amount of time to search the best hyperparameters.
+            n_seeds_per_agent_mdp_interaction : int, optional
+                is the number of seeds for which each agent/MDP interaction is repeated.
+            n_mdp_parameter_samples_from_mdp_classes : int, optional
+                is the number of parameters sampled from the MDP classes and that results in MDP instance that the agent.
+                will interact with during the hyperparameter optimization.
+        seed : int, optional
+            is the seed used for sampling the MDP parameters and the agent hyperparameters.
+        log_folder : str, optional
+            is the folder where the logs from the hyperparameter optimization procedure can be stored.
+        overwrite_previous_logs : bool, optional
+            checks whether to remove the previous logs in the given folder.
+        &#34;&#34;&#34;
+
+        assert (
+            0.7 * hpoc.max_optimization_time_budget_s
+            &gt;= hpoc.max_agent_interaction_s
+            * hpoc.n_seeds_per_agent_mdp_interaction
+            * hpoc.n_mdp_parameter_samples_from_mdp_classes
+        ), (
+            &#34;You are not giving enough total optimization time for the selected number of interactions. &#34;
+            &#34;Make sure that at least 0.5 * max_optimization_time_budget_s &gt; max_agent_interaction_s * &#34;
+            &#34;n_seeds_per_agent_mdp_interaction * n_mdp_parameter_samples_from_mdp_classes so that you can obtain two&#34;
+            &#34;full samples of the regrets from all the MDPs for each of your cores.&#34;
+        )
+
+        # We add 30 seconds to allow for computing the quantities related to the final score like the optimal
+        # average reward
+        hpoc.max_agent_interaction_s += 30
+
+        # The total time necessary to compute a measure given the number of seeds and the number of MDP parameters to be
+        # sampled
+        total_time_to_compute_single_measure = (
+            hpoc.max_agent_interaction_s
+            * hpoc.n_seeds_per_agent_mdp_interaction
+            * hpoc.n_mdp_parameter_samples_from_mdp_classes
+        )
+
+        # The effective amount of time required to compute the maximum number of scores given the total time constraint.
+        # All the additional time would be wasted since it would not be possible to compute the score.
+        max_optimization_time_budget_s = total_time_to_compute_single_measure * max(
+            1,
+            int(
+                hpoc.max_optimization_time_budget_s
+                / total_time_to_compute_single_measure
+            ),
+        )
+
+        self._agent_class = agent_class
+        self._mdp_classes = (
+            get_colosseum_mdp_classes(self._agent_class.is_episodic())
+            if mdp_classes is None
+            else mdp_classes
+        )
+        self._optimization_horizon = hpoc.optimization_horizon
+        self._max_agent_interaction_s = hpoc.max_agent_interaction_s
+        self._max_optimization_time_budget_s = max_optimization_time_budget_s
+        self._n_seeds_per_agent_mdp_interaction = hpoc.n_seeds_per_agent_mdp_interaction
+        self._n_mdp_parameter_samples_from_mdp_classes = (
+            hpoc.n_mdp_parameter_samples_from_mdp_classes
+        )
+        self._seed = seed
+        self._log_every = hpoc.log_every
+
+        self._rng = np.random.RandomState(seed)
+        self._log_folder = ensure_folder(log_folder) + agent_class.__name__ + os.sep
+        self._rng.shuffle(self._mdp_classes)
+
+        if overwrite_previous_logs and os.path.isdir(self._log_folder):
+            shutil.rmtree(self._log_folder)
+        os.makedirs(self._log_folder, exist_ok=True)
+
+    def _get_debug_file(self, agent_next_hyperparams: Dict[str, Any]) -&gt; str:
+        &#34;&#34;&#34;
+        returns a txt file path corresponding to the given agent hyperparameter instance where the logs can be stored.
+        &#34;&#34;&#34;
+        agent_next_hyperparams_str = map(
+            lambda x: &#34;_&#34;.join(map(str, x[0])),
+            zip(clean_for_storing(agent_next_hyperparams).items()),
+        )
+        agent_next_hyperparams_str = &#34;__&#34;.join(agent_next_hyperparams_str)
+        debug_file_path = self._log_folder + agent_next_hyperparams_str + &#34;.txt&#34;
+        if os.path.isfile(debug_file_path):
+            os.remove(debug_file_path)
+        return debug_file_path
+
+    @abc.abstractmethod
+    def _multi_process_optimization(
+        self,
+        n_cores: int,
+        gen: Generator[Dict[str, &#34;Domain&#34;], None, None],
+        compute_measure: Callable[
+            [
+                Dict[str, Any],
+                str,
+                List[Type[&#34;BaseMDP&#34;]],
+                int,
+                int,
+                int,
+                int,
+                Type[&#34;BaseAgent&#34;],
+                float,
+                bool,
+                bool,
+                int,
+            ],
+            Tuple[Dict[str, Any], float],
+        ],
+        verbose: bool,
+    ) -&gt; List[Tuple[Dict[str, Any], float]]:
+        &#34;&#34;&#34;
+        performs the hyperparameter optimization procedure using n_cores.
+
+        Parameters
+        ----------
+        n_cores : int
+            is the number of processes available for the hyperparameters optimization procedure.
+        gen : Generator[Dict[str, &#34;Domain&#34;], None, None]
+            is a generator that yield instances of agent hyperparameters.
+        compute_measure : Callable
+            is the function that is optimized in the hyperparameter optimization procedure. See &#34;compute_regret&#34; in
+            colosseum.experiments.hyperopt.utils for an example of such function.
+        Returns
+        -------
+        returns a list of tuples containing hyperparameters and their corresponding scores.
+        &#34;&#34;&#34;
+
+    def single_process_optimization(
+        self,
+        gen: Generator[Dict[str, &#34;Domain&#34;], None, None],
+        compute_measure: Callable[
+            [
+                Dict[str, Any],
+                str,
+                List[Type[&#34;BaseMDP&#34;]],
+                int,
+                int,
+                int,
+                int,
+                Type[&#34;BaseAgent&#34;],
+                float,
+                bool,
+                bool,
+                int,
+            ],
+            Tuple[Dict[str, Any], float],
+        ],
+    ) -&gt; List[Tuple[Dict[str, Any], float]]:
+        &#34;&#34;&#34;
+        performs the hyperparameter optimization procedure in single thread.
+
+        Parameters
+        ----------
+        gen : Generator[Dict[str, &#34;Domain&#34;], None, None]
+            is a generator that yield instances of agent hyperparameters.
+        compute_measure : Callable
+            is the function that is optimized in the hyperparameter optimization procedure. See &#34;compute_regret&#34; in
+            colosseum.experiments.hyperopt.utils for an example of such function.
+        Returns
+        -------
+        returns a list of tuples containing hyperparameters and their corresponding scores.
+        &#34;&#34;&#34;
+
+        results = []
+        start = time.time()
+        remaining_time = self._max_optimization_time_budget_s - (time.time() - start)
+        while remaining_time &gt; 0:
+            print(
+                &#34;\r&#34;,
+                f&#34;{datetime.timedelta(seconds=int(remaining_time))} time left with {len(results)} completed measures.&#34;,
+                end=&#34;&#34;,
+            )
+            agent_next_hyperparams = next(gen)
+            agent_hyperparameters, score = compute_measure(
+                agent_next_hyperparams,
+                self._get_debug_file(agent_next_hyperparams),
+                self._mdp_classes,
+                self._n_mdp_parameter_samples_from_mdp_classes,
+                self._seed,
+                self._optimization_horizon,
+                self._n_seeds_per_agent_mdp_interaction,
+                self._agent_class,
+                self._max_agent_interaction_s,
+                False,
+                False,
+                self._log_every,
+            )
+            results.append((agent_hyperparameters, score))
+            remaining_time = self._max_optimization_time_budget_s - (
+                time.time() - start
+            )
+        return results
+
+    @abc.abstractmethod
+    def optimize(
+        self, n_cores: int, verbose: bool
+    ) -&gt; List[Tuple[Dict[str, Any], float]]:
+        &#34;&#34;&#34;
+        returns a tuples containing the best hyperparameters and the corresponding score. When implementing this function,
+        you should internally define the function that computes the score and call the self._optimize function.
+
+        Parameters
+        ----------
+        n_cores : int
+            is the number of processes available for the hyperparameters optimization procedure. Value less than one
+            correspond to single thread execution.
+        verbose : bool
+            checks whether the progress in the hyperparameters optimization procedure are printed in the console.
+        &#34;&#34;&#34;
+
+    def _optimize(
+        self,
+        n_cores: int,
+        compute_measure: Callable[
+            [
+                Dict[str, Any],
+                str,
+                List[Type[&#34;BaseMDP&#34;]],
+                int,
+                int,
+                int,
+                int,
+                Type[&#34;BaseAgent&#34;],
+                float,
+            ],
+            Tuple[Dict[str, Any], float],
+        ],
+        verbose: bool,
+    ) -&gt; Tuple[Dict[str, Any], float]:
+        &#34;&#34;&#34;
+        returns a tuples containing the best hyperparameters and the corresponding score.
+        &#34;&#34;&#34;
+        agent_hyperparams_gen = agent_hyperparameters_generator(
+            self._seed, self._agent_class.get_hyperparameters_search_spaces()
+        )
+
+        from colosseum import (
+            disable_multiprocessing,
+            get_available_cores,
+            set_available_cores,
+        )
+
+        # Ensure that Colosseum does not use multiprocessing while we perform hyperparameter optimization
+        colosseum_cores_config = get_available_cores()
+        disable_multiprocessing()
+
+        if verbose:
+            print(f&#34;Random search started for {self._agent_class.__name__}.&#34;)
+        start = time.time()
+        if n_cores &gt; 1:
+            results = self._multi_process_optimization(
+                n_cores, agent_hyperparams_gen, compute_measure, verbose
+            )
+        else:
+            results = self.single_process_optimization(
+                agent_hyperparams_gen, compute_measure
+            )
+
+        # Reactive previous multiprocessing configuration
+        set_available_cores(colosseum_cores_config)
+
+        if len(results) == 0:
+            raise HyperparametersOptimizationFailed()
+
+        best_hyperparams_and_score = max(results, key=lambda x: -x[1])
+        if verbose:
+            print(
+                f&#34;Search took {datetime.timedelta(seconds=int(time.time() - start))} &#34;
+                f&#34;and computed {len(results)} full agent/MDP interactions.&#34;
+            )
+            print(
+                f&#34;The best hyperparameters are: {toolz.valmap(lambda x: np.round(x, 3), best_hyperparams_and_score[0])} &#34;
+                f&#34;with a total regret of {min(x[1] for x in results):.5f}&#34;
+            )
+            print(
+                f&#34;The worst hyperparameters obtained {max(x[1] for x in results):.5f} regret &#34;
+                f&#34;and the average over all the regrets is &#34;
+                f&#34;{np.mean([x[1] for x in results]):.5f} plus minus {np.std([x[1] for x in results]):.5f}.&#34;
+            )
+        return best_hyperparams_and_score</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="colosseum.experiment.hyperopt.multiprocessing.base_mp_opt.BaseMultiProcessingOptimizer" href="multiprocessing/base_mp_opt.html#colosseum.experiment.hyperopt.multiprocessing.base_mp_opt.BaseMultiProcessingOptimizer">BaseMultiProcessingOptimizer</a></li>
+<li><a title="colosseum.experiment.hyperopt.multiprocessing.regret_hps_opt.MPRegretOptimizer" href="multiprocessing/regret_hps_opt.html#colosseum.experiment.hyperopt.multiprocessing.regret_hps_opt.MPRegretOptimizer">MPRegretOptimizer</a></li>
+<li><a title="colosseum.experiment.hyperopt.ray.base_ray_opt.BaseRayOptimizer" href="ray/base_ray_opt.html#colosseum.experiment.hyperopt.ray.base_ray_opt.BaseRayOptimizer">BaseRayOptimizer</a></li>
+<li><a title="colosseum.experiment.hyperopt.ray.regret_hps_opt.RayRegretOptimizer" href="ray/regret_hps_opt.html#colosseum.experiment.hyperopt.ray.regret_hps_opt.RayRegretOptimizer">RayRegretOptimizer</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="colosseum.experiment.hyperopt.base.BaseAgentHyperparametersOptimizer.optimize"><code class="name flex">
+<span>def <span class="ident">optimize</span></span>(<span>self, n_cores: int, verbose: bool) ‑> List[Tuple[Dict[str, Any], float]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>returns a tuples containing the best hyperparameters and the corresponding score. When implementing this function,
+you should internally define the function that computes the score and call the self._optimize function.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n_cores</code></strong> :&ensp;<code>int</code></dt>
+<dd>is the number of processes available for the hyperparameters optimization procedure. Value less than one
+correspond to single thread execution.</dd>
+<dt><strong><code>verbose</code></strong> :&ensp;<code>bool</code></dt>
+<dd>checks whether the progress in the hyperparameters optimization procedure are printed in the console.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abc.abstractmethod
+def optimize(
+    self, n_cores: int, verbose: bool
+) -&gt; List[Tuple[Dict[str, Any], float]]:
+    &#34;&#34;&#34;
+    returns a tuples containing the best hyperparameters and the corresponding score. When implementing this function,
+    you should internally define the function that computes the score and call the self._optimize function.
+
+    Parameters
+    ----------
+    n_cores : int
+        is the number of processes available for the hyperparameters optimization procedure. Value less than one
+        correspond to single thread execution.
+    verbose : bool
+        checks whether the progress in the hyperparameters optimization procedure are printed in the console.
+    &#34;&#34;&#34;</code></pre>
+</details>
+</dd>
+<dt id="colosseum.experiment.hyperopt.base.BaseAgentHyperparametersOptimizer.single_process_optimization"><code class="name flex">
+<span>def <span class="ident">single_process_optimization</span></span>(<span>self, gen: Generator[Dict[str, ForwardRef('Domain')], None, None], compute_measure: Callable[[Dict[str, Any], str, List[Type[ForwardRef('BaseMDP')]], int, int, int, int, Type[ForwardRef('BaseAgent')], float, bool, bool, int], Tuple[Dict[str, Any], float]]) ‑> List[Tuple[Dict[str, Any], float]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>performs the hyperparameter optimization procedure in single thread.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>gen</code></strong> :&ensp;<code>Generator[Dict[str, "Domain"], None, None]</code></dt>
+<dd>is a generator that yield instances of agent hyperparameters.</dd>
+<dt><strong><code>compute_measure</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>is the function that is optimized in the hyperparameter optimization procedure. See "compute_regret" in
+colosseum.experiments.hyperopt.utils for an example of such function.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>returns a list of tuples containing hyperparameters and their corresponding scores.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def single_process_optimization(
+    self,
+    gen: Generator[Dict[str, &#34;Domain&#34;], None, None],
+    compute_measure: Callable[
+        [
+            Dict[str, Any],
+            str,
+            List[Type[&#34;BaseMDP&#34;]],
+            int,
+            int,
+            int,
+            int,
+            Type[&#34;BaseAgent&#34;],
+            float,
+            bool,
+            bool,
+            int,
+        ],
+        Tuple[Dict[str, Any], float],
+    ],
+) -&gt; List[Tuple[Dict[str, Any], float]]:
+    &#34;&#34;&#34;
+    performs the hyperparameter optimization procedure in single thread.
+
+    Parameters
+    ----------
+    gen : Generator[Dict[str, &#34;Domain&#34;], None, None]
+        is a generator that yield instances of agent hyperparameters.
+    compute_measure : Callable
+        is the function that is optimized in the hyperparameter optimization procedure. See &#34;compute_regret&#34; in
+        colosseum.experiments.hyperopt.utils for an example of such function.
+    Returns
+    -------
+    returns a list of tuples containing hyperparameters and their corresponding scores.
+    &#34;&#34;&#34;
+
+    results = []
+    start = time.time()
+    remaining_time = self._max_optimization_time_budget_s - (time.time() - start)
+    while remaining_time &gt; 0:
+        print(
+            &#34;\r&#34;,
+            f&#34;{datetime.timedelta(seconds=int(remaining_time))} time left with {len(results)} completed measures.&#34;,
+            end=&#34;&#34;,
+        )
+        agent_next_hyperparams = next(gen)
+        agent_hyperparameters, score = compute_measure(
+            agent_next_hyperparams,
+            self._get_debug_file(agent_next_hyperparams),
+            self._mdp_classes,
+            self._n_mdp_parameter_samples_from_mdp_classes,
+            self._seed,
+            self._optimization_horizon,
+            self._n_seeds_per_agent_mdp_interaction,
+            self._agent_class,
+            self._max_agent_interaction_s,
+            False,
+            False,
+            self._log_every,
+        )
+        results.append((agent_hyperparameters, score))
+        remaining_time = self._max_optimization_time_budget_s - (
+            time.time() - start
+        )
+    return results</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration"><code class="flex name class">
+<span>class <span class="ident">HyperparameterOptimizationConfiguration</span></span>
+<span>(</span><span>optimization_horizon: int, max_agent_interaction_s: float, max_optimization_time_budget_s: float, n_seeds_per_agent_mdp_interaction: int, n_mdp_parameter_samples_from_mdp_classes: int, log_every: int)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>HyperparameterOptimizationConfiguration(optimization_horizon: int, max_agent_interaction_s: float, max_optimization_time_budget_s: float, n_seeds_per_agent_mdp_interaction: int, n_mdp_parameter_samples_from_mdp_classes: int, log_every: int)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HyperparameterOptimizationConfiguration:
+    optimization_horizon: int
+    max_agent_interaction_s: float
+    max_optimization_time_budget_s: float
+    n_seeds_per_agent_mdp_interaction: int
+    n_mdp_parameter_samples_from_mdp_classes: int
+    log_every: int</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.log_every"><code class="name">var <span class="ident">log_every</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.max_agent_interaction_s"><code class="name">var <span class="ident">max_agent_interaction_s</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.max_optimization_time_budget_s"><code class="name">var <span class="ident">max_optimization_time_budget_s</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.n_mdp_parameter_samples_from_mdp_classes"><code class="name">var <span class="ident">n_mdp_parameter_samples_from_mdp_classes</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.n_seeds_per_agent_mdp_interaction"><code class="name">var <span class="ident">n_seeds_per_agent_mdp_interaction</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.optimization_horizon"><code class="name">var <span class="ident">optimization_horizon</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="colosseum.experiment.hyperopt.base.HyperparametersOptimizationFailed"><code class="flex name class">
+<span>class <span class="ident">HyperparametersOptimizationFailed</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HyperparametersOptimizationFailed(Exception):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="colosseum.experiment.hyperopt" href="index.html">colosseum.experiment.hyperopt</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="colosseum.experiment.hyperopt.base.agent_hyperparameters_generator" href="#colosseum.experiment.hyperopt.base.agent_hyperparameters_generator">agent_hyperparameters_generator</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="colosseum.experiment.hyperopt.base.BaseAgentHyperparametersOptimizer" href="#colosseum.experiment.hyperopt.base.BaseAgentHyperparametersOptimizer">BaseAgentHyperparametersOptimizer</a></code></h4>
+<ul class="">
+<li><code><a title="colosseum.experiment.hyperopt.base.BaseAgentHyperparametersOptimizer.optimize" href="#colosseum.experiment.hyperopt.base.BaseAgentHyperparametersOptimizer.optimize">optimize</a></code></li>
+<li><code><a title="colosseum.experiment.hyperopt.base.BaseAgentHyperparametersOptimizer.single_process_optimization" href="#colosseum.experiment.hyperopt.base.BaseAgentHyperparametersOptimizer.single_process_optimization">single_process_optimization</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration" href="#colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration">HyperparameterOptimizationConfiguration</a></code></h4>
+<ul class="">
+<li><code><a title="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.log_every" href="#colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.log_every">log_every</a></code></li>
+<li><code><a title="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.max_agent_interaction_s" href="#colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.max_agent_interaction_s">max_agent_interaction_s</a></code></li>
+<li><code><a title="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.max_optimization_time_budget_s" href="#colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.max_optimization_time_budget_s">max_optimization_time_budget_s</a></code></li>
+<li><code><a title="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.n_mdp_parameter_samples_from_mdp_classes" href="#colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.n_mdp_parameter_samples_from_mdp_classes">n_mdp_parameter_samples_from_mdp_classes</a></code></li>
+<li><code><a title="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.n_seeds_per_agent_mdp_interaction" href="#colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.n_seeds_per_agent_mdp_interaction">n_seeds_per_agent_mdp_interaction</a></code></li>
+<li><code><a title="colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.optimization_horizon" href="#colosseum.experiment.hyperopt.base.HyperparameterOptimizationConfiguration.optimization_horizon">optimization_horizon</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="colosseum.experiment.hyperopt.base.HyperparametersOptimizationFailed" href="#colosseum.experiment.hyperopt.base.HyperparametersOptimizationFailed">HyperparametersOptimizationFailed</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>colosseum.agent.agents.infinite_horizon.posterior_sampling API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>colosseum.agent.agents.infinite_horizon.posterior_sampling</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from typing import TYPE_CHECKING, Any, Callable, Dict, Union
+
+import dm_env
+import gin
+import numpy as np
+from ray import tune
+
+from colosseum.dynamic_programming import discounted_value_iteration
+from colosseum.dynamic_programming.utils import get_policy_from_q_values
+from colosseum.agent.actors import QValuesActor
+from colosseum.agent.agents.base import BaseAgent
+from colosseum.agent.mdp_models.bayesian_model import BayesianMDPModel
+from colosseum.agent.mdp_models.bayesian_models import (
+    RewardsConjugateModel,
+    TransitionsConjugateModel,
+)
+from colosseum.utils.acme.specs import MDPSpec
+
+if TYPE_CHECKING:
+    from colosseum.mdp import ACTION_TYPE, OBSERVATION_TYPE
+
+
+def get_psi(num_states, num_actions, T, p) -&gt; float:
+    return num_states * np.log(num_states * num_actions / p)
+
+
+def get_omega(num_states, num_actions, T, p) -&gt; float:
+    return np.log(T / p)
+
+
+def get_kappa(num_states, num_actions, T, p) -&gt; float:
+    return np.log(T / p)
+
+
+def get_eta(num_states, num_actions, T, p, omega) -&gt; float:
+    return np.sqrt(T * num_states / num_actions) + 12 * omega * num_states ** 4
+
+
+@gin.configurable
+class PSRLContinuous(BaseAgent):
+    @staticmethod
+    def produce_gin_file_from_hyperparameters(
+        hyperparameters: Dict[str, Any], index: int = 0
+    ):
+        return (
+            &#34;from colosseum.agent.mdp_models import bayesian_models\n&#34;
+            f&#34;prms_{index}/PSRLContinuous.reward_prior_model = %bayesian_models.RewardsConjugateModel.N_NIG\n&#34;
+            f&#34;prms_{index}/PSRLContinuous.rewards_prior_prms = [{hyperparameters[&#39;rewards_prior_mean&#39;]}, 1, 1, 1]\n&#34;
+            f&#34;prms_{index}/PSRLContinuous.psi_weight = {hyperparameters[&#39;psi_weight&#39;]}\n&#34;
+            f&#34;prms_{index}/PSRLContinuous.omega_weight = {hyperparameters[&#39;omega_weight&#39;]}\n&#34;
+            f&#34;prms_{index}/PSRLContinuous.kappa_weight = {hyperparameters[&#39;kappa_weight&#39;]}\n&#34;
+            f&#34;prms_{index}/PSRLContinuous.eta_weight = {hyperparameters[&#39;eta_weight&#39;]}&#34;
+        )
+
+    @staticmethod
+    def is_episodic() -&gt; bool:
+        return False
+
+    @staticmethod
+    def get_hyperparameters_search_spaces() -&gt; Dict[str, tune.sample.Domain]:
+        return {
+            &#34;psi_weight&#34;: tune.uniform(0.001, 0.1),
+            &#34;omega_weight&#34;: tune.uniform(0.0001, 1),
+            &#34;kappa_weight&#34;: tune.uniform(0.2, 4),
+            &#34;eta_weight&#34;: tune.uniform(1e-10, 1e-6),
+            &#34;rewards_prior_mean&#34;: tune.uniform(0.0, 1.2),
+        }
+
+    @staticmethod
+    def get_agent_instance_from_hyperparameters(
+        seed: int,
+        optimization_horizon: int,
+        mdp_specs: MDPSpec,
+        hyperparameters: Dict[str, Any],
+    ) -&gt; &#34;BaseAgent&#34;:
+        return PSRLContinuous(
+            environment_spec=mdp_specs,
+            seed=seed,
+            optimization_horizon=optimization_horizon,
+            reward_prior_model=RewardsConjugateModel.N_NIG,
+            rewards_prior_prms=[hyperparameters[&#34;rewards_prior_mean&#34;], 1, 1, 1],
+            psi_weight=hyperparameters[&#34;psi_weight&#34;],
+            omega_weight=hyperparameters[&#34;omega_weight&#34;],
+            kappa_weight=hyperparameters[&#34;kappa_weight&#34;],
+            eta_weight=hyperparameters[&#34;eta_weight&#34;],
+        )
+
+    @property
+    def current_optimal_stochastic_policy(self) -&gt; np.ndarray:
+        T_map, R_map = self._mdp_model.get_map_estimate()
+        Q, _ = discounted_value_iteration(T_map, R_map)
+        return get_policy_from_q_values(Q, True)
+
+    def __init__(
+        self,
+        seed: int,
+        environment_spec: MDPSpec,
+        optimization_horizon: int,
+        # MDP model hyperparameters
+        reward_prior_model: RewardsConjugateModel = None,
+        transitions_prior_model: TransitionsConjugateModel = None,
+        rewards_prior_prms=None,
+        transitions_prior_prms=None,
+        # Actor hyperparameters
+        epsilon_greedy: Union[float, Callable] = None,
+        boltzmann_temperature: Union[float, Callable] = None,
+        psi_weight: float = 1.0,
+        omega_weight: float = 1.0,
+        kappa_weight: float = 1.0,
+        eta_weight: float = 1.0,
+        get_psi: Callable = get_psi,
+        get_omega: Callable = get_omega,
+        get_kappa: Callable = get_kappa,
+        get_eta: Callable = get_eta,
+        p: float = 0.05,
+        no_optimistic_sampling: bool = False,
+        truncate_reward_with_max: bool = False,
+        min_steps_before_new_episode: int = 0,
+        max_psi: int = 60,
+    ):
+        self._n_states = environment_spec.observations.num_values
+        self._n_actions = environment_spec.actions.num_values
+
+        self.truncate_reward_with_max = truncate_reward_with_max
+        self.no_optimistic_sampling = (
+            no_optimistic_sampling
+            or (self._n_states ** 2 * self._n_actions) &gt; 6_000_000
+        )
+
+        self.p = p
+        self.psi = min(
+            max_psi,
+            max(
+                2,
+                int(
+                    psi_weight
+                    * get_psi(self._n_states, self._n_actions, optimization_horizon, p)
+                ),
+            ),
+        )
+        self.omega = omega_weight * get_omega(
+            self._n_states, self._n_actions, optimization_horizon, p
+        )
+        self.kappa = kappa_weight * get_kappa(
+            self._n_states, self._n_actions, optimization_horizon, p
+        )
+        self.eta = max(
+            5,
+            min(
+                10 * self._n_states,
+                eta_weight
+                * get_eta(
+                    self._n_states,
+                    self._n_actions,
+                    optimization_horizon,
+                    p,
+                    self.omega,
+                ),
+            ),
+        )
+
+        self._n_states = environment_spec.observations.num_values
+        self.episode = 0
+        self.min_steps_before_new_episode = min_steps_before_new_episode
+        self.last_change = 0
+
+        self.M = np.zeros(
+            (self._n_states, self._n_actions, self._n_states), dtype=np.float32
+        )
+        self.N = np.zeros(
+            (self._n_states, self._n_actions, self._n_states), dtype=np.int32
+        )
+        q_shape = (
+            (self._n_states, self._n_actions, self._n_states)
+            if no_optimistic_sampling
+            else (self.psi, self._n_states, self._n_actions, self._n_states)
+        )
+        self.Q = np.zeros(q_shape, dtype=np.float32)
+        self.nu_k = np.zeros((self._n_states, self._n_actions), dtype=np.int8)
+        self.episode_transition_data = dict()
+
+        mdp_model = BayesianMDPModel(
+            seed,
+            environment_spec,
+            reward_prior_model=reward_prior_model,
+            transitions_prior_model=transitions_prior_model,
+            rewards_prior_prms=rewards_prior_prms,
+            transitions_prior_prms=transitions_prior_prms,
+        )
+
+        super(PSRLContinuous, self).__init__(
+            seed,
+            environment_spec,
+            mdp_model,
+            QValuesActor(seed, environment_spec, epsilon_greedy, boltzmann_temperature),
+            optimization_horizon,
+        )
+
+    def is_episode_end(
+        self,
+        ts_t: dm_env.TimeStep,
+        a_t: &#34;ACTION_TYPE&#34;,
+        ts_tp1: dm_env.TimeStep,
+        time_step: int,
+    ) -&gt; bool:
+        if time_step - self.last_change &lt; self.min_steps_before_new_episode:
+            return False
+        self.last_change = time_step
+        nu_k = len(self.episode_transition_data[ts_t.observation, a_t])
+        N_tau = self.N[ts_t.observation, a_t].sum()
+        return N_tau &gt;= 2 * (N_tau - nu_k)
+
+    def episode_end_update(self):
+        if self.no_optimistic_sampling:
+            T = self._mdp_model.sample_T()
+        else:
+            self.optimistic_sampling()
+            T = np.moveaxis(self.Q, 0, 2)
+            T = T.reshape((self._n_states, -1, self._n_states))
+
+        R = self._mdp_model.sample_R()
+        if self.truncate_reward_with_max:
+            R = np.maximum(self.r_max, R)
+        if not self.no_optimistic_sampling:
+            R = np.tile(R, (1, self.psi))
+
+        Q, _ = discounted_value_iteration(T, R)
+        self._actor.set_q_values(Q)
+
+        self.episode_transition_data = dict()
+
+    def before_start_interacting(self):
+        self._actor.set_q_values(
+            self._rng.randn(self._n_states, self._n_actions * self.psi)
+        )
+        self.episode_end_update()
+
+    def select_action(
+        self, ts: dm_env.TimeStep, time_step: int
+    ) -&gt; &#34;ACTION_TYPE&#34;:
+        return self.extended_action_to_real(
+            super(PSRLContinuous, self).select_action(ts.observation, time_step)
+        )
+
+    def step_update(
+        self, ts_t: dm_env.TimeStep, a_t: &#34;ACTION_TYPE&#34;, ts_tp1: dm_env.TimeStep, h: int
+    ):
+        super(PSRLContinuous, self).step_update(ts_t, a_t, ts_tp1, h)
+
+        self.M[ts_t.observation, a_t, ts_tp1.observation] = (
+            self.N[ts_t.observation, a_t, ts_tp1.observation] + self.omega
+        ) / self.kappa
+        self.N[ts_t.observation, a_t, ts_tp1.observation] += 1
+
+        if (ts_t.observation, a_t) in self.episode_transition_data:
+            if not ts_tp1.last():
+                self.episode_transition_data[ts_t.observation, a_t].append(
+                    ts_tp1.observation
+                )
+        else:
+            if not ts_tp1.last():
+                self.episode_transition_data[ts_t.observation, a_t] = [
+                    ts_tp1.observation
+                ]
+
+    def optimistic_sampling(self):
+        Nsum = self.N.sum(-1)
+        cond = Nsum &lt; self.eta
+        indices_2 = list(np.where(cond))
+        indices_1 = list(np.where(~cond))
+
+        do_simple_sampling = len(indices_2[0]) &gt; 0
+        do_posterior_sampling = len(indices_1[0]) &gt; 0
+        if do_simple_sampling:
+            P_hat = self.N / np.maximum(Nsum[..., None], 1)
+            N = np.maximum(self.N, 1)
+            P_minus = P_hat - np.minimum(
+                np.sqrt(3 * P_hat * np.log(4 * self._n_states) / N)
+                + 3 * np.log(4 * self._n_states) / N,
+                P_hat,
+            )
+
+        for psi in range(self.psi):
+            if do_posterior_sampling:
+                self.Q[
+                    tuple([np.array([psi] * len(indices_1[0]))] + indices_1)
+                ] = self._mdp_model._transitions_model.sample_sa(tuple(indices_1))
+            if do_simple_sampling:
+                z = self._rng.randint(self._n_states)
+                summing = 1 - P_minus.sum(-1)
+                P_minus[:, :, z] += summing
+                self.Q[
+                    tuple([np.array([psi] * len(indices_2[0]))] + indices_2)
+                ] = P_minus[tuple(indices_2)]
+                P_minus[:, :, z] -= summing
+
+    def extended_action_to_real(self, action) -&gt; int:
+        &#34;&#34;&#34;
+        Transform the extended action used to induce optimistic to a real action of the MDP.
+        &#34;&#34;&#34;
+        if self.no_optimistic_sampling:
+            return action
+        psi, real_action = action % self.psi, int(action / self.psi)
+        return real_action</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="colosseum.agent.agents.infinite_horizon.posterior_sampling.get_eta"><code class="name flex">
+<span>def <span class="ident">get_eta</span></span>(<span>num_states, num_actions, T, p, omega) ‑> float</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_eta(num_states, num_actions, T, p, omega) -&gt; float:
+    return np.sqrt(T * num_states / num_actions) + 12 * omega * num_states ** 4</code></pre>
+</details>
+</dd>
+<dt id="colosseum.agent.agents.infinite_horizon.posterior_sampling.get_kappa"><code class="name flex">
+<span>def <span class="ident">get_kappa</span></span>(<span>num_states, num_actions, T, p) ‑> float</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_kappa(num_states, num_actions, T, p) -&gt; float:
+    return np.log(T / p)</code></pre>
+</details>
+</dd>
+<dt id="colosseum.agent.agents.infinite_horizon.posterior_sampling.get_omega"><code class="name flex">
+<span>def <span class="ident">get_omega</span></span>(<span>num_states, num_actions, T, p) ‑> float</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_omega(num_states, num_actions, T, p) -&gt; float:
+    return np.log(T / p)</code></pre>
+</details>
+</dd>
+<dt id="colosseum.agent.agents.infinite_horizon.posterior_sampling.get_psi"><code class="name flex">
+<span>def <span class="ident">get_psi</span></span>(<span>num_states, num_actions, T, p) ‑> float</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_psi(num_states, num_actions, T, p) -&gt; float:
+    return num_states * np.log(num_states * num_actions / p)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="colosseum.agent.agents.infinite_horizon.posterior_sampling.PSRLContinuous"><code class="flex name class">
+<span>class <span class="ident">PSRLContinuous</span></span>
+<span>(</span><span>seed: int, environment_spec: <a title="colosseum.utils.acme.specs.MDPSpec" href="../../../utils/acme/specs.html#colosseum.utils.acme.specs.MDPSpec">MDPSpec</a>, optimization_horizon: int, reward_prior_model: <a title="colosseum.agent.mdp_models.bayesian_models.RewardsConjugateModel" href="../../mdp_models/bayesian_models/index.html#colosseum.agent.mdp_models.bayesian_models.RewardsConjugateModel">RewardsConjugateModel</a> = None, transitions_prior_model: <a title="colosseum.agent.mdp_models.bayesian_models.TransitionsConjugateModel" href="../../mdp_models/bayesian_models/index.html#colosseum.agent.mdp_models.bayesian_models.TransitionsConjugateModel">TransitionsConjugateModel</a> = None, rewards_prior_prms=None, transitions_prior_prms=None, epsilon_greedy: Union[float, Callable] = None, boltzmann_temperature: Union[float, Callable] = None, psi_weight: float = 1.0, omega_weight: float = 1.0, kappa_weight: float = 1.0, eta_weight: float = 1.0, get_psi: Callable = &lt;function get_psi&gt;, get_omega: Callable = &lt;function get_omega&gt;, get_kappa: Callable = &lt;function get_kappa&gt;, get_eta: Callable = &lt;function get_eta&gt;, p: float = 0.05, no_optimistic_sampling: bool = False, truncate_reward_with_max: bool = False, min_steps_before_new_episode: int = 0, max_psi: int = 60)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>seed</code></strong> :&ensp;<code>int</code></dt>
+<dd>is the random seed.</dd>
+<dt><strong><code>environment_spec</code></strong> :&ensp;<code>MDPSpec</code></dt>
+<dd>provides the full specification of the MDP.</dd>
+<dt><strong><code>mdp_model</code></strong> :&ensp;<code>BaseMDP_Model</code></dt>
+<dd>is the component of the agent that encapsulates the knowledge acquired from the interactions with
+the MDP.</dd>
+<dt><strong><code>actor</code></strong> :&ensp;<code>BaseActor</code></dt>
+<dd>calculates an action given the corresponding MDP model.</dd>
+<dt><strong><code>optimization_horizon</code></strong> :&ensp;<code>int</code></dt>
+<dd>is the total number of interactions that the agent is expected to have with the MDP.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PSRLContinuous(BaseAgent):
+    @staticmethod
+    def produce_gin_file_from_hyperparameters(
+        hyperparameters: Dict[str, Any], index: int = 0
+    ):
+        return (
+            &#34;from colosseum.agent.mdp_models import bayesian_models\n&#34;
+            f&#34;prms_{index}/PSRLContinuous.reward_prior_model = %bayesian_models.RewardsConjugateModel.N_NIG\n&#34;
+            f&#34;prms_{index}/PSRLContinuous.rewards_prior_prms = [{hyperparameters[&#39;rewards_prior_mean&#39;]}, 1, 1, 1]\n&#34;
+            f&#34;prms_{index}/PSRLContinuous.psi_weight = {hyperparameters[&#39;psi_weight&#39;]}\n&#34;
+            f&#34;prms_{index}/PSRLContinuous.omega_weight = {hyperparameters[&#39;omega_weight&#39;]}\n&#34;
+            f&#34;prms_{index}/PSRLContinuous.kappa_weight = {hyperparameters[&#39;kappa_weight&#39;]}\n&#34;
+            f&#34;prms_{index}/PSRLContinuous.eta_weight = {hyperparameters[&#39;eta_weight&#39;]}&#34;
+        )
+
+    @staticmethod
+    def is_episodic() -&gt; bool:
+        return False
+
+    @staticmethod
+    def get_hyperparameters_search_spaces() -&gt; Dict[str, tune.sample.Domain]:
+        return {
+            &#34;psi_weight&#34;: tune.uniform(0.001, 0.1),
+            &#34;omega_weight&#34;: tune.uniform(0.0001, 1),
+            &#34;kappa_weight&#34;: tune.uniform(0.2, 4),
+            &#34;eta_weight&#34;: tune.uniform(1e-10, 1e-6),
+            &#34;rewards_prior_mean&#34;: tune.uniform(0.0, 1.2),
+        }
+
+    @staticmethod
+    def get_agent_instance_from_hyperparameters(
+        seed: int,
+        optimization_horizon: int,
+        mdp_specs: MDPSpec,
+        hyperparameters: Dict[str, Any],
+    ) -&gt; &#34;BaseAgent&#34;:
+        return PSRLContinuous(
+            environment_spec=mdp_specs,
+            seed=seed,
+            optimization_horizon=optimization_horizon,
+            reward_prior_model=RewardsConjugateModel.N_NIG,
+            rewards_prior_prms=[hyperparameters[&#34;rewards_prior_mean&#34;], 1, 1, 1],
+            psi_weight=hyperparameters[&#34;psi_weight&#34;],
+            omega_weight=hyperparameters[&#34;omega_weight&#34;],
+            kappa_weight=hyperparameters[&#34;kappa_weight&#34;],
+            eta_weight=hyperparameters[&#34;eta_weight&#34;],
+        )
+
+    @property
+    def current_optimal_stochastic_policy(self) -&gt; np.ndarray:
+        T_map, R_map = self._mdp_model.get_map_estimate()
+        Q, _ = discounted_value_iteration(T_map, R_map)
+        return get_policy_from_q_values(Q, True)
+
+    def __init__(
+        self,
+        seed: int,
+        environment_spec: MDPSpec,
+        optimization_horizon: int,
+        # MDP model hyperparameters
+        reward_prior_model: RewardsConjugateModel = None,
+        transitions_prior_model: TransitionsConjugateModel = None,
+        rewards_prior_prms=None,
+        transitions_prior_prms=None,
+        # Actor hyperparameters
+        epsilon_greedy: Union[float, Callable] = None,
+        boltzmann_temperature: Union[float, Callable] = None,
+        psi_weight: float = 1.0,
+        omega_weight: float = 1.0,
+        kappa_weight: float = 1.0,
+        eta_weight: float = 1.0,
+        get_psi: Callable = get_psi,
+        get_omega: Callable = get_omega,
+        get_kappa: Callable = get_kappa,
+        get_eta: Callable = get_eta,
+        p: float = 0.05,
+        no_optimistic_sampling: bool = False,
+        truncate_reward_with_max: bool = False,
+        min_steps_before_new_episode: int = 0,
+        max_psi: int = 60,
+    ):
+        self._n_states = environment_spec.observations.num_values
+        self._n_actions = environment_spec.actions.num_values
+
+        self.truncate_reward_with_max = truncate_reward_with_max
+        self.no_optimistic_sampling = (
+            no_optimistic_sampling
+            or (self._n_states ** 2 * self._n_actions) &gt; 6_000_000
+        )
+
+        self.p = p
+        self.psi = min(
+            max_psi,
+            max(
+                2,
+                int(
+                    psi_weight
+                    * get_psi(self._n_states, self._n_actions, optimization_horizon, p)
+                ),
+            ),
+        )
+        self.omega = omega_weight * get_omega(
+            self._n_states, self._n_actions, optimization_horizon, p
+        )
+        self.kappa = kappa_weight * get_kappa(
+            self._n_states, self._n_actions, optimization_horizon, p
+        )
+        self.eta = max(
+            5,
+            min(
+                10 * self._n_states,
+                eta_weight
+                * get_eta(
+                    self._n_states,
+                    self._n_actions,
+                    optimization_horizon,
+                    p,
+                    self.omega,
+                ),
+            ),
+        )
+
+        self._n_states = environment_spec.observations.num_values
+        self.episode = 0
+        self.min_steps_before_new_episode = min_steps_before_new_episode
+        self.last_change = 0
+
+        self.M = np.zeros(
+            (self._n_states, self._n_actions, self._n_states), dtype=np.float32
+        )
+        self.N = np.zeros(
+            (self._n_states, self._n_actions, self._n_states), dtype=np.int32
+        )
+        q_shape = (
+            (self._n_states, self._n_actions, self._n_states)
+            if no_optimistic_sampling
+            else (self.psi, self._n_states, self._n_actions, self._n_states)
+        )
+        self.Q = np.zeros(q_shape, dtype=np.float32)
+        self.nu_k = np.zeros((self._n_states, self._n_actions), dtype=np.int8)
+        self.episode_transition_data = dict()
+
+        mdp_model = BayesianMDPModel(
+            seed,
+            environment_spec,
+            reward_prior_model=reward_prior_model,
+            transitions_prior_model=transitions_prior_model,
+            rewards_prior_prms=rewards_prior_prms,
+            transitions_prior_prms=transitions_prior_prms,
+        )
+
+        super(PSRLContinuous, self).__init__(
+            seed,
+            environment_spec,
+            mdp_model,
+            QValuesActor(seed, environment_spec, epsilon_greedy, boltzmann_temperature),
+            optimization_horizon,
+        )
+
+    def is_episode_end(
+        self,
+        ts_t: dm_env.TimeStep,
+        a_t: &#34;ACTION_TYPE&#34;,
+        ts_tp1: dm_env.TimeStep,
+        time_step: int,
+    ) -&gt; bool:
+        if time_step - self.last_change &lt; self.min_steps_before_new_episode:
+            return False
+        self.last_change = time_step
+        nu_k = len(self.episode_transition_data[ts_t.observation, a_t])
+        N_tau = self.N[ts_t.observation, a_t].sum()
+        return N_tau &gt;= 2 * (N_tau - nu_k)
+
+    def episode_end_update(self):
+        if self.no_optimistic_sampling:
+            T = self._mdp_model.sample_T()
+        else:
+            self.optimistic_sampling()
+            T = np.moveaxis(self.Q, 0, 2)
+            T = T.reshape((self._n_states, -1, self._n_states))
+
+        R = self._mdp_model.sample_R()
+        if self.truncate_reward_with_max:
+            R = np.maximum(self.r_max, R)
+        if not self.no_optimistic_sampling:
+            R = np.tile(R, (1, self.psi))
+
+        Q, _ = discounted_value_iteration(T, R)
+        self._actor.set_q_values(Q)
+
+        self.episode_transition_data = dict()
+
+    def before_start_interacting(self):
+        self._actor.set_q_values(
+            self._rng.randn(self._n_states, self._n_actions * self.psi)
+        )
+        self.episode_end_update()
+
+    def select_action(
+        self, ts: dm_env.TimeStep, time_step: int
+    ) -&gt; &#34;ACTION_TYPE&#34;:
+        return self.extended_action_to_real(
+            super(PSRLContinuous, self).select_action(ts.observation, time_step)
+        )
+
+    def step_update(
+        self, ts_t: dm_env.TimeStep, a_t: &#34;ACTION_TYPE&#34;, ts_tp1: dm_env.TimeStep, h: int
+    ):
+        super(PSRLContinuous, self).step_update(ts_t, a_t, ts_tp1, h)
+
+        self.M[ts_t.observation, a_t, ts_tp1.observation] = (
+            self.N[ts_t.observation, a_t, ts_tp1.observation] + self.omega
+        ) / self.kappa
+        self.N[ts_t.observation, a_t, ts_tp1.observation] += 1
+
+        if (ts_t.observation, a_t) in self.episode_transition_data:
+            if not ts_tp1.last():
+                self.episode_transition_data[ts_t.observation, a_t].append(
+                    ts_tp1.observation
+                )
+        else:
+            if not ts_tp1.last():
+                self.episode_transition_data[ts_t.observation, a_t] = [
+                    ts_tp1.observation
+                ]
+
+    def optimistic_sampling(self):
+        Nsum = self.N.sum(-1)
+        cond = Nsum &lt; self.eta
+        indices_2 = list(np.where(cond))
+        indices_1 = list(np.where(~cond))
+
+        do_simple_sampling = len(indices_2[0]) &gt; 0
+        do_posterior_sampling = len(indices_1[0]) &gt; 0
+        if do_simple_sampling:
+            P_hat = self.N / np.maximum(Nsum[..., None], 1)
+            N = np.maximum(self.N, 1)
+            P_minus = P_hat - np.minimum(
+                np.sqrt(3 * P_hat * np.log(4 * self._n_states) / N)
+                + 3 * np.log(4 * self._n_states) / N,
+                P_hat,
+            )
+
+        for psi in range(self.psi):
+            if do_posterior_sampling:
+                self.Q[
+                    tuple([np.array([psi] * len(indices_1[0]))] + indices_1)
+                ] = self._mdp_model._transitions_model.sample_sa(tuple(indices_1))
+            if do_simple_sampling:
+                z = self._rng.randint(self._n_states)
+                summing = 1 - P_minus.sum(-1)
+                P_minus[:, :, z] += summing
+                self.Q[
+                    tuple([np.array([psi] * len(indices_2[0]))] + indices_2)
+                ] = P_minus[tuple(indices_2)]
+                P_minus[:, :, z] -= summing
+
+    def extended_action_to_real(self, action) -&gt; int:
+        &#34;&#34;&#34;
+        Transform the extended action used to induce optimistic to a real action of the MDP.
+        &#34;&#34;&#34;
+        if self.no_optimistic_sampling:
+            return action
+        psi, real_action = action % self.psi, int(action / self.psi)
+        return real_action</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="colosseum.agent.agents.base.BaseAgent" href="../base.html#colosseum.agent.agents.base.BaseAgent">BaseAgent</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="colosseum.agent.agents.infinite_horizon.posterior_sampling.PSRLContinuous.produce_gin_file_from_hyperparameters"><code class="name flex">
+<span>def <span class="ident">produce_gin_file_from_hyperparameters</span></span>(<span>hyperparameters: Dict[str, Any], index: int = 0)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def produce_gin_file_from_hyperparameters(
+    hyperparameters: Dict[str, Any], index: int = 0
+):
+    return (
+        &#34;from colosseum.agent.mdp_models import bayesian_models\n&#34;
+        f&#34;prms_{index}/PSRLContinuous.reward_prior_model = %bayesian_models.RewardsConjugateModel.N_NIG\n&#34;
+        f&#34;prms_{index}/PSRLContinuous.rewards_prior_prms = [{hyperparameters[&#39;rewards_prior_mean&#39;]}, 1, 1, 1]\n&#34;
+        f&#34;prms_{index}/PSRLContinuous.psi_weight = {hyperparameters[&#39;psi_weight&#39;]}\n&#34;
+        f&#34;prms_{index}/PSRLContinuous.omega_weight = {hyperparameters[&#39;omega_weight&#39;]}\n&#34;
+        f&#34;prms_{index}/PSRLContinuous.kappa_weight = {hyperparameters[&#39;kappa_weight&#39;]}\n&#34;
+        f&#34;prms_{index}/PSRLContinuous.eta_weight = {hyperparameters[&#39;eta_weight&#39;]}&#34;
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="colosseum.agent.agents.infinite_horizon.posterior_sampling.PSRLContinuous.extended_action_to_real"><code class="name flex">
+<span>def <span class="ident">extended_action_to_real</span></span>(<span>self, action) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Transform the extended action used to induce optimistic to a real action of the MDP.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def extended_action_to_real(self, action) -&gt; int:
+    &#34;&#34;&#34;
+    Transform the extended action used to induce optimistic to a real action of the MDP.
+    &#34;&#34;&#34;
+    if self.no_optimistic_sampling:
+        return action
+    psi, real_action = action % self.psi, int(action / self.psi)
+    return real_action</code></pre>
+</details>
+</dd>
+<dt id="colosseum.agent.agents.infinite_horizon.posterior_sampling.PSRLContinuous.optimistic_sampling"><code class="name flex">
+<span>def <span class="ident">optimistic_sampling</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def optimistic_sampling(self):
+    Nsum = self.N.sum(-1)
+    cond = Nsum &lt; self.eta
+    indices_2 = list(np.where(cond))
+    indices_1 = list(np.where(~cond))
+
+    do_simple_sampling = len(indices_2[0]) &gt; 0
+    do_posterior_sampling = len(indices_1[0]) &gt; 0
+    if do_simple_sampling:
+        P_hat = self.N / np.maximum(Nsum[..., None], 1)
+        N = np.maximum(self.N, 1)
+        P_minus = P_hat - np.minimum(
+            np.sqrt(3 * P_hat * np.log(4 * self._n_states) / N)
+            + 3 * np.log(4 * self._n_states) / N,
+            P_hat,
+        )
+
+    for psi in range(self.psi):
+        if do_posterior_sampling:
+            self.Q[
+                tuple([np.array([psi] * len(indices_1[0]))] + indices_1)
+            ] = self._mdp_model._transitions_model.sample_sa(tuple(indices_1))
+        if do_simple_sampling:
+            z = self._rng.randint(self._n_states)
+            summing = 1 - P_minus.sum(-1)
+            P_minus[:, :, z] += summing
+            self.Q[
+                tuple([np.array([psi] * len(indices_2[0]))] + indices_2)
+            ] = P_minus[tuple(indices_2)]
+            P_minus[:, :, z] -= summing</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="colosseum.agent.agents.base.BaseAgent" href="../base.html#colosseum.agent.agents.base.BaseAgent">BaseAgent</a></b></code>:
+<ul class="hlist">
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.agent_logs" href="../base.html#colosseum.agent.agents.base.BaseAgent.agent_logs">agent_logs</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.before_start_interacting" href="../base.html#colosseum.agent.agents.base.BaseAgent.before_start_interacting">before_start_interacting</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.current_optimal_stochastic_policy" href="../base.html#colosseum.agent.agents.base.BaseAgent.current_optimal_stochastic_policy">current_optimal_stochastic_policy</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.episode_end_update" href="../base.html#colosseum.agent.agents.base.BaseAgent.episode_end_update">episode_end_update</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.get_agent_instance_from_hyperparameters" href="../base.html#colosseum.agent.agents.base.BaseAgent.get_agent_instance_from_hyperparameters">get_agent_instance_from_hyperparameters</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.get_hyperparameters_search_spaces" href="../base.html#colosseum.agent.agents.base.BaseAgent.get_hyperparameters_search_spaces">get_hyperparameters_search_spaces</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.is_episode_end" href="../base.html#colosseum.agent.agents.base.BaseAgent.is_episode_end">is_episode_end</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.is_episodic" href="../base.html#colosseum.agent.agents.base.BaseAgent.is_episodic">is_episodic</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.select_action" href="../base.html#colosseum.agent.agents.base.BaseAgent.select_action">select_action</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.step_update" href="../base.html#colosseum.agent.agents.base.BaseAgent.step_update">step_update</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="colosseum.agent.agents.infinite_horizon" href="index.html">colosseum.agent.agents.infinite_horizon</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="colosseum.agent.agents.infinite_horizon.posterior_sampling.get_eta" href="#colosseum.agent.agents.infinite_horizon.posterior_sampling.get_eta">get_eta</a></code></li>
+<li><code><a title="colosseum.agent.agents.infinite_horizon.posterior_sampling.get_kappa" href="#colosseum.agent.agents.infinite_horizon.posterior_sampling.get_kappa">get_kappa</a></code></li>
+<li><code><a title="colosseum.agent.agents.infinite_horizon.posterior_sampling.get_omega" href="#colosseum.agent.agents.infinite_horizon.posterior_sampling.get_omega">get_omega</a></code></li>
+<li><code><a title="colosseum.agent.agents.infinite_horizon.posterior_sampling.get_psi" href="#colosseum.agent.agents.infinite_horizon.posterior_sampling.get_psi">get_psi</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="colosseum.agent.agents.infinite_horizon.posterior_sampling.PSRLContinuous" href="#colosseum.agent.agents.infinite_horizon.posterior_sampling.PSRLContinuous">PSRLContinuous</a></code></h4>
+<ul class="">
+<li><code><a title="colosseum.agent.agents.infinite_horizon.posterior_sampling.PSRLContinuous.extended_action_to_real" href="#colosseum.agent.agents.infinite_horizon.posterior_sampling.PSRLContinuous.extended_action_to_real">extended_action_to_real</a></code></li>
+<li><code><a title="colosseum.agent.agents.infinite_horizon.posterior_sampling.PSRLContinuous.optimistic_sampling" href="#colosseum.agent.agents.infinite_horizon.posterior_sampling.PSRLContinuous.optimistic_sampling">optimistic_sampling</a></code></li>
+<li><code><a title="colosseum.agent.agents.infinite_horizon.posterior_sampling.PSRLContinuous.produce_gin_file_from_hyperparameters" href="#colosseum.agent.agents.infinite_horizon.posterior_sampling.PSRLContinuous.produce_gin_file_from_hyperparameters">produce_gin_file_from_hyperparameters</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

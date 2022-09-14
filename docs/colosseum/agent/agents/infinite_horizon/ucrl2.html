@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>colosseum.agent.agents.infinite_horizon.ucrl2 API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>colosseum.agent.agents.infinite_horizon.ucrl2</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import math
+import os
+from typing import TYPE_CHECKING, Any, Callable, Dict, Union
+
+import dm_env
+import gin
+import numpy as np
+from ray import tune
+
+from colosseum.dynamic_programming import discounted_value_iteration
+from colosseum.dynamic_programming.infinite_horizon import extended_value_iteration
+from colosseum.dynamic_programming.utils import get_policy_from_q_values
+from colosseum.agent.actors import QValuesActor
+from colosseum.agent.agents.base import BaseAgent
+
+if TYPE_CHECKING:
+    from colosseum.mdp import ACTION_TYPE
+    from colosseum.utils.acme.specs import MDPSpec
+
+
+def chernoff(it, N, delta, sqrt_C, log_C, range=1.0):
+    ci = range * np.sqrt(sqrt_C * math.log(log_C * (it + 1) / delta) / np.maximum(1, N))
+    return ci
+
+
+def bernstein(scale_a, log_scale_a, scale_b, log_scale_b, alpha_1, alpha_2):
+    A = scale_a * math.log(log_scale_a)
+    B = scale_b * math.log(log_scale_b)
+    return alpha_1 * np.sqrt(A) + alpha_2 * B
+
+
+@gin.configurable
+class UCRL2Continuous(BaseAgent):
+    @staticmethod
+    def produce_gin_file_from_hyperparameters(
+        hyperparameters: Dict[str, Any], index: int = 0
+    ):
+        string = f&#34;prms_{index}/UCRL2Continuous.bound_type_p=&#39;bernstein&#39;\n&#34;
+        for k, v in hyperparameters.items():
+            string += f&#34;prms_{index}/UCRL2Continuous.{k} = {v}\n&#34;
+        return string[:-1]
+
+    @staticmethod
+    def is_episodic() -&gt; bool:
+        return False
+
+    @staticmethod
+    def get_hyperparameters_search_spaces() -&gt; Dict[str, tune.sample.Domain]:
+        return {&#34;alpha_p&#34;: tune.uniform(0.0001, 1), &#34;alpha_r&#34;: tune.uniform(0.001, 1)}
+
+    @staticmethod
+    def get_agent_instance_from_hyperparameters(
+        seed: int,
+        optimization_horizon: int,
+        mdp_specs: &#34;MDPSpec&#34;,
+        hyperparameters: Dict[str, Any],
+    ) -&gt; &#34;BaseAgent&#34;:
+        return UCRL2Continuous(
+            environment_spec=mdp_specs,
+            seed=seed,
+            optimization_horizon=optimization_horizon,
+            alpha_p=hyperparameters[&#34;alpha_p&#34;],
+            alpha_r=hyperparameters[&#34;alpha_r&#34;],
+            bound_type_p=&#34;bernstein&#34;,
+        )
+
+    @property
+    def current_optimal_stochastic_policy(self) -&gt; np.ndarray:
+        Q, _ = discounted_value_iteration(self.P, self.estimated_rewards)
+        return get_policy_from_q_values(Q, True)
+
+    def __init__(
+        self,
+        seed: int,
+        environment_spec: &#34;MDPSpec&#34;,
+        optimization_horizon: int,
+        # MDP model hyperparameters
+        alpha_r=None,
+        alpha_p=None,
+        bound_type_p=&#34;chernoff&#34;,
+        bound_type_rew=&#34;chernoff&#34;,
+        # Actor hyperparameters
+        epsilon_greedy: Union[float, Callable] = None,
+        boltzmann_temperature: Union[float, Callable] = None,
+    ):
+        n_states = self._n_states = environment_spec.observations.num_values
+        n_actions = self._n_actions = environment_spec.actions.num_values
+        self.reward_range = environment_spec.rewards_range
+
+        assert bound_type_p in [&#34;chernoff&#34;, &#34;bernstein&#34;]
+        assert bound_type_rew in [&#34;chernoff&#34;, &#34;bernstein&#34;]
+
+        self.alpha_p = 1.0 if alpha_p is None else alpha_p
+        self.alpha_r = 1.0 if alpha_r is None else alpha_r
+
+        # initialize matrices
+        self.policy = np.zeros((n_states,), dtype=np.int_)
+        self.policy_indices = np.zeros((n_states,), dtype=np.int_)
+
+        # initialization
+        self.iteration = 0
+        self.episode = 0
+        self.delta = 1.0  # confidence
+        self.bound_type_p = bound_type_p
+        self.bound_type_rew = bound_type_rew
+
+        self.P = np.ones((n_states, n_actions, n_states), np.float32) / n_states
+
+        self.estimated_rewards = (
+            np.ones((n_states, n_actions), np.float32)
+            * environment_spec.rewards_range[1]
+        )
+        self.variance_proxy_reward = np.zeros((n_states, n_actions), np.float32)
+        self.estimated_holding_times = np.ones((n_states, n_actions), np.float32)
+        self.N = np.zeros((n_states, n_actions, n_states), dtype=np.int32)
+
+        self.current_state = None
+        self.artificial_episode = 0
+        self.episode_reward_data = dict()
+        self.episode_transition_data = dict()
+
+        super(UCRL2Continuous, self).__init__(
+            seed,
+            environment_spec,
+            None,
+            QValuesActor(seed, environment_spec, epsilon_greedy, boltzmann_temperature),
+            optimization_horizon,
+        )
+
+    def is_episode_end(
+        self,
+        ts_t: dm_env.TimeStep,
+        a_t: &#34;ACTION_TYPE&#34;,
+        ts_tp1: dm_env.TimeStep,
+        time_step: int,
+    ) -&gt; bool:
+        nu_k = len(self.episode_transition_data[ts_t.observation, a_t])
+        return nu_k &gt;= max(1, self.N[ts_t.observation, a_t].sum() - nu_k)
+
+    def episode_end_update(self):
+        self.episode += 1
+        self.delta = 1 / math.sqrt(self.iteration + 1)
+
+        new_sp = self.solve_optimistic_model()
+        if new_sp is not None:
+            self.span_value = new_sp / self.reward_range[1]
+
+        if len(self.episode_transition_data) &gt; 0:
+            self.model_update()
+            self.episode_reward_data = dict()
+            self.episode_transition_data = dict()
+
+    def before_start_interacting(self):
+        self.episode_end_update()
+
+    def step_update(
+        self, ts_t: dm_env.TimeStep, a_t: &#34;ACTION_TYPE&#34;, ts_tp1: dm_env.TimeStep, h: int
+    ):
+        self.N[ts_t.observation, a_t, ts_tp1.observation] += 1
+
+        if (ts_t.observation, a_t) in self.episode_reward_data:
+            self.episode_reward_data[ts_t.observation, a_t].append(ts_tp1.reward)
+            if not ts_tp1.last():
+                self.episode_transition_data[ts_t.observation, a_t].append(
+                    ts_tp1.observation
+                )
+        else:
+            self.episode_reward_data[ts_t.observation, a_t] = [ts_tp1.reward]
+            if not ts_tp1.last():
+                self.episode_transition_data[ts_t.observation, a_t] = [
+                    ts_tp1.observation
+                ]
+
+    def model_update(self):
+        for (s_tm1, action), r_ts in self.episode_reward_data.items():
+            # updated observations
+            scale_f = self.N[s_tm1, action].sum()
+            for r in r_ts:
+                # update the number of total iterations
+                self.iteration += 1
+
+                # update reward and variance estimate
+                scale_f += 1
+                old_estimated_reward = self.estimated_rewards[s_tm1, action]
+                self.estimated_rewards[s_tm1, action] *= scale_f / (scale_f + 1.0)
+                self.estimated_rewards[s_tm1, action] += r / (scale_f + 1.0)
+                self.variance_proxy_reward[s_tm1, action] += (
+                    r - old_estimated_reward
+                ) * (r - self.estimated_rewards[s_tm1, action])
+
+                # update holding time
+                self.estimated_holding_times[s_tm1, action] *= scale_f / (scale_f + 1.0)
+                self.estimated_holding_times[s_tm1, action] += 1 / (scale_f + 1)
+
+        for (s_tm1, action) in set(self.episode_transition_data.keys()):
+            self.P[s_tm1, action] = self.N[s_tm1, action] / self.N[s_tm1, action].sum()
+
+    def beta_r(self, nb_observations) -&gt; np.ndarray:
+        &#34;&#34;&#34;
+        Calculates the confidence bounds on the reward.
+        Returns:
+            np.array: the vector of confidence bounds on the reward function (|S| x |A|)
+        &#34;&#34;&#34;
+        S = self._n_states
+        A = self._n_actions
+        if self.bound_type_rew != &#34;bernstein&#34;:
+            ci = chernoff(
+                it=self.iteration,
+                N=nb_observations,
+                range=self.reward_range[1],
+                delta=self.delta,
+                sqrt_C=3.5,
+                log_C=2 * S * A,
+            )
+            return self.alpha_r * ci
+        else:
+            N = np.maximum(1, nb_observations)
+            Nm1 = np.maximum(1, nb_observations - 1)
+            var_r = self.variance_proxy_reward / Nm1
+            log_value = 2.0 * S * A * (self.iteration + 1) / self.delta
+            beta = bernstein(
+                scale_a=14 * var_r / N,
+                log_scale_a=log_value,
+                scale_b=49.0 * self.r_max / (3.0 * Nm1),
+                log_scale_b=log_value,
+                alpha_1=math.sqrt(self.alpha_r),
+                alpha_2=self.alpha_r,
+            )
+            return beta
+
+    def beta_p(self, nb_observations) -&gt; np.ndarray:
+        &#34;&#34;&#34;
+        Calculates the confidence bounds on the transition probabilities.
+        Returns:
+            np.array: the vector of confidence bounds on the reward function (|S| x |A|)
+        &#34;&#34;&#34;
+        S = self._n_states
+        A = self._n_actions
+        if self.bound_type_p != &#34;bernstein&#34;:
+            beta = chernoff(
+                it=self.iteration,
+                N=nb_observations,
+                range=1.0,
+                delta=self.delta,
+                sqrt_C=14 * S,
+                log_C=2 * A,
+            )
+            return self.alpha_p * beta.reshape([S, A, 1])
+        else:
+            N = np.maximum(1, nb_observations)
+            Nm1 = np.maximum(1, nb_observations - 1)
+            var_p = self.P * (1.0 - self.P)
+            log_value = 2.0 * S * A * (self.iteration + 1) / self.delta
+            beta = bernstein(
+                scale_a=14 * var_p / N[:, :, np.newaxis],
+                log_scale_a=log_value,
+                scale_b=49.0 / (3.0 * Nm1[:, :, np.newaxis]),
+                log_scale_b=log_value,
+                alpha_1=math.sqrt(self.alpha_p),
+                alpha_2=self.alpha_p,
+            )
+            return beta
+
+    def solve_optimistic_model(self) -&gt; Union[None, float]:
+        &#34;&#34;&#34;
+        Solves the optimistic value iteration.
+        Returns
+        -------
+            The span value of the estimates from the optimistic value iteration or None if no solution has been found.
+        &#34;&#34;&#34;
+        nb_observations = self.N.sum(-1)
+
+        beta_r = self.beta_r(nb_observations)  # confidence bounds on rewards
+        beta_p = self.beta_p(
+            nb_observations
+        )  # confidence bounds on transition probabilities
+
+        T = self.P
+        estimated_rewards = self.estimated_rewards
+
+        assert np.isclose(T.sum(-1), 1.0).all()
+        try:
+            res = extended_value_iteration(
+                T, estimated_rewards, beta_r, beta_p, self.reward_range[1]
+            )
+        except SystemError:
+            os.makedirs(f&#34;tmp{os.sep}error_ext_vi&#34;, exist_ok=True)
+            for i in range(100):
+                if not os.path.isfile(f&#34;tmp{os.sep}error_ext_vi{os.sep}T{i}.npy&#34;):
+                    np.save(f&#34;tmp{os.sep}error_ext_vi{os.sep}T{i}.npy&#34;, T)
+                    np.save(
+                        f&#34;tmp{os.sep}error_ext_vi{os.sep}estimated_rewards{i}.npy&#34;,
+                        estimated_rewards,
+                    )
+                    np.save(f&#34;tmp{os.sep}error_ext_vi{os.sep}beta_r.npy{i}&#34;, beta_r)
+                    np.save(f&#34;tmp{os.sep}error_ext_vi{os.sep}beta_p.npy{i}&#34;, beta_p)
+                    break
+            res = None
+
+        if res is not None:
+            span_value_new, self.Q, self.V = res
+            span_value = span_value_new
+            self._actor.set_q_values(self.Q)
+
+            assert span_value &gt;= 0, &#34;The span value cannot be lower than zero&#34;
+            assert np.abs(span_value - span_value_new) &lt; 1e-8
+
+            return span_value
+        return None</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="colosseum.agent.agents.infinite_horizon.ucrl2.bernstein"><code class="name flex">
+<span>def <span class="ident">bernstein</span></span>(<span>scale_a, log_scale_a, scale_b, log_scale_b, alpha_1, alpha_2)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bernstein(scale_a, log_scale_a, scale_b, log_scale_b, alpha_1, alpha_2):
+    A = scale_a * math.log(log_scale_a)
+    B = scale_b * math.log(log_scale_b)
+    return alpha_1 * np.sqrt(A) + alpha_2 * B</code></pre>
+</details>
+</dd>
+<dt id="colosseum.agent.agents.infinite_horizon.ucrl2.chernoff"><code class="name flex">
+<span>def <span class="ident">chernoff</span></span>(<span>it, N, delta, sqrt_C, log_C, range=1.0)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def chernoff(it, N, delta, sqrt_C, log_C, range=1.0):
+    ci = range * np.sqrt(sqrt_C * math.log(log_C * (it + 1) / delta) / np.maximum(1, N))
+    return ci</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous"><code class="flex name class">
+<span>class <span class="ident">UCRL2Continuous</span></span>
+<span>(</span><span>seed: int, environment_spec: MDPSpec, optimization_horizon: int, alpha_r=None, alpha_p=None, bound_type_p='chernoff', bound_type_rew='chernoff', epsilon_greedy: Union[float, Callable] = None, boltzmann_temperature: Union[float, Callable] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>seed</code></strong> :&ensp;<code>int</code></dt>
+<dd>is the random seed.</dd>
+<dt><strong><code>environment_spec</code></strong> :&ensp;<code>MDPSpec</code></dt>
+<dd>provides the full specification of the MDP.</dd>
+<dt><strong><code>mdp_model</code></strong> :&ensp;<code>BaseMDP_Model</code></dt>
+<dd>is the component of the agent that encapsulates the knowledge acquired from the interactions with
+the MDP.</dd>
+<dt><strong><code>actor</code></strong> :&ensp;<code>BaseActor</code></dt>
+<dd>calculates an action given the corresponding MDP model.</dd>
+<dt><strong><code>optimization_horizon</code></strong> :&ensp;<code>int</code></dt>
+<dd>is the total number of interactions that the agent is expected to have with the MDP.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class UCRL2Continuous(BaseAgent):
+    @staticmethod
+    def produce_gin_file_from_hyperparameters(
+        hyperparameters: Dict[str, Any], index: int = 0
+    ):
+        string = f&#34;prms_{index}/UCRL2Continuous.bound_type_p=&#39;bernstein&#39;\n&#34;
+        for k, v in hyperparameters.items():
+            string += f&#34;prms_{index}/UCRL2Continuous.{k} = {v}\n&#34;
+        return string[:-1]
+
+    @staticmethod
+    def is_episodic() -&gt; bool:
+        return False
+
+    @staticmethod
+    def get_hyperparameters_search_spaces() -&gt; Dict[str, tune.sample.Domain]:
+        return {&#34;alpha_p&#34;: tune.uniform(0.0001, 1), &#34;alpha_r&#34;: tune.uniform(0.001, 1)}
+
+    @staticmethod
+    def get_agent_instance_from_hyperparameters(
+        seed: int,
+        optimization_horizon: int,
+        mdp_specs: &#34;MDPSpec&#34;,
+        hyperparameters: Dict[str, Any],
+    ) -&gt; &#34;BaseAgent&#34;:
+        return UCRL2Continuous(
+            environment_spec=mdp_specs,
+            seed=seed,
+            optimization_horizon=optimization_horizon,
+            alpha_p=hyperparameters[&#34;alpha_p&#34;],
+            alpha_r=hyperparameters[&#34;alpha_r&#34;],
+            bound_type_p=&#34;bernstein&#34;,
+        )
+
+    @property
+    def current_optimal_stochastic_policy(self) -&gt; np.ndarray:
+        Q, _ = discounted_value_iteration(self.P, self.estimated_rewards)
+        return get_policy_from_q_values(Q, True)
+
+    def __init__(
+        self,
+        seed: int,
+        environment_spec: &#34;MDPSpec&#34;,
+        optimization_horizon: int,
+        # MDP model hyperparameters
+        alpha_r=None,
+        alpha_p=None,
+        bound_type_p=&#34;chernoff&#34;,
+        bound_type_rew=&#34;chernoff&#34;,
+        # Actor hyperparameters
+        epsilon_greedy: Union[float, Callable] = None,
+        boltzmann_temperature: Union[float, Callable] = None,
+    ):
+        n_states = self._n_states = environment_spec.observations.num_values
+        n_actions = self._n_actions = environment_spec.actions.num_values
+        self.reward_range = environment_spec.rewards_range
+
+        assert bound_type_p in [&#34;chernoff&#34;, &#34;bernstein&#34;]
+        assert bound_type_rew in [&#34;chernoff&#34;, &#34;bernstein&#34;]
+
+        self.alpha_p = 1.0 if alpha_p is None else alpha_p
+        self.alpha_r = 1.0 if alpha_r is None else alpha_r
+
+        # initialize matrices
+        self.policy = np.zeros((n_states,), dtype=np.int_)
+        self.policy_indices = np.zeros((n_states,), dtype=np.int_)
+
+        # initialization
+        self.iteration = 0
+        self.episode = 0
+        self.delta = 1.0  # confidence
+        self.bound_type_p = bound_type_p
+        self.bound_type_rew = bound_type_rew
+
+        self.P = np.ones((n_states, n_actions, n_states), np.float32) / n_states
+
+        self.estimated_rewards = (
+            np.ones((n_states, n_actions), np.float32)
+            * environment_spec.rewards_range[1]
+        )
+        self.variance_proxy_reward = np.zeros((n_states, n_actions), np.float32)
+        self.estimated_holding_times = np.ones((n_states, n_actions), np.float32)
+        self.N = np.zeros((n_states, n_actions, n_states), dtype=np.int32)
+
+        self.current_state = None
+        self.artificial_episode = 0
+        self.episode_reward_data = dict()
+        self.episode_transition_data = dict()
+
+        super(UCRL2Continuous, self).__init__(
+            seed,
+            environment_spec,
+            None,
+            QValuesActor(seed, environment_spec, epsilon_greedy, boltzmann_temperature),
+            optimization_horizon,
+        )
+
+    def is_episode_end(
+        self,
+        ts_t: dm_env.TimeStep,
+        a_t: &#34;ACTION_TYPE&#34;,
+        ts_tp1: dm_env.TimeStep,
+        time_step: int,
+    ) -&gt; bool:
+        nu_k = len(self.episode_transition_data[ts_t.observation, a_t])
+        return nu_k &gt;= max(1, self.N[ts_t.observation, a_t].sum() - nu_k)
+
+    def episode_end_update(self):
+        self.episode += 1
+        self.delta = 1 / math.sqrt(self.iteration + 1)
+
+        new_sp = self.solve_optimistic_model()
+        if new_sp is not None:
+            self.span_value = new_sp / self.reward_range[1]
+
+        if len(self.episode_transition_data) &gt; 0:
+            self.model_update()
+            self.episode_reward_data = dict()
+            self.episode_transition_data = dict()
+
+    def before_start_interacting(self):
+        self.episode_end_update()
+
+    def step_update(
+        self, ts_t: dm_env.TimeStep, a_t: &#34;ACTION_TYPE&#34;, ts_tp1: dm_env.TimeStep, h: int
+    ):
+        self.N[ts_t.observation, a_t, ts_tp1.observation] += 1
+
+        if (ts_t.observation, a_t) in self.episode_reward_data:
+            self.episode_reward_data[ts_t.observation, a_t].append(ts_tp1.reward)
+            if not ts_tp1.last():
+                self.episode_transition_data[ts_t.observation, a_t].append(
+                    ts_tp1.observation
+                )
+        else:
+            self.episode_reward_data[ts_t.observation, a_t] = [ts_tp1.reward]
+            if not ts_tp1.last():
+                self.episode_transition_data[ts_t.observation, a_t] = [
+                    ts_tp1.observation
+                ]
+
+    def model_update(self):
+        for (s_tm1, action), r_ts in self.episode_reward_data.items():
+            # updated observations
+            scale_f = self.N[s_tm1, action].sum()
+            for r in r_ts:
+                # update the number of total iterations
+                self.iteration += 1
+
+                # update reward and variance estimate
+                scale_f += 1
+                old_estimated_reward = self.estimated_rewards[s_tm1, action]
+                self.estimated_rewards[s_tm1, action] *= scale_f / (scale_f + 1.0)
+                self.estimated_rewards[s_tm1, action] += r / (scale_f + 1.0)
+                self.variance_proxy_reward[s_tm1, action] += (
+                    r - old_estimated_reward
+                ) * (r - self.estimated_rewards[s_tm1, action])
+
+                # update holding time
+                self.estimated_holding_times[s_tm1, action] *= scale_f / (scale_f + 1.0)
+                self.estimated_holding_times[s_tm1, action] += 1 / (scale_f + 1)
+
+        for (s_tm1, action) in set(self.episode_transition_data.keys()):
+            self.P[s_tm1, action] = self.N[s_tm1, action] / self.N[s_tm1, action].sum()
+
+    def beta_r(self, nb_observations) -&gt; np.ndarray:
+        &#34;&#34;&#34;
+        Calculates the confidence bounds on the reward.
+        Returns:
+            np.array: the vector of confidence bounds on the reward function (|S| x |A|)
+        &#34;&#34;&#34;
+        S = self._n_states
+        A = self._n_actions
+        if self.bound_type_rew != &#34;bernstein&#34;:
+            ci = chernoff(
+                it=self.iteration,
+                N=nb_observations,
+                range=self.reward_range[1],
+                delta=self.delta,
+                sqrt_C=3.5,
+                log_C=2 * S * A,
+            )
+            return self.alpha_r * ci
+        else:
+            N = np.maximum(1, nb_observations)
+            Nm1 = np.maximum(1, nb_observations - 1)
+            var_r = self.variance_proxy_reward / Nm1
+            log_value = 2.0 * S * A * (self.iteration + 1) / self.delta
+            beta = bernstein(
+                scale_a=14 * var_r / N,
+                log_scale_a=log_value,
+                scale_b=49.0 * self.r_max / (3.0 * Nm1),
+                log_scale_b=log_value,
+                alpha_1=math.sqrt(self.alpha_r),
+                alpha_2=self.alpha_r,
+            )
+            return beta
+
+    def beta_p(self, nb_observations) -&gt; np.ndarray:
+        &#34;&#34;&#34;
+        Calculates the confidence bounds on the transition probabilities.
+        Returns:
+            np.array: the vector of confidence bounds on the reward function (|S| x |A|)
+        &#34;&#34;&#34;
+        S = self._n_states
+        A = self._n_actions
+        if self.bound_type_p != &#34;bernstein&#34;:
+            beta = chernoff(
+                it=self.iteration,
+                N=nb_observations,
+                range=1.0,
+                delta=self.delta,
+                sqrt_C=14 * S,
+                log_C=2 * A,
+            )
+            return self.alpha_p * beta.reshape([S, A, 1])
+        else:
+            N = np.maximum(1, nb_observations)
+            Nm1 = np.maximum(1, nb_observations - 1)
+            var_p = self.P * (1.0 - self.P)
+            log_value = 2.0 * S * A * (self.iteration + 1) / self.delta
+            beta = bernstein(
+                scale_a=14 * var_p / N[:, :, np.newaxis],
+                log_scale_a=log_value,
+                scale_b=49.0 / (3.0 * Nm1[:, :, np.newaxis]),
+                log_scale_b=log_value,
+                alpha_1=math.sqrt(self.alpha_p),
+                alpha_2=self.alpha_p,
+            )
+            return beta
+
+    def solve_optimistic_model(self) -&gt; Union[None, float]:
+        &#34;&#34;&#34;
+        Solves the optimistic value iteration.
+        Returns
+        -------
+            The span value of the estimates from the optimistic value iteration or None if no solution has been found.
+        &#34;&#34;&#34;
+        nb_observations = self.N.sum(-1)
+
+        beta_r = self.beta_r(nb_observations)  # confidence bounds on rewards
+        beta_p = self.beta_p(
+            nb_observations
+        )  # confidence bounds on transition probabilities
+
+        T = self.P
+        estimated_rewards = self.estimated_rewards
+
+        assert np.isclose(T.sum(-1), 1.0).all()
+        try:
+            res = extended_value_iteration(
+                T, estimated_rewards, beta_r, beta_p, self.reward_range[1]
+            )
+        except SystemError:
+            os.makedirs(f&#34;tmp{os.sep}error_ext_vi&#34;, exist_ok=True)
+            for i in range(100):
+                if not os.path.isfile(f&#34;tmp{os.sep}error_ext_vi{os.sep}T{i}.npy&#34;):
+                    np.save(f&#34;tmp{os.sep}error_ext_vi{os.sep}T{i}.npy&#34;, T)
+                    np.save(
+                        f&#34;tmp{os.sep}error_ext_vi{os.sep}estimated_rewards{i}.npy&#34;,
+                        estimated_rewards,
+                    )
+                    np.save(f&#34;tmp{os.sep}error_ext_vi{os.sep}beta_r.npy{i}&#34;, beta_r)
+                    np.save(f&#34;tmp{os.sep}error_ext_vi{os.sep}beta_p.npy{i}&#34;, beta_p)
+                    break
+            res = None
+
+        if res is not None:
+            span_value_new, self.Q, self.V = res
+            span_value = span_value_new
+            self._actor.set_q_values(self.Q)
+
+            assert span_value &gt;= 0, &#34;The span value cannot be lower than zero&#34;
+            assert np.abs(span_value - span_value_new) &lt; 1e-8
+
+            return span_value
+        return None</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="colosseum.agent.agents.base.BaseAgent" href="../base.html#colosseum.agent.agents.base.BaseAgent">BaseAgent</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.produce_gin_file_from_hyperparameters"><code class="name flex">
+<span>def <span class="ident">produce_gin_file_from_hyperparameters</span></span>(<span>hyperparameters: Dict[str, Any], index: int = 0)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def produce_gin_file_from_hyperparameters(
+    hyperparameters: Dict[str, Any], index: int = 0
+):
+    string = f&#34;prms_{index}/UCRL2Continuous.bound_type_p=&#39;bernstein&#39;\n&#34;
+    for k, v in hyperparameters.items():
+        string += f&#34;prms_{index}/UCRL2Continuous.{k} = {v}\n&#34;
+    return string[:-1]</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.beta_p"><code class="name flex">
+<span>def <span class="ident">beta_p</span></span>(<span>self, nb_observations) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculates the confidence bounds on the transition probabilities.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.array</code></dt>
+<dd>the vector of confidence bounds on the reward function (|S| x |A|)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def beta_p(self, nb_observations) -&gt; np.ndarray:
+    &#34;&#34;&#34;
+    Calculates the confidence bounds on the transition probabilities.
+    Returns:
+        np.array: the vector of confidence bounds on the reward function (|S| x |A|)
+    &#34;&#34;&#34;
+    S = self._n_states
+    A = self._n_actions
+    if self.bound_type_p != &#34;bernstein&#34;:
+        beta = chernoff(
+            it=self.iteration,
+            N=nb_observations,
+            range=1.0,
+            delta=self.delta,
+            sqrt_C=14 * S,
+            log_C=2 * A,
+        )
+        return self.alpha_p * beta.reshape([S, A, 1])
+    else:
+        N = np.maximum(1, nb_observations)
+        Nm1 = np.maximum(1, nb_observations - 1)
+        var_p = self.P * (1.0 - self.P)
+        log_value = 2.0 * S * A * (self.iteration + 1) / self.delta
+        beta = bernstein(
+            scale_a=14 * var_p / N[:, :, np.newaxis],
+            log_scale_a=log_value,
+            scale_b=49.0 / (3.0 * Nm1[:, :, np.newaxis]),
+            log_scale_b=log_value,
+            alpha_1=math.sqrt(self.alpha_p),
+            alpha_2=self.alpha_p,
+        )
+        return beta</code></pre>
+</details>
+</dd>
+<dt id="colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.beta_r"><code class="name flex">
+<span>def <span class="ident">beta_r</span></span>(<span>self, nb_observations) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculates the confidence bounds on the reward.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.array</code></dt>
+<dd>the vector of confidence bounds on the reward function (|S| x |A|)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def beta_r(self, nb_observations) -&gt; np.ndarray:
+    &#34;&#34;&#34;
+    Calculates the confidence bounds on the reward.
+    Returns:
+        np.array: the vector of confidence bounds on the reward function (|S| x |A|)
+    &#34;&#34;&#34;
+    S = self._n_states
+    A = self._n_actions
+    if self.bound_type_rew != &#34;bernstein&#34;:
+        ci = chernoff(
+            it=self.iteration,
+            N=nb_observations,
+            range=self.reward_range[1],
+            delta=self.delta,
+            sqrt_C=3.5,
+            log_C=2 * S * A,
+        )
+        return self.alpha_r * ci
+    else:
+        N = np.maximum(1, nb_observations)
+        Nm1 = np.maximum(1, nb_observations - 1)
+        var_r = self.variance_proxy_reward / Nm1
+        log_value = 2.0 * S * A * (self.iteration + 1) / self.delta
+        beta = bernstein(
+            scale_a=14 * var_r / N,
+            log_scale_a=log_value,
+            scale_b=49.0 * self.r_max / (3.0 * Nm1),
+            log_scale_b=log_value,
+            alpha_1=math.sqrt(self.alpha_r),
+            alpha_2=self.alpha_r,
+        )
+        return beta</code></pre>
+</details>
+</dd>
+<dt id="colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.model_update"><code class="name flex">
+<span>def <span class="ident">model_update</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def model_update(self):
+    for (s_tm1, action), r_ts in self.episode_reward_data.items():
+        # updated observations
+        scale_f = self.N[s_tm1, action].sum()
+        for r in r_ts:
+            # update the number of total iterations
+            self.iteration += 1
+
+            # update reward and variance estimate
+            scale_f += 1
+            old_estimated_reward = self.estimated_rewards[s_tm1, action]
+            self.estimated_rewards[s_tm1, action] *= scale_f / (scale_f + 1.0)
+            self.estimated_rewards[s_tm1, action] += r / (scale_f + 1.0)
+            self.variance_proxy_reward[s_tm1, action] += (
+                r - old_estimated_reward
+            ) * (r - self.estimated_rewards[s_tm1, action])
+
+            # update holding time
+            self.estimated_holding_times[s_tm1, action] *= scale_f / (scale_f + 1.0)
+            self.estimated_holding_times[s_tm1, action] += 1 / (scale_f + 1)
+
+    for (s_tm1, action) in set(self.episode_transition_data.keys()):
+        self.P[s_tm1, action] = self.N[s_tm1, action] / self.N[s_tm1, action].sum()</code></pre>
+</details>
+</dd>
+<dt id="colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.solve_optimistic_model"><code class="name flex">
+<span>def <span class="ident">solve_optimistic_model</span></span>(<span>self) ‑> Optional[None]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Solves the optimistic value iteration.
+Returns</p>
+<hr>
+<pre><code>The span value of the estimates from the optimistic value iteration or None if no solution has been found.
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def solve_optimistic_model(self) -&gt; Union[None, float]:
+    &#34;&#34;&#34;
+    Solves the optimistic value iteration.
+    Returns
+    -------
+        The span value of the estimates from the optimistic value iteration or None if no solution has been found.
+    &#34;&#34;&#34;
+    nb_observations = self.N.sum(-1)
+
+    beta_r = self.beta_r(nb_observations)  # confidence bounds on rewards
+    beta_p = self.beta_p(
+        nb_observations
+    )  # confidence bounds on transition probabilities
+
+    T = self.P
+    estimated_rewards = self.estimated_rewards
+
+    assert np.isclose(T.sum(-1), 1.0).all()
+    try:
+        res = extended_value_iteration(
+            T, estimated_rewards, beta_r, beta_p, self.reward_range[1]
+        )
+    except SystemError:
+        os.makedirs(f&#34;tmp{os.sep}error_ext_vi&#34;, exist_ok=True)
+        for i in range(100):
+            if not os.path.isfile(f&#34;tmp{os.sep}error_ext_vi{os.sep}T{i}.npy&#34;):
+                np.save(f&#34;tmp{os.sep}error_ext_vi{os.sep}T{i}.npy&#34;, T)
+                np.save(
+                    f&#34;tmp{os.sep}error_ext_vi{os.sep}estimated_rewards{i}.npy&#34;,
+                    estimated_rewards,
+                )
+                np.save(f&#34;tmp{os.sep}error_ext_vi{os.sep}beta_r.npy{i}&#34;, beta_r)
+                np.save(f&#34;tmp{os.sep}error_ext_vi{os.sep}beta_p.npy{i}&#34;, beta_p)
+                break
+        res = None
+
+    if res is not None:
+        span_value_new, self.Q, self.V = res
+        span_value = span_value_new
+        self._actor.set_q_values(self.Q)
+
+        assert span_value &gt;= 0, &#34;The span value cannot be lower than zero&#34;
+        assert np.abs(span_value - span_value_new) &lt; 1e-8
+
+        return span_value
+    return None</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="colosseum.agent.agents.base.BaseAgent" href="../base.html#colosseum.agent.agents.base.BaseAgent">BaseAgent</a></b></code>:
+<ul class="hlist">
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.agent_logs" href="../base.html#colosseum.agent.agents.base.BaseAgent.agent_logs">agent_logs</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.before_start_interacting" href="../base.html#colosseum.agent.agents.base.BaseAgent.before_start_interacting">before_start_interacting</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.current_optimal_stochastic_policy" href="../base.html#colosseum.agent.agents.base.BaseAgent.current_optimal_stochastic_policy">current_optimal_stochastic_policy</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.episode_end_update" href="../base.html#colosseum.agent.agents.base.BaseAgent.episode_end_update">episode_end_update</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.get_agent_instance_from_hyperparameters" href="../base.html#colosseum.agent.agents.base.BaseAgent.get_agent_instance_from_hyperparameters">get_agent_instance_from_hyperparameters</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.get_hyperparameters_search_spaces" href="../base.html#colosseum.agent.agents.base.BaseAgent.get_hyperparameters_search_spaces">get_hyperparameters_search_spaces</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.is_episode_end" href="../base.html#colosseum.agent.agents.base.BaseAgent.is_episode_end">is_episode_end</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.is_episodic" href="../base.html#colosseum.agent.agents.base.BaseAgent.is_episodic">is_episodic</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.select_action" href="../base.html#colosseum.agent.agents.base.BaseAgent.select_action">select_action</a></code></li>
+<li><code><a title="colosseum.agent.agents.base.BaseAgent.step_update" href="../base.html#colosseum.agent.agents.base.BaseAgent.step_update">step_update</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="colosseum.agent.agents.infinite_horizon" href="index.html">colosseum.agent.agents.infinite_horizon</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="colosseum.agent.agents.infinite_horizon.ucrl2.bernstein" href="#colosseum.agent.agents.infinite_horizon.ucrl2.bernstein">bernstein</a></code></li>
+<li><code><a title="colosseum.agent.agents.infinite_horizon.ucrl2.chernoff" href="#colosseum.agent.agents.infinite_horizon.ucrl2.chernoff">chernoff</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous" href="#colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous">UCRL2Continuous</a></code></h4>
+<ul class="">
+<li><code><a title="colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.beta_p" href="#colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.beta_p">beta_p</a></code></li>
+<li><code><a title="colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.beta_r" href="#colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.beta_r">beta_r</a></code></li>
+<li><code><a title="colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.model_update" href="#colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.model_update">model_update</a></code></li>
+<li><code><a title="colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.produce_gin_file_from_hyperparameters" href="#colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.produce_gin_file_from_hyperparameters">produce_gin_file_from_hyperparameters</a></code></li>
+<li><code><a title="colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.solve_optimistic_model" href="#colosseum.agent.agents.infinite_horizon.ucrl2.UCRL2Continuous.solve_optimistic_model">solve_optimistic_model</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
