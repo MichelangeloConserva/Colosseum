@@ -8,42 +8,44 @@ import numpy as np
 from colosseum.utils.acme.specs import MDPSpec
 
 if TYPE_CHECKING:
-    from colosseum.mdp import ACTION_TYPE, OBSERVATION_TYPE
+    from colosseum.mdp import ACTION_TYPE
 
 
 class BaseActor(abc.ABC):
+    """
+    The `BaseActor` class is the abstract class for the actor component of a reinforcement learning agent, which
+    handles the interactions with the MDPs.
+    """
+
     @abc.abstractmethod
-    def __init__(self, seed: int, environment_spec: MDPSpec):
+    def __init__(self, seed: int, mdp_specs: MDPSpec):
         """
         Parameters
         ----------
         seed : int
-            is the random seed.
-        environment_spec : MDPSpec
-            provides the full specification of the MDP.
+            The random seed.
+        mdp_specs : MDPSpec
+            The full specification of the MDP.
         """
-        self._environment_spec = environment_spec
+        self._mdp_spec = mdp_specs
         self._seed = seed
 
         self._rng = np.random.RandomState(seed)
         self._rng_fast = random.Random(seed)
 
     @abc.abstractmethod
-    def select_action(
-        self, ts: dm_env.TimeStep, time_step: int
-    ) -> "ACTION_TYPE":
+    def select_action(self, ts: dm_env.TimeStep, time: int) -> "ACTION_TYPE":
         """
-
         Parameters
         ----------
         ts : dm_env.TimeStep
-            the observation for which the agent is required to calculate the next action.
-        time_step : int
-            the current time step of the environment. In the episodic case, this refers to the in-episode time step,
-            whereas in the continuous case this refers to the number of previous interactions.
+            The TimeStep for which the agent is required to calculate the next action.
+        time : int
+            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in
+            the continuous case this refers to the total number of previous interactions.
 
         Returns
         -------
         action : ACTION_TYPE
-            the action that the agent suggests to take given the observation and the time step.
+            The action that the agent suggests to take given the observation and the time step.
         """

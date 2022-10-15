@@ -5,8 +5,8 @@ import setuptools
 
 HERE = pathlib.Path(__file__).parent
 
-VERSION = "1.1.0"
-DESCRIPTION = "Research-oriented library for tabular reinforcement learning."
+VERSION = "1.2.0"
+DESCRIPTION = "Research-oriented library for reinforcement learning."
 LICENSE = "MIT License"
 PACKAGE_NAME = "colosseum"
 KEYWORDS = "reinforcement-learning python"
@@ -34,9 +34,10 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         "adjustText",
-        "timeout-decorator",
+        "bsuite",
         "dm-env",
         "dm-sonnet",
+        "frozendict",
         "gin-config",
         "gym",
         "matplotlib",
@@ -49,16 +50,15 @@ setuptools.setup(
         "pygame",
         "pyyaml",
         "ray[tune]",
-        "seaborn",
-        "tensorflow",
-        "bsuite",
         "scipy>=1.7.3",
+        "seaborn>=0.12",
         "sparse",
+        "tensorflow",
+        "timeout-decorator",
         "toolz",
         "tqdm",
         "PyYAML>=6.0",
         "wrapt_timeout_decorator",
-        "frozendict"
     ],
     # scripts=glob("bin" + os.sep + "*"),
     classifiers=[
@@ -73,3 +73,4 @@ setuptools.setup(
     ],
     # zip_safe=F,  # Doesn't create an egg - easier to debug and hack on
 )
+

@@ -1,6 +1,6 @@
 import io
 from time import time
-from typing import TYPE_CHECKING, Dict, Iterable, List, Tuple, Union
+from typing import TYPE_CHECKING, Dict, Iterable, List, Tuple, Union, Set
 
 import numpy as np
 import pandas as pd
@@ -12,54 +12,124 @@ from wrapt_timeout_decorator import timeout
 
 from colosseum import config
 from colosseum.config import process_debug_output
-from colosseum.experiment.utils import get_episodic_regrets_and_average_reward
+from colosseum.emission_maps import Tabular
+from colosseum.experiment.indicators import (
+    get_episodic_regrets_and_average_reward_at_time_zero,
+)
 from colosseum.mdp.utils.markov_chain import get_average_reward
 from colosseum.utils.acme import InMemoryLogger
 from colosseum.utils.acme.base_logger import Logger
+from colosseum.utils.formatter import clear_agent_mdp_class_name
 
 if TYPE_CHECKING:
-    from colosseum.mdp import ContinuousMDP, EpisodicMDP
-    from colosseum.agent.agents import BaseAgent
+    from colosseum.mdp import ContinuousMDP, EpisodicMDP, BaseMDP
+    from colosseum.agent.agents.base import BaseAgent
 
 
 class MDPLoop:
+    """
+    The `MDPLoop` is the object in charge of the agent/MDP interactions and the computation of the performance indicators.
+    It also provides limited plotting functionalities.
+    """
+
     @staticmethod
-    def get_available_indicators() -> List[str]:
+    def get_indicators() -> List[str]:
         """
-        returns the code names for the indicators that are calculated by the MDPLoop.
+        Returns
+        -------
+        List[str]
+            The code names for the indicators that are computed by the MDPLoop.
         """
         return [
-            "cumulative_reward",
             "cumulative_expected_reward",
-            "normalized_cumulative_expected_reward",
-            "random_cumulative_reward",
-            "normalized_cumulative_reward",
-            "random_cumulative_reward",
             "cumulative_regret",
-            "random_cumulative_regret",
-            "steps_per_second",
+            "cumulative_reward",
+            "normalized_cumulative_expected_reward",
             "normalized_cumulative_regret",
-            "random_normalized_cumulative_regret",
+            "normalized_cumulative_reward",
+            "steps_per_second",
         ]
+
+    @staticmethod
+    def get_baseline_indicators() -> List[str]:
+        """
+        Returns
+        -------
+        List[str]
+            The code names for the baseline indicators that are computed by the MDPLoop.
+        """
+        return [
+            "random_cumulative_regret",
+            "random_cumulative_expected_reward",
+            "random_normalized_cumulative_regret",
+            "random_normalized_cumulative_expected_reward",
+            "optimal_cumulative_expected_reward",
+            "optimal_normalized_cumulative_expected_reward",
+            "worst_cumulative_regret",
+            "worst_cumulative_expected_reward",
+            "worst_normalized_cumulative_regret",
+            "worst_normalized_cumulative_expected_reward",
+        ]
+
+    @staticmethod
+    def get_baselines() -> Set[str]:
+        """
+        Returns
+        -------
+        Set[str]
+            The baselines available for comparison.
+        """
+        return set(b[: b.find("_")] for b in MDPLoop.get_baseline_indicators())
+
+    @staticmethod
+    def get_baselines_color_dict() -> Dict[str, str]:
+        """
+        Returns
+        -------
+        Dict[str, str]
+            The color associated by default to the baselines.
+        """
+        return dict(random="black", worst="crimson", optimal="gold")
+
+    @staticmethod
+    def get_baselines_style_dict():
+        """
+        Returns
+        -------
+        Dict[str, str]
+            The line style associated by default to the baselines.
+        """
+        return dict(random=(0, (6, 12)), worst=(9, (6, 12)), optimal=(0, (6, 12)))
 
     def __init__(
         self,
         mdp: Union["BaseMDP", "EpisodicMDP", "ContinuousMDP"],
         agent: "BaseAgent",
-        logger: Logger = InMemoryLogger(),
+        logger: Logger = None,
         n_log_intervals_to_check_for_agent_optimality: int = 10,
         enforce_time_constraint: bool = True,
-    ):
+    ) -> object:
         """
         Parameters
         ----------
         mdp: Union["EpisodicMDP", "ContinuousMDP"]
-            the MDP.
+            The MDP.
         agent : BaseAgent
-            the agent.
-        logger : Logger, optional
-            a logger used to store the result of the interaction between the agent and the MDP.
+            The agent.
+        logger : Logger
+            The logger where the results of the interaction between the agent and the MDP are stored. By default, the
+            `InMemoryLogger` is used.
+        n_log_intervals_to_check_for_agent_optimality : int
+            The length of the interval between check is the policy has reached optimality. By default, the check happens
+            every ten interactions.
+        enforce_time_constraint : bool
+            If True, the computational time constraint given in the `run` function is enforced through multithreading.
+            By default, it is enforced.
         """
+
+        if logger is None:
+            logger = InMemoryLogger()
+
         self.logger = logger
         self._enforce_time_constraint = enforce_time_constraint
         self._mdp = mdp
@@ -69,10 +139,19 @@ class MDPLoop:
             n_log_intervals_to_check_for_agent_optimality
         )
         assert self._episodic == agent.is_episodic()
+        assert self._agent.is_emission_map_accepted(
+            Tabular if self._mdp.emission_map is None else self._mdp.emission_map
+        )
         self.actions_sequence = []
 
     @property
     def remaining_time(self) -> float:
+        """
+        Returns
+        -------
+        float
+            The remaining computational time for training the agent.
+        """
         return self._max_time - (time() - self._mdp_loop_timer)
 
     def _limit_update_time(self, t, f):
@@ -81,14 +160,14 @@ class MDPLoop:
                 raise TimeoutError()
             timeout(self.remaining_time)(f)()
         except TimeoutError or SystemError:
-            if config.DEBUG_LEVEL > 0:
+            if config._DEBUG_LEVEL > 0:
                 print("Time exceeded with function ", f)
             self._limit_exceeded(t)
 
     def _limit_exceeded(self, t):
         self._is_training = False
         self._last_training_step = t
-        if config.DEBUG_LEVEL > 0:
+        if config._DEBUG_LEVEL > 0:
             do = f"Stopped training at {time() - self._mdp_loop_timer:.2f}"
             process_debug_output(do)
         if self._verbose:
@@ -101,23 +180,28 @@ class MDPLoop:
         max_time: float = np.inf,
     ) -> Tuple[int, Dict[str, float]]:
         """
+        runs the agent/MDP interactions.
 
         Parameters
         ----------
         T : int
-            number of total interactions between the agent and the MDP.
-        log_every : int, optional
-            the number of time steps after which performance indicators are calculated. By default, it does not calculate
+            The number of total interactions between the agent and the MDP.
+        log_every : int
+            The number of time steps after which performance indicators are calculated. By default, it does not calculate
             them at any time except at the last one.
-        max_time : float, optional
-            the maximum number of seconds the interactions can take. If it is surpassed then the loop is interrupted.
+        max_time : float
+            The maximum number of seconds the interactions can take. If it is surpassed then the loop is interrupted.
             By default, the maximum given time is infinite.
 
         Returns
         ----------
-        a tuple containing the time step at which the training has been interrupted due to the time constraint, which is
-        -1 if the constraint has been respected, and a dictionary containing the performance indicators.
+        int
+            The time step at which the training has been interrupted due to the time constraint. If the constraint has
+            been respected it returns -1.
+        Dict[str, float]
+            The performance indicators computed at the end of the interactions.
         """
+
         if max_time == np.inf:
             enforce_time_constraint = False
         else:
@@ -128,6 +212,9 @@ class MDPLoop:
         ), f"The log_every variable should be an integer, received value: {log_every}."
         log_every = -1 if log_every == 0 else log_every
 
+        # Reset the visitation count of the MDP
+        self._mdp.reset_visitation_counts()
+
         self._reset_run_variables()
         self._max_time = max_time
 
@@ -137,7 +224,7 @@ class MDPLoop:
             self._limit_update_time(0, self._agent.before_start_interacting)
         else:
             self._agent.before_start_interacting()
-        if config.DEBUG_LEVEL > 0:
+        if config._DEBUG_LEVEL > 0:
             if self._is_training:
                 do = f"before_start_interacting completed in {time() - first_before_new_episode_timer:.2f}."
             else:
@@ -215,7 +302,7 @@ class MDPLoop:
         self._cumulative_reward = 0.0
         self._cumulative_regret = 0.0
         self._normalized_cumulative_regret = 0.0
-        self._random_cumulative_reward = 0.0
+        self._random_cumulative_expected_reward = 0.0
         self._random_cumulative_regret = 0.0
         self._normalized_random_cumulative_regret = 0.0
         self._cumulative_expected_reward_agent = 0.0
@@ -234,6 +321,8 @@ class MDPLoop:
 
         # Cache the regret for the random agent
         if self._episodic:
+
+            # Random agent regret
             self._episodic_regret_random_agent = (
                 self._mdp.episodic_optimal_average_reward
                 - self._mdp.episodic_random_average_reward
@@ -245,17 +334,53 @@ class MDPLoop:
                     - self._mdp.episodic_worst_average_reward
                 )
             )
+
+            # Worst agent regret
+            self._episodic_regret_worst_agent = (
+                self._mdp.episodic_optimal_average_reward
+                - self._mdp.episodic_worst_average_reward
+            )
+            self._episodic_normalized_regret_worst_agent = (
+                self._episodic_regret_worst_agent
+                / (
+                    self._mdp.episodic_optimal_average_reward
+                    - self._mdp.episodic_worst_average_reward
+                )
+            )
+
+            # Reward normalized
+            self._cumulative_reward_normalizer = lambda t, cr: (
+                cr - t * self._mdp.episodic_worst_average_reward
+            ) / (
+                self._mdp.episodic_optimal_average_reward
+                - self._mdp.episodic_worst_average_reward
+            )
         else:
+
+            # Random agent regret
             self._regret_random_agent = (
                 self._mdp.optimal_average_reward - self._mdp.random_average_reward
             )
             self._normalized_regret_random_agent = self._regret_random_agent / (
                 self._mdp.optimal_average_reward - self._mdp.worst_average_reward
             )
+
+            # Worst agent regret
+            self._regret_worst_agent = (
+                self._mdp.optimal_average_reward - self._mdp.worst_average_reward
+            )
+            self._normalized_regret_worst_agent = self._regret_worst_agent / (
+                self._mdp.optimal_average_reward - self._mdp.worst_average_reward
+            )
+
             assert (
                 self._mdp.optimal_average_reward - self._mdp.worst_average_reward
                 > 0.0002
             ), type(self._mdp).__name__ + str(self._mdp.parameters)
+
+            self._cumulative_reward_normalizer = lambda t, cr: (
+                cr - t * self._mdp.worst_average_reward
+            ) / (self._mdp.optimal_average_reward - self._mdp.worst_average_reward)
 
         self.logger.reset()
         self._mdp_loop_timer = time()
@@ -266,26 +391,33 @@ class MDPLoop:
 
         self._last_logs = dict(
             steps=t,
-            steps_per_second=t / (time() - self._mdp_loop_timer),
+            cumulative_regret=self._cumulative_regret,
             cumulative_reward=self._cumulative_reward,
             cumulative_expected_reward=self._cumulative_expected_reward_agent,
-            normalized_cumulative_expected_reward=(
-                (self._cumulative_expected_reward_agent - self._mdp.r_min)
-                / (self._mdp.r_max - self._mdp.r_min)
-            ),
-            random_cumulative_reward=self._cumulative_reward_random_agent,
-            normalized_cumulative_reward=(
-                (self._cumulative_reward - self._mdp.r_min)
-                / (self._mdp.r_max - self._mdp.r_min)
-            ),
-            normalized_random_cumulative_reward=(
-                (self._cumulative_reward_random_agent - self._mdp.r_min)
-                / (self._mdp.r_max - self._mdp.r_min)
-            ),
-            cumulative_regret=self._cumulative_regret,
             normalized_cumulative_regret=self._normalized_cumulative_regret,
+            normalized_cumulative_reward=self._cumulative_reward_normalizer(
+                t, self._cumulative_reward
+            ),
+            normalized_cumulative_expected_reward=self._cumulative_reward_normalizer(
+                t, self._cumulative_expected_reward_agent
+            ),
             random_cumulative_regret=self._cumulative_regret_random_agent,
+            random_cumulative_expected_reward=self._cumulative_reward_random_agent,
             random_normalized_cumulative_regret=self._normalized_cumulative_regret_random_agent,
+            random_normalized_cumulative_expected_reward=self._cumulative_reward_normalizer(
+                t, self._cumulative_reward_random_agent
+            ),
+            worst_cumulative_regret=self._cumulative_regret_worst_agent,
+            worst_cumulative_expected_reward=self._cumulative_reward_worst_agent,
+            worst_normalized_cumulative_regret=self._normalized_cumulative_regret_worst_agent,
+            worst_normalized_cumulative_expected_reward=self._cumulative_reward_normalizer(
+                t, self._cumulative_reward_worst_agent
+            ),
+            optimal_cumulative_expected_reward=self._cumulative_reward_optimal_agent,
+            optimal_normalized_cumulative_expected_reward=self._cumulative_reward_normalizer(
+                t, self._cumulative_reward_optimal_agent
+            ),
+            steps_per_second=t / (time() - self._mdp_loop_timer),
         )
 
         # Communicate the indicators to the logger with a maximum of five digits
@@ -301,21 +433,56 @@ class MDPLoop:
         self._compute_regrets()
 
         if self._episodic:
+            # Randon agent (regret)
             self._cumulative_regret_random_agent = (
                 self._episodic_regret_random_agent * t
             )
             self._normalized_cumulative_regret_random_agent = (
                 self._episodic_normalized_regret_random_agent * t
             )
+
+            # Worst agent (regret)
+            self._cumulative_regret_worst_agent = self._episodic_regret_worst_agent * t
+            self._normalized_cumulative_regret_worst_agent = (
+                self._episodic_normalized_regret_worst_agent * t
+            )
+
+            # Random agent (reward)
             self._cumulative_reward_random_agent = (
                 self._mdp.episodic_random_average_reward * t
             )
+
+            # Worst agent (reward)
+            self._cumulative_reward_worst_agent = (
+                self._mdp.episodic_worst_average_reward * t
+            )
+
+            # Optimal agent (reward)
+            self._cumulative_reward_optimal_agent = (
+                self._mdp.episodic_optimal_average_reward * t
+            )
+
         else:
+            # Randon agent (regret)
             self._cumulative_regret_random_agent = self._regret_random_agent * t
             self._normalized_cumulative_regret_random_agent = (
                 self._normalized_regret_random_agent * t
             )
+
+            # Worst agent (regret)
+            self._cumulative_regret_worst_agent = self._regret_worst_agent * t
+            self._normalized_cumulative_regret_worst_agent = (
+                self._normalized_regret_worst_agent * t
+            )
+
+            # Random agent (reward)
             self._cumulative_reward_random_agent = self._mdp.random_average_reward * t
+
+            # Worst agent (reward)
+            self._cumulative_reward_worst_agent = self._mdp.worst_average_reward * t
+
+            # Optimal agent (reward)
+            self._cumulative_reward_optimal_agent = self._mdp.optimal_average_reward * t
 
         # Avoid numerical errors that lead to negative rewards
         assert (
@@ -350,8 +517,9 @@ class MDPLoop:
             self._mdp.T,
             self._mdp.R,
             self._agent.current_optimal_stochastic_policy,
-            self._mdp.starting_states_and_probs,
+            [(self._mdp.node_to_index[self._mdp.cur_node], 1.0)],
         )
+
         r = self._mdp.optimal_average_reward - self._agent_continuous_average_reward
         if np.isclose(r, 0.0, atol=1e-3):
             r = 0.0
@@ -363,15 +531,15 @@ class MDPLoop:
     def _compute_episodic_regret(self):
         if not self._is_training:
             # If the agent is not training, the policy will not change we can cache and reuse the regret for each given
-            # starting node.
+            # starting state.
             if self._cached_episodic_regrets is None:
-                Rs, epi_agent_ar = get_episodic_regrets_and_average_reward(
+                Rs, epi_agent_ar = get_episodic_regrets_and_average_reward_at_time_zero(
                     self._mdp.H,
                     self._mdp.T,
                     self._mdp.R,
                     self._agent.current_optimal_stochastic_policy,
-                    self._mdp.starting_distribution,
-                    self._mdp.optimal_value[1],
+                    self._mdp.starting_state_distribution,
+                    self._mdp.optimal_value_functions[1],
                 )
                 self._episodic_agent_average_reward = epi_agent_ar
                 self._cached_episodic_regrets = {
@@ -386,13 +554,13 @@ class MDPLoop:
                 self._mdp.last_starting_node
             ]
         else:
-            Rs, epi_agent_ar = get_episodic_regrets_and_average_reward(
+            Rs, epi_agent_ar = get_episodic_regrets_and_average_reward_at_time_zero(
                 self._mdp.H,
                 self._mdp.T,
                 self._mdp.R,
                 self._agent.current_optimal_stochastic_policy,
-                self._mdp.starting_distribution,
-                self._mdp.optimal_value[1],
+                self._mdp.starting_state_distribution,
+                self._mdp.optimal_value_functions[1],
             )
             self._episodic_agent_average_reward = epi_agent_ar
             self._regret = (
@@ -407,10 +575,6 @@ class MDPLoop:
             )
 
     def _is_policy_optimal(self) -> bool:
-        """
-        checks whether the agent has confidently reached an optimal policy by checking if the latest logged regrets are
-        all close to zero.
-        """
         if (
             len(self._latest_expected_regrets)
             == self._n_steps_to_check_for_agent_optimality
@@ -448,62 +612,69 @@ class MDPLoop:
             )
             self._loop.set_postfix(self._verbose_postfix, refresh=False)
 
-        # if time() - self._verbose_time > 5:
-        #     self._verbose_time = time()
-        #     if self._verbose:
-        #         self._loop.set_postfix_str(f"Episode: {self._n_episodes}")
-        #     if type(config.VERBOSE_LEVEL) == str:
-        #         if not os.path.isdir(
-        #             config.VERBOSE_LEVEL[: config.VERBOSE_LEVEL.rfind(os.sep)]
-        #         ):
-        #             os.makedirs(
-        #                 config.VERBOSE_LEVEL[: config.VERBOSE_LEVEL.rfind(os.sep)],
-        #                 exist_ok=True,
-        #             )
-        #         with open(config.VERBOSE_LEVEL, "a") as f:
-        #             f.write(
-        #                 datetime.datetime.now().strftime("%H:%M:%S")
-        #                 + "  "
-        #                 + self.s.getvalue()
-        #                 .split("\x1b")[0][2:]
-        #                 .replace("\x00", "")
-        #                 .replace("\n\r", "")
-        #                 + "\n"
-        #             )
-        #         self.s.truncate(0)
-
     def plot(
         self,
-        y: Union[str, List[str], Tuple[str, ...]] = ("cumulative_regret",),
+        indicator: str = "cumulative_regret",
         ax=None,
-        labels: Union[str, List[str], Tuple[str, ...]] = None,
-            common_label : str = None
+        baselines=("random", "worst", "optimal"),
+        label=None,
     ):
         """
-        quick utility function to plot the performance indicators directly from the MDPLoop.
+        plots the values of the indicator obtained by the agent during the interactions along with the baseline values.
+
+        Parameters
+        ----------
+        indicator : str
+            The code name of the performance indicator that will be shown in the plot. Check `MDPLoop.get_indicators()`
+            to get a list of the available indicators. By default, the 'cumulative_regret' is shown.
+        ax : plt.Axes
+            The ax object where the plot will be put. By default, a new axis is created.
+        baselines : List[str]
+            The baselines to be included in the plot. Check `MDPLoop.get_baselines()` to get a list of the available
+            baselines. By default, all baselines are shown.
+        label : str
+            The label to be given to the agent. By default, a cleaned version of the agent class name is used.
         """
+
         show = ax is None
         if ax is None:
             fig, ax = plt.subplots()
-        if type(y) == str:
-            y = [y]
-        if type(labels) == str:
-            labels = [labels]
-        if type(labels) == list:
-            assert len(labels) == len(
-                y
-            ), "Please make sure that the labels corresponds to the measures."
+
+        assert indicator in self.get_indicators(), (
+            f"{indicator} is not an indicator. The indicators available are: "
+            + ",".join(self.get_indicators())
+            + "."
+        )
 
         df_e = pd.DataFrame(self.logger.data)
         time_steps = [0] + df_e.loc[:, "steps"].tolist()
-        for i, yy in enumerate(y):
-            ax.plot(
-                time_steps[1:] if yy == "steps_per_second" else time_steps,
-                ([] if yy == "steps_per_second" else [0]) + df_e.loc[:, yy].tolist(),
-                label=(yy.replace("_", " ").capitalize()
-                if labels is None or labels[i] is None
-                else labels[i]) + ("" if common_label is None or "random" in yy.lower() else f" ({common_label})"),
+        ax.plot(
+            time_steps[1:] if indicator == "steps_per_second" else time_steps,
+            ([] if indicator == "steps_per_second" else [0])
+            + df_e.loc[:, indicator].tolist(),
+            label=clear_agent_mdp_class_name(type(self._agent).__name__)
+            if label is None
+            else label,
+        )
+        ax.set_ylabel(indicator.replace("_", " ").capitalize())
+
+        for b in baselines:
+            indicator = indicator.replace(
+                "cumulative_reward", "cumulative_expected_reward"
             )
+            if b + "_" + indicator in self.get_baseline_indicators():
+                ax.plot(
+                    time_steps,
+                    [0] + df_e.loc[:, b + "_" + indicator].tolist(),
+                    label=b.capitalize(),
+                    # alpha=0.9,
+                    linestyle=(0, (5, 10)),
+                    color="darkolivegreen"
+                    if "optimal" in b
+                    else ("darkred" if "worst" in b else "darkslategray"),
+                    linewidth=2,
+                )
+
         ax.set_xlabel("time step")
         ax.legend()
         if show:

@@ -24,8 +24,8 @@ class M_DIR(ConjugateModel):
 
     def __init__(
         self,
-        num_states: int,
-        num_actions: int,
+        n_states: int,
+        n_actions: int,
         hyper_params: Union[
             List[float],
             List[
@@ -36,39 +36,13 @@ class M_DIR(ConjugateModel):
         ],
         seed: int,
     ):
-        """
+        super(M_DIR, self).__init__(n_states, n_actions, hyper_params, seed)
+        if self.hyper_params.shape == (n_states, n_actions, 1):
+            self.hyper_params = np.tile(self.hyper_params, (1, 1, n_states))
+        assert self.hyper_params.shape == (n_states, n_actions, n_states)
 
-        Parameters
-        ----------
-        num_states : int
-            the number of states of the MDP.
-        num_actions : int
-            the number of action of the
-        hyper_params : Union[List[float],List[List[float]]]
-            the prior hyperparameters can either be a list of hyperparameters that are set identical for each
-            state-action pair, or it can be a dictionary with the state action pair as key and a list of hyperparameters
-            as value.
-        seed : int
-            the seed for sampling.
-        """
-        super(M_DIR, self).__init__(num_states, num_actions, hyper_params, seed)
-        if self.hyper_params.shape == (num_states, num_actions, 1):
-            self.hyper_params = np.tile(self.hyper_params, (1, 1, num_states))
-        assert self.hyper_params.shape == (num_states, num_actions, num_states)
-
-    def _update_sa(self, s: int, a: int, xs: List[int]):
-        """
-        updates the beliefs of the given state action pair.
-        Parameters
-        ----------
-        s : int
-            the state to update.
-        a : int
-            the action to update.
-        xs : List
-            the occurrences of states obtained from state action pair (s,a).
-        """
-        xs = [state_occurencens_to_counts(x, self.num_states) for x in xs]
+    def update_sa(self, s: int, a: int, xs: List[int]):
+        xs = [state_occurencens_to_counts(x, self.n_states) for x in xs]
         self.hyper_params[s, a] += np.array(xs).sum(0)
 
     def _sample(self, hyper_params: np.ndarray, n: int) -> np.ndarray:
@@ -81,9 +55,9 @@ class M_DIR(ConjugateModel):
 
     def sample(self, n: int = 1) -> np.ndarray:
         r = self._sample(
-            self.hyper_params.reshape(self.num_states * self.num_actions, -1), n
+            self.hyper_params.reshape(self.n_states * self.n_actions, -1), n
         )
-        return r.reshape((self.num_states, self.num_actions, -1))
+        return r.reshape((self.n_states, self.n_actions, -1))
 
     def sample_sa(self, sa: Tuple[int, int]) -> np.ndarray:
         return self._sample(self.hyper_params[sa], 1)

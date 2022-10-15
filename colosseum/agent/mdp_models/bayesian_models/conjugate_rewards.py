@@ -24,32 +24,32 @@ class N_NIG(ConjugateModel):
 
     def __init__(
         self,
-        num_states: int,
-        num_actions: int,
+        n_states: int,
+        n_actions: int,
         hyper_params: Union[List[float], List[List[float]]],
         seed: int,
         interpretable_parameters: bool = True,
     ):
         """
-
         Parameters
         ----------
-        num_states : int
-            the number of states of the MDP.
-        num_actions : int
-            the number of action of the
+        n_states : int
+            The number of states of the MDP.
+        n_actions : int
+            The number of action of the MDP.
         hyper_params : Union[List[float],List[List[float]]]
-            the prior hyperparameters can either be a list of hyperparameters that are set identical for each
-            state-action pair, or it can be a dictionary with the state action pair as key and a list of hyperparameters
+            The prior parameters can either be a list of parameters that are set identical for each
+            state-action pair, or it can be a dictionary with the state action pair as key and a list of parameters
             as value.
         seed : int
-            the seed for sampling.
+            The random seed.
         interpretable_parameters : bool
-            checks if the parameters are given in the natural way of speaking of NIG hyperparameters.
+            If True, the parameters are given in the natural way of speaking of NIG parameters.
         """
-        super(N_NIG, self).__init__(num_states, num_actions, hyper_params, seed)
 
-        assert self.hyper_params.shape == (num_states, num_actions, 4)
+        super(N_NIG, self).__init__(n_states, n_actions, hyper_params, seed)
+
+        assert self.hyper_params.shape == (n_states, n_actions, 4)
 
         if interpretable_parameters:
             for i in range(self.hyper_params.shape[0]):
@@ -62,18 +62,7 @@ class N_NIG(ConjugateModel):
                         (0.5 * n_tau) / tau,
                     )
 
-    def _update_sa(self, s: int, a: int, rs: List[float]):
-        """
-        updates the beliefs of the given state action pair.
-        Parameters
-        ----------
-        s : int
-            the state to update.
-        a : int
-            the action to update.
-        xs : List
-            the rewards obtained from state action pair (s,a).
-        """
+    def update_sa(self, s: int, a: int, rs: List[float]):
         # Unpack the prior
         (mu0, lambda0, alpha0, beta0) = self.hyper_params[s, a]
 
@@ -95,7 +84,7 @@ class N_NIG(ConjugateModel):
     def sample(self, n: int = 1) -> np.ndarray:
         # Unpack the prior
         (mu, lambda0, alpha, beta) = self.hyper_params.reshape(
-            self.num_states * self.num_actions, -1
+            self.n_states * self.n_actions, -1
         ).T
 
         # Sample scaling tau from a gamma distribution
@@ -107,51 +96,29 @@ class N_NIG(ConjugateModel):
             np.float32
         )
 
-        return mean.reshape(self.num_states, self.num_actions).squeeze()
+        return mean.reshape(self.n_states, self.n_actions).squeeze()
 
     def get_map_estimate(self) -> np.ndarray:
         return self.hyper_params[:, :, 0]
 
 
 class N_N(ConjugateModel):
+    """
+    The Normal-Normal conjugate model.
+    """
+
     def __init__(
         self,
-        num_states: int,
-        num_actions: int,
+        n_states: int,
+        n_actions: int,
         hyper_params: Union[List[float], List[List[float]]],
         seed: int,
     ):
-        """
+        super(N_N, self).__init__(n_states, n_actions, hyper_params, seed)
 
-        Parameters
-        ----------
-        num_states : int
-            the number of states of the MDP.
-        num_actions : int
-            the number of action of the
-        hyper_params : Union[List[float],List[List[float]]]
-            the prior hyperparameters can either be a list of hyperparameters that are set identical for each
-            state-action pair, or it can be a dictionary with the state action pair as key and a list of hyperparameters
-            as value.
-        seed : int
-            the seed for sampling.
-        """
-        super(N_N, self).__init__(num_states, num_actions, hyper_params, seed)
+        assert self.hyper_params.shape == (n_states, n_actions, 2)
 
-        assert self.hyper_params.shape == (num_states, num_actions, 2)
-
-    def _update_sa(self, s: int, a: int, xs: List[float]):
-        """
-        updates the beliefs of the given state action pair.
-        Parameters
-        ----------
-        s : int
-            the state to update.
-        a : int
-            the action to update.
-        xs : List
-            the rewards obtained from state action pair (s,a).
-        """
+    def update_sa(self, s: int, a: int, xs: List[float]):
         for r in xs:
             mu0, tau0 = self.hyper_params[s, a]
             tau1 = tau0 + 1

@@ -1,101 +1,180 @@
 import os
 import shutil
-from typing import TYPE_CHECKING, Dict, List, Type, Union
+from typing import TYPE_CHECKING, Dict, List, Type, Tuple, Iterable
 
 from colosseum import config
-from colosseum.benchmark import ColosseumBenchmarks
-from colosseum.benchmark.utils import obtain_hyperparameters
-from colosseum.experiment.experiment import run_experiments_from_folders
-from colosseum.experiment.hyperopt.base import HyperparameterOptimizationConfiguration, \
-    DEFAULT_HYPERPARAMETERS_OPTIMIZATION_CONFIGURATION
+from colosseum.benchmark.benchmark import ColosseumBenchmark
+from colosseum.benchmark.utils import (
+    instantiate_benchmark_folder,
+    instantiate_agent_configs,
+)
+from colosseum.experiment.experiment_instance import ExperimentInstance
+from colosseum.experiment.experiment_instances import (
+    get_experiment_instances_from_folder,
+)
+from colosseum.utils import ensure_folder
 
 if TYPE_CHECKING:
     from colosseum.agent.agents.base import BaseAgent
 
 
-def run_benchmark(
-    agent_classes_to_benchmark_with_hyperparameters: Union[
-        List[Type["BaseAgent"]], Dict[Type["BaseAgent"], str]
-    ],
-    n_cores: int,
-    load_colosseum_cached_hyperparams: bool = False,
-    benchmark_to_run: ColosseumBenchmarks = ColosseumBenchmarks.ALL,
-    use_ray: bool = False,
-    overwrite_previous_benchmark_config=True,
-    verbose_hyperopt: bool = True,
-    hpoc: HyperparameterOptimizationConfiguration = DEFAULT_HYPERPARAMETERS_OPTIMIZATION_CONFIGURATION,
-):
+def instantiate_agents_and_benchmark(
+    agents_configs: Dict[Type["BaseAgent"], str],
+    benchmark: ColosseumBenchmark,
+    overwrite_previous_experiment: bool = False,
+    experiment_folder: str = None,
+) -> str:
     """
-    runs the Colosseum benchmark for the given agent classes. If no hyperparameters are provided then the default
-    hyperparameters optimization procedure is run.
+    instantiate the benchmark and the agents configs locally.
 
     Parameters
     ----------
-    agent_classes_to_benchmark_with_hyperparameters : Union[List[Type["BaseAgent"]], Dict[Type["BaseAgent"], str]
-        is the list of agent classes or a dictionary whose key are agent classes and values are the corresponding
-        hyperparameters.
-    n_cores : int
-        is the number of cores that are made available to run the benchmark and the hyperparameter optimization when
-        necessary.
-    load_colosseum_cached_hyperparams : bool, optional
-        checks whether to load the hyperparameters of the default agents from Colosseum cache. By default, it is set to
-        False.
-    benchmark_to_run : ColosseumBenchmarks, optional
-        is the type of Colosseum benchmark to run. By default, it is set to the benchmark for all the different MDP
-        settings.
-    use_ray : bool, optional
-        checks whether to use ray for the hyperparameters optimization when necessary. By default, it is set to False.
-    overwrite_previous_benchmark_config : bool, optional
-        checks whether to remove any previous benchmark configuration from the config.get_experiments_to_run() folder.
-        By default, it is set to True.
-    verbose_hyperopt : bool, optional
-        checks whether the hyperparameters optimization procedure is verbose or not.
-    hpoc: HyperparameterOptimizationConfiguration, optional
-        is the configuration for the hyperparameters optimization procedure. By default, the default one is used.
+    agents_configs : Dict[Type["BaseAgent"], str]
+        The dictionary associates agent classes to their gin config files.
+    benchmark : ColosseumBenchmark
+        The benchmark to be instantiated.
+    overwrite_previous_experiment : bool
+        If True the destination folder is cleared before instantiating the MDP configs. If False, it raises an error if
+        it finds a different set of agents configs, MDP configs, or `ExperimentalConfig` in the destination folder.
+    experiment_folder : str
+        The folder where to instantiate the benchmark and the agents configs. By default, it is taken from the package
+        configurations.
+
+    Returns
+    -------
+    str
+        The folder where the benchmark and the agents configs have been instantiated.
     """
 
-    # Obtain the gin config for each agent class
-    agent_classes_to_benchmark_with_hyperparameters = obtain_hyperparameters(
-        agent_classes_to_benchmark_with_hyperparameters,
-        n_cores,
-        load_colosseum_cached_hyperparams,
-        verbose_hyperopt,
-        hpoc
+    # Avoid mixing episodic and continuous settings
+    assert all(
+        agent_class.is_episodic() == list(agents_configs)[0].is_episodic()
+        for agent_class in agents_configs
+    )
+    assert all(
+        mdp_configs.is_episodic() == list(agents_configs)[0].is_episodic()
+        for mdp_configs in benchmark.mdps_gin_configs
     )
 
-    stopped_existing_experiments = []
-    for existing_experiment in os.listdir(config.get_experiment_to_run_folder()):
-        # Removing previous configuration of the benchmark
-        if (
-            overwrite_previous_benchmark_config
-            and existing_experiment in benchmark_to_run.experiment_names()
-        ):
-            shutil.rmtree(config.get_experiment_to_run_folder() + existing_experiment)
-        # Ensure that the other experiments in the folder are not run together
-        elif existing_experiment[0] != "_":
-            stopped_existing_experiments.append(existing_experiment)
-            shutil.move(
-                config.get_experiment_to_run_folder() + existing_experiment,
-                config.get_experiment_to_run_folder() + "_" + existing_experiment,
-            )
+    # Set the current experiment folder of the given benchmark
+    benchmark_folder = (
+        config.get_experiments_folder()
+        if experiment_folder is None
+        else ensure_folder(experiment_folder)
+    ) + benchmark.name
 
-    # Create the folder structure for the mdp_configs of the benchmark
-    benchmark_to_run.get_copy_benchmark_to_folder(config.get_experiment_to_run_folder())
+    if overwrite_previous_experiment:
+        # Remove any previous experiment directory
+        shutil.rmtree(benchmark_folder, ignore_errors=True)
+        os.makedirs(benchmark_folder)
 
-    # Copy the obtained hyperparameters into the experiment config folder
-    for (
-        agent_class,
-        hyper_gin_config,
-    ) in agent_classes_to_benchmark_with_hyperparameters.items():
-        benchmark_to_run.add_agent_config(
-            config.get_experiment_to_run_folder(), hyper_gin_config, agent_class
+    # Instantiate the mdp configs
+    instantiate_benchmark_folder(benchmark, benchmark_folder)
+
+    # Instantiate the agent configs
+    instantiate_agent_configs(agents_configs, benchmark_folder)
+
+    return benchmark_folder
+
+
+def instantiate_and_get_exp_instances_from_benchmark(
+    agents_configs: Dict[Type["BaseAgent"], str],
+    benchmark: ColosseumBenchmark,
+    overwrite_previous_experiment: bool = False,
+    experiment_folder: str = None,
+) -> List[ExperimentInstance]:
+    """
+    instantiate the benchmark and the agents configs locally, and creates the corresponding `ExperimentInstance`.
+
+    Parameters
+    ----------
+    agents_configs : Dict[Type["BaseAgent"], str]
+        The dictionary associates agent classes to their gin config files.
+    benchmark : ColosseumBenchmark
+        The benchmark to be instantiated.
+    overwrite_previous_experiment : bool
+        If True the destination folder is cleared before instantiating the MDP configs. If False, it raises an error if
+        it finds a different set of agents configs, MDP configs, or `ExperimentalConfig` in the destination folder.
+    experiment_folder : str
+        The folder where to instantiate the benchmark and the agents configs. By default, it is taken from the package
+        configurations.
+
+    Returns
+    -------
+    List[ExperimentInstance]
+        The `ExperimentInstance`s corresponding to the benchmark and the agents configs.
+    """
+
+    # Instantiate the local directories for the benchmark
+    benchmark_folder = instantiate_agents_and_benchmark(
+        agents_configs, benchmark, overwrite_previous_experiment, experiment_folder
+    )
+
+    # Create the ExperimentInstance objects
+    return get_experiment_instances_from_folder(benchmark_folder)
+
+
+def instantiate_and_get_exp_instances_from_agents_and_benchmarks(
+    agents_and_benchmarks: Iterable[
+        Tuple[Dict[Type["BaseAgent"], str], ColosseumBenchmark]
+    ],
+    overwrite_previous_experiment: bool = False,
+    experiment_folder: str = None,
+) -> List[ExperimentInstance]:
+    """
+    instantiate the benchmarks_and_agents and the agents configs locally, and creates the corresponding `ExperimentInstance`.
+
+    Parameters
+    ----------
+    agents_and_benchmarks : Iterable[Tuple[Dict[Type["BaseAgent"], str], ColosseumBenchmark]]
+        The agent configs and benchmarks_and_agents to be instantiated.
+    overwrite_previous_experiment : bool
+        If True the destination folder is cleared before instantiating the MDP configs. If False, it raises an error if
+        it finds a different set of agents configs, MDP configs, or `ExperimentalConfig` in the destination folder.
+    experiment_folder : str
+        The folder where to instantiate the benchmark and the agents configs. By default, it is taken from the package
+        configurations.
+
+    Returns
+    -------
+    List[ExperimentInstance]
+        The `ExperimentInstance`s corresponding to the benchmarks_and_agents and the agents configs.
+    """
+
+    experiment_instances = []
+    for agents_configs, benchmark in agents_and_benchmarks:
+        experiment_instances += instantiate_and_get_exp_instances_from_benchmark(
+            agents_configs, benchmark, overwrite_previous_experiment, experiment_folder
         )
+    return experiment_instances
 
-    run_experiments_from_folders(n_cores, use_ray=use_ray)
 
-    # Restoring the previously stopped experiments
-    for stopped_existing_experiment in stopped_existing_experiments:
-        shutil.move(
-            config.get_experiment_to_run_folder() + "_" + stopped_existing_experiment,
-            config.get_experiment_to_run_folder() + stopped_existing_experiment,
-        )
+def instantiate_and_get_exp_instances_from_agents_and_benchmarks_for_hyperopt(
+    agents_and_benchmarks: Iterable[
+        Tuple[Dict[Type["BaseAgent"], str], ColosseumBenchmark]
+    ],
+    overwrite_previous_experiment: bool = False,
+) -> List[ExperimentInstance]:
+    """
+    instantiate the benchmarks_and_agents and the agents configs for the parameters optimization locally (by
+    checking the parameters optimization folder in the package configurations), and creates the corresponding
+    `ExperimentInstance`.
+
+    Parameters
+    ----------
+    agents_and_benchmarks : Iterable[Tuple[Dict[Type["BaseAgent"], str], ColosseumBenchmark]]
+        The agent configs and benchmarks_and_agents to be instantiated.
+    overwrite_previous_experiment : bool
+        If True the destination folder is cleared before instantiating the MDP configs. If False, it raises an error if
+        it finds a different set of agents configs, MDP configs, or `ExperimentalConfig` in the destination folder.
+
+    Returns
+    -------
+    List[ExperimentInstance]
+        The `ExperimentInstance`s corresponding to the benchmarks_and_agents and the agents configs.
+    """
+    return instantiate_and_get_exp_instances_from_agents_and_benchmarks(
+        agents_and_benchmarks,
+        overwrite_previous_experiment,
+        config.get_hyperopt_folder(),
+    )

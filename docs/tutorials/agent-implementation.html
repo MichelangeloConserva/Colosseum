@@ -1,0 +1,1099 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Agent implementation &#8212; The hitchhiker&#39;s guide to Colosseum</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/myfile.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"bR": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <link rel="shortcut icon" href="../_static/colosseum_icon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Non-tabular setting" href="non-tabular.html" />
+    <link rel="prev" title="Empirical hardness analysis" href="hardness-analysis.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/colosseum_banner.svg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">The hitchhiker's guide to Colosseum</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    What is Colosseum?
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/manifesto.html">
+   Motivation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../documentation.html">
+   API reference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/participating.html">
+   Participating
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="introduction.html">
+   Tutorials overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="colosseum-configurations.html">
+   Configurations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="agent-performance-analysis.html">
+   Agent performance analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-visual-representations.html">
+   MDP visual inspections
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-introduction.html">
+   Colosseum benchmark
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-analysis.html">
+   Benchmark analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-custom.html">
+   Custom benchmarks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-running.html">
+   Running benchmarks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hyperopt.html">
+   Hyperparameters optimization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-scaling.html">
+   Scaling up Colosseum
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-functionalities.html">
+   MDP class
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hardness-analysis.html">
+   Empirical hardness analysis
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Agent implementation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="non-tabular.html">
+   Non-tabular setting
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/MichelangeloConserva/Colosseum/main?urlpath=tree/docs/book/tutorials/agent-implementation.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum/issues/new?title=Issue%20on%20page%20%2Ftutorials/agent-implementation.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/tutorials/agent-implementation.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="../_sources/tutorials/agent-implementation.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-texttt-q-learning-ensemble-agent">
+   The
+   <span class="math notranslate nohighlight">
+    \(\texttt{q-learning}\)
+   </span>
+   ensemble agent
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-baseagent-class">
+     The
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       BaseAgent
+      </span>
+     </code>
+     class
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-qensemblemodel">
+     The QEnsembleModel
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-ensembleqlearning-agent">
+     The EnsembleQLearning agent
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#testing-the-ensembleqlearning-agent-class">
+     Testing the
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EnsembleQLearning
+      </span>
+     </code>
+     agent class
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#benchmarking">
+     Benchmarking
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Agent implementation</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-texttt-q-learning-ensemble-agent">
+   The
+   <span class="math notranslate nohighlight">
+    \(\texttt{q-learning}\)
+   </span>
+   ensemble agent
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-baseagent-class">
+     The
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       BaseAgent
+      </span>
+     </code>
+     class
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-qensemblemodel">
+     The QEnsembleModel
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-ensembleqlearning-agent">
+     The EnsembleQLearning agent
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#testing-the-ensembleqlearning-agent-class">
+     Testing the
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       EnsembleQLearning
+      </span>
+     </code>
+     agent class
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#benchmarking">
+     Benchmarking
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="agent-implementation">
+<h1>Agent implementation<a class="headerlink" href="#agent-implementation" title="Permalink to this headline">#</a></h1>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+Necessary imports<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="kn">import</span> <span class="nn">dm_env</span>
+<span class="kn">import</span> <span class="nn">gin</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">tune</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span><span class="p">,</span> <span class="n">cm</span>
+
+<span class="kn">from</span> <span class="nn">colosseum</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">colosseum.agent.actors</span> <span class="kn">import</span> <span class="n">QValuesActor</span>
+<span class="kn">from</span> <span class="nn">colosseum.agent.agents.base</span> <span class="kn">import</span> <span class="n">BaseAgent</span>
+<span class="kn">from</span> <span class="nn">colosseum.agent.agents.episodic</span> <span class="kn">import</span> <span class="n">QLearningEpisodic</span>
+<span class="kn">from</span> <span class="nn">colosseum.agent.mdp_models.base</span> <span class="kn">import</span> <span class="n">BaseMDPModel</span>
+<span class="kn">from</span> <span class="nn">colosseum.analysis.plots</span> <span class="kn">import</span> <span class="n">_get_index</span>
+<span class="kn">from</span> <span class="nn">colosseum.analysis.plots</span> <span class="kn">import</span> <span class="n">agent_performances_per_mdp_plot</span>
+<span class="kn">from</span> <span class="nn">colosseum.analysis.plots</span> <span class="kn">import</span> <span class="n">plot_labels_on_benchmarks_hardness_space</span>
+<span class="kn">from</span> <span class="nn">colosseum.analysis.tables</span> <span class="kn">import</span> <span class="n">get_latex_table_of_average_indicator</span>
+<span class="kn">from</span> <span class="nn">colosseum.benchmark</span> <span class="kn">import</span> <span class="n">ColosseumDefaultBenchmark</span>
+<span class="kn">from</span> <span class="nn">colosseum.dynamic_programming.utils</span> <span class="kn">import</span> <span class="n">get_policy_from_q_values</span>
+<span class="kn">from</span> <span class="nn">colosseum.emission_maps</span> <span class="kn">import</span> <span class="n">EmissionMap</span>
+<span class="kn">from</span> <span class="nn">colosseum.experiment.agent_mdp_interaction</span> <span class="kn">import</span> <span class="n">MDPLoop</span>
+<span class="kn">from</span> <span class="nn">colosseum.hyperopt</span> <span class="kn">import</span> <span class="n">SMALL_HYPEROPT_CONF</span>
+<span class="kn">from</span> <span class="nn">colosseum.mdp.river_swim</span> <span class="kn">import</span> <span class="n">RiverSwimEpisodic</span>
+<span class="kn">from</span> <span class="nn">colosseum.utils</span> <span class="kn">import</span> <span class="n">make_mdp_spec</span>
+<span class="kn">from</span> <span class="nn">colosseum.utils.acme.specs</span> <span class="kn">import</span> <span class="n">MDPSpec</span>
+<span class="kn">from</span> <span class="nn">colosseum.utils.acme</span> <span class="kn">import</span> <span class="n">InMemoryLogger</span>
+<span class="kn">from</span> <span class="nn">colosseum.benchmark.run</span> <span class="kn">import</span> <span class="n">instantiate_and_get_exp_instances_from_benchmark</span>
+<span class="kn">from</span> <span class="nn">colosseum.experiment.experiment_instances</span> <span class="kn">import</span> <span class="n">run_experiment_instances</span>
+<span class="kn">from</span> <span class="nn">colosseum.agent.utils</span> <span class="kn">import</span> <span class="n">sample_agent_gin_configs_file</span>
+
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span>
+
+<span class="n">config</span><span class="o">.</span><span class="n">set_experiments_folder</span><span class="p">(</span><span class="s2">&quot;tutorial&quot;</span><span class="p">,</span> <span class="s2">&quot;agent_run&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details></aside>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+<p>This tutorial covers the implementation of a new agent in <span class="math notranslate nohighlight">\(\texttt{Colosseum}\)</span>.
+Although novel agents should be preferably implemented inside the
+<span class="xref myst"><code class="docutils literal notranslate"><span class="pre">agents</span></code></span>
+module, it is also possible to implement your agent outside <span class="math notranslate nohighlight">\(\texttt{Colosseum}\)</span> and register the implemented class to <span class="math notranslate nohighlight">\(\texttt{Colosseum}\)</span>.
+For the sake of the tutorial, we will follow the latter option.</p>
+<p>Before diving into the tutorial, we list below the agent classes available in the package.</p>
+<p><strong>Available agent classes</strong></p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-4 sd-g-xs-4 sd-g-sm-4 sd-g-md-4 sd-g-lg-4 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Tabular episodic agents</div>
+<p class="sd-card-text"><a href="../pdoc_files/colosseum/agent/agents/episodic/posterior_sampling.html#PSRLEpisodic"><code class="docutils literal notranslate"><span class="pre">PSRLEpisodic</span></code></a><br />
+<a href="../pdoc_files/colosseum/agent/agents/episodic/q_learning.html#QLearningEpisodic"><code class="docutils literal notranslate"><span class="pre">QLearningEpisodic</span></code></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Tabular continuous  agents</div>
+<p class="sd-card-text"><a href="../pdoc_files/colosseum/agent/agents/infinite_horizon/posterior_sampling.html#PSRLContinuous"><code class="docutils literal notranslate"><span class="pre">PSRLContinuous</span></code></a><br />
+<a href="../pdoc_files/colosseum/agent/agents/infinite_horizon/q_learning.html#QLearningContinuous"><code class="docutils literal notranslate"><span class="pre">QLearningContinuous</span></code></a><br />
+<a href="../pdoc_files/colosseum/agent/agents/infinite_horizon/ucrl2.html#UCRL2Continuous"><code class="docutils literal notranslate"><span class="pre">UCRL2Continuous</span></code></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Non-tabular episodic agents</div>
+<p class="sd-card-text"><a href="../pdoc_files/colosseum/agent/agents/episodic/actor_critic.html#ActorCriticEpisodic"><code class="docutils literal notranslate"><span class="pre">ActorCriticEpisodic</span></code></a><br />
+<a href="../pdoc_files/colosseum/agent/agents/episodic/actor_critic_rnn.html#ActorCriticRNNEpisodic"><code class="docutils literal notranslate"><span class="pre">ActorCriticRNNEpisodic</span></code></a><br />
+<a href="../pdoc_files/colosseum/agent/agents/episodic/boot_dqn.html#BootDQNEpisodic"><code class="docutils literal notranslate"><span class="pre">BootDQNEpisodic</span></code></a><br />
+<a href="../pdoc_files/colosseum/agent/agents/episodic/dqn.html#DQNEpisodic"><code class="docutils literal notranslate"><span class="pre">DQNEpisodic</span></code></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Non-tabular continuous agents</div>
+<p class="sd-card-text"><a href="../pdoc_files/colosseum/agent/agents/infinite_horizon/actor_critic.html#ActorCriticContinuous"><code class="docutils literal notranslate"><span class="pre">ActorCriticContinuous</span></code></a><br />
+<a href="../pdoc_files/colosseum/agent/agents/infinite_horizon/actor_critic_rnn.html#ActorCriticRNNContinuous"><code class="docutils literal notranslate"><span class="pre">ActorCriticRNNContinuous</span></code></a><br />
+<a href="../pdoc_files/colosseum/agent/agents/infinite_horizon/boot_dqn.html#BootDQNContinuous"><code class="docutils literal notranslate"><span class="pre">BootDQNContinuous</span></code></a><br />
+<a href="../pdoc_files/colosseum/agent/agents/infinite_horizon/dqn.html#DQNContinuous"><code class="docutils literal notranslate"><span class="pre">DQNContinuous</span></code></a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section id="the-texttt-q-learning-ensemble-agent">
+<h2>The <span class="math notranslate nohighlight">\(\texttt{q-learning}\)</span> ensemble agent<a class="headerlink" href="#the-texttt-q-learning-ensemble-agent" title="Permalink to this headline">#</a></h2>
+<p>The tutorial implements a simple extension of the q-learning algorithm with boosted Bayesian-inspired exploration using ensembles.
+Concretely, the agent randomly initialises <span class="math notranslate nohighlight">\(K\)</span> different q-value estimates and, at the beginning of each episode, it samples one of the estimates and acts greedily with respect to it.
+Each transition is used to update all the q-value estimates.
+Note that although different exploratory behaviour can be observed at the beginning of the interaction of the agent with the MDP, we are guaranteed that the estimates will converge to the true optimal q value.</p>
+<section id="the-baseagent-class">
+<h3>The <code class="docutils literal notranslate"><span class="pre">BaseAgent</span></code> class<a class="headerlink" href="#the-baseagent-class" title="Permalink to this headline">#</a></h3>
+<p>The <a class="reference external" href="../pdoc_files/colosseum/agent/agents/base.html#BaseAgent"><code class="docutils literal notranslate"><span class="pre">BaseAgent</span></code></a> class can be implemented following two different perspecitve.
+The simplest one is to implement all the abstract methods of the class.
+However, it is also to implement the new agent in a modular fashion, which may be useful when components can be re-used in different agents.
+The two components of an reinforcement learning are the
+<a class="reference external" href="../pdoc_files/colosseum/agent/mdp_models/base.html#BaseMDPModel"><code class="docutils literal notranslate"><span class="pre">BaseMDPModel</span></code></a>
+and the
+<a class="reference external" href="../pdoc_files/colosseum/agent/actors/base.html#BaseActor"><code class="docutils literal notranslate"><span class="pre">BaseActor</span></code></a>.
+The <code class="docutils literal notranslate"><span class="pre">BaseMDPModel</span></code> stores and updates estimates regarding the MDP, e.g. estimated transition probabilities or q-value estimates.
+The <code class="docutils literal notranslate"><span class="pre">BaseActor</span></code> defines how the agent acts based on estimates from the <code class="docutils literal notranslate"><span class="pre">BaseMDPModel</span></code>, for example, the <a class="reference external" href="../pdoc_files/colosseum/agent/actors/Q_values_actor.html#QValuesActor"><code class="docutils literal notranslate"><span class="pre">QValuesActor</span></code></a> can be used to define epsilon greedy and Boltzmann policies for given q-values estimates.
+Note that <code class="docutils literal notranslate"><span class="pre">BaseActor</span></code> objects are not supposed to keep a reference to the corresponding <code class="docutils literal notranslate"><span class="pre">BaseMDPModel</span></code>, and the agent should decide when to update the estimates that the actor is using.</p>
+<p>In this tutorial, we implement a novel <code class="docutils literal notranslate"><span class="pre">BaseMDPModel</span></code> and use the <code class="docutils literal notranslate"><span class="pre">QValuesActor</span></code>.</p>
+</section>
+<section id="the-qensemblemodel">
+<h3>The QEnsembleModel<a class="headerlink" href="#the-qensemblemodel" title="Permalink to this headline">#</a></h3>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">QEnsembleModel</span><span class="p">(</span><span class="n">BaseMDPModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; An MDP model composed of an ensemble of q-value estimates. &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">mdp_specs</span><span class="p">:</span> <span class="s2">&quot;MDPSpec&quot;</span><span class="p">,</span>
+        <span class="n">n_ensembles</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        seed : int</span>
+<span class="sd">           the seed controlling the random parts of the model.</span>
+<span class="sd">        mdp_specs : MDPSpec</span>
+<span class="sd">            the specification of the MDP properties, e.g. number of states.</span>
+<span class="sd">        n_ensembles : int</span>
+<span class="sd">            the number of ensembles to use.</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            the coefficient for the q-learning update rule.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">QEnsembleModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">mdp_specs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        
+        <span class="c1"># The index of the ensemble that will be </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_head</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="c1"># Random initialization of the q value estimates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_states</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_actions</span><span class="p">,</span> <span class="n">n_ensembles</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_H</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_states</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">active_Q</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The q-value estimates corresponding to the active q-value estimate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_head</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">step_update</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span> <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span> <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        updates the q value estimate using the q-learning update rule.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ts_t : dm_env.TimeStep</span>
+<span class="sd">          the object containing the information at time step t.</span>
+<span class="sd">        a_t : int</span>
+<span class="sd">          the action the agent has taken at time step t.</span>
+<span class="sd">        ts_tp1 : dm_env.TimeStep</span>
+<span class="sd">          the object containing the information at time step t + 1.</span>
+<span class="sd">        h : int</span>
+<span class="sd">          the in-episode time step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+        <span class="n">s_t</span> <span class="o">=</span> <span class="n">ts_t</span><span class="o">.</span><span class="n">observation</span>
+        <span class="n">s_tp1</span> <span class="o">=</span> <span class="n">ts_tp1</span><span class="o">.</span><span class="n">observation</span>
+
+        <span class="c1"># The q-learning update for all q value estimates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">[</span><span class="n">h</span><span class="p">,</span> <span class="n">s_t</span><span class="p">,</span> <span class="n">a_t</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">[</span><span class="n">h</span><span class="p">,</span> <span class="n">s_t</span><span class="p">,</span> <span class="n">a_t</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="n">ts_tp1</span><span class="o">.</span><span class="n">reward</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">[</span><span class="n">h</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">s_tp1</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">[</span><span class="n">h</span><span class="p">,</span> <span class="n">s_t</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">[</span><span class="n">h</span><span class="p">,</span> <span class="n">s_t</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-ensembleqlearning-agent">
+<h3>The EnsembleQLearning agent<a class="headerlink" href="#the-ensembleqlearning-agent" title="Permalink to this headline">#</a></h3>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@gin</span><span class="o">.</span><span class="n">configurable</span>
+<span class="k">class</span> <span class="nc">EnsembleQLearning</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A simple agent that extends the q-learning algorithms with ensembles.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_episodic</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="c1"># Base parameters</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">mdp_specs</span><span class="p">:</span> <span class="s2">&quot;MDPSpec&quot;</span><span class="p">,</span>
+        <span class="n">optimization_horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="c1"># MDP model hyperparameters</span>
+        <span class="n">n_ensembles</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="c1"># Actor hyperparameters</span>
+        <span class="n">epsilon_greedy</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">boltzmann_temperature</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        seed : int</span>
+<span class="sd">            The random seed.</span>
+<span class="sd">        mdp_specs : MDPSpec</span>
+<span class="sd">            The specification of the MDP properties, e.g. number of states.</span>
+<span class="sd">        optimization_horizon : int</span>
+<span class="sd">            The total number of interactions with the MDP.</span>
+<span class="sd">        n_ensembles : int</span>
+<span class="sd">            The number of ensembles to use.</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            The coefficient for the q-learning update rule.</span>
+<span class="sd">        epsilon_greedy : Union[float, Callable], optional</span>
+<span class="sd">            The probability of selecting an action at random. It can be provided as a float or as a function of the</span>
+<span class="sd">            total number of interactions. By default, the probability is set to zero.</span>
+<span class="sd">        boltzmann_temperature : Union[float, Callable], optional</span>
+<span class="sd">            The parameter that controls the Boltzmann exploration. It can be provided as a float or as a function of</span>
+<span class="sd">            the total number of interactions. By default, Boltzmann exploration is disabled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">n_ensembles</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_ensembles</span> <span class="o">=</span> <span class="n">n_ensembles</span>
+        
+        <span class="c1"># The MDP model</span>
+        <span class="n">mdp_model</span> <span class="o">=</span> <span class="n">QEnsembleModel</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">mdp_specs</span><span class="p">,</span> <span class="n">n_ensembles</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        
+        <span class="c1"># The Actor model</span>
+        <span class="n">actor</span> <span class="o">=</span> <span class="n">QValuesActor</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">mdp_specs</span><span class="p">,</span> <span class="n">epsilon_greedy</span><span class="p">,</span> <span class="n">boltzmann_temperature</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">EnsembleQLearning</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">seed</span><span class="p">,</span> <span class="n">mdp_specs</span><span class="p">,</span> <span class="n">mdp_model</span><span class="p">,</span> <span class="n">actor</span><span class="p">,</span> <span class="n">optimization_horizon</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">episode_end_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        samples a new index for the ensembles.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="o">.</span><span class="n">active_head</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng_fast</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_ensembles</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_actor</span><span class="o">.</span><span class="n">set_q_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="o">.</span><span class="n">active_Q</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">before_start_interacting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episode_end_update</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">current_optimal_stochastic_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The optimal policy the agent would use if no more training was allowed, which, in our case, is acting</span>
+<span class="sd">             greedily w.r.t. the average q value estimate over ensembles.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Q_average</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="o">.</span><span class="n">Q</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">get_policy_from_q_values</span><span class="p">(</span><span class="n">Q_average</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_hyperparameters_search_spaces</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">tune</span><span class="o">.</span><span class="n">sample</span><span class="o">.</span><span class="n">Domain</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            The sampling spaces associated with the hyperparameters of the algorithm.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;n_ensembles&quot;</span><span class="p">:</span> <span class="n">tune</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+            <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="n">tune</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">produce_gin_file_from_parameters</span><span class="p">(</span>
+        <span class="n">hyperparameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">          The hyperparameter values in gin file format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;prms_</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">/EnsembleQLearning.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">string</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_agent_instance_from_parameters</span><span class="p">(</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">optimization_horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">mdp_specs</span><span class="p">:</span> <span class="n">MDPSpec</span><span class="p">,</span>
+        <span class="n">hyperparameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BaseAgent&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            The agent instance corresponding to the hyperparameters and the MDP specification.</span>
+<span class="sd">            actions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">EnsembleQLearning</span><span class="p">(</span>
+            <span class="n">mdp_specs</span><span class="o">=</span><span class="n">mdp_specs</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+            <span class="n">optimization_horizon</span><span class="o">=</span><span class="n">optimization_horizon</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="n">hyperparameters</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">],</span>
+            <span class="n">n_ensembles</span><span class="o">=</span><span class="n">hyperparameters</span><span class="p">[</span><span class="s2">&quot;n_ensembles&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_emission_map_accepted</span><span class="p">(</span><span class="n">emission_map</span><span class="p">:</span> <span class="s2">&quot;EmissionMap&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">          True if the emission map in input is the tabular one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">EmissionMap</span><span class="o">.</span><span class="n">is_tabular</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="testing-the-ensembleqlearning-agent-class">
+<h3>Testing the <code class="docutils literal notranslate"><span class="pre">EnsembleQLearning</span></code> agent class<a class="headerlink" href="#testing-the-ensembleqlearning-agent-class" title="Permalink to this headline">#</a></h3>
+<p>We now proceed to compare the <code class="docutils literal notranslate"><span class="pre">EnsembleQLearning</span></code> agent with the q-learning agent with UCB exploration available in the
+package <a class="reference external" href="../pdoc_files/colosseum/agent/agents/episodicq_learning.html#QLearningEpisodic"><code class="docutils literal notranslate"><span class="pre">QLearningEpisodic</span></code></a>
+on an instance of the
+<a class="reference external" href="../pdoc_files/colosseum/mdp/river_swim/base.html#RiverSwimEpisodic"><code class="docutils literal notranslate"><span class="pre">RiverSwimEpisodic</span></code></a>
+class.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">optimization_horizon</span> <span class="o">=</span> <span class="mi">30_000</span>
+
+<span class="c1"># Instantiate the MDP</span>
+<span class="n">mdp</span> <span class="o">=</span> <span class="n">RiverSwimEpisodic</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">p_rand</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="c1"># Instantiate the agent</span>
+<span class="n">ensemble_q_learning</span> <span class="o">=</span> <span class="n">EnsembleQLearning</span><span class="p">(</span>
+    <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+    <span class="n">mdp_specs</span><span class="o">=</span><span class="n">make_mdp_spec</span><span class="p">(</span><span class="n">mdp</span><span class="p">),</span>
+    <span class="n">optimization_horizon</span><span class="o">=</span><span class="n">optimization_horizon</span><span class="p">,</span>
+    <span class="n">n_ensembles</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Perform the agent/MDP interaction</span>
+<span class="n">loop_ensemble</span> <span class="o">=</span> <span class="n">MDPLoop</span><span class="p">(</span><span class="n">mdp</span><span class="p">,</span> <span class="n">ensemble_q_learning</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">InMemoryLogger</span><span class="p">())</span>
+<span class="n">loop_ensemble</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">optimization_horizon</span><span class="p">,</span> <span class="n">log_every</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Q-learning agent with UCB exploration</span>
+<span class="n">q_learning_agent</span> <span class="o">=</span> <span class="n">QLearningEpisodic</span><span class="p">(</span>
+    <span class="n">mdp_specs</span><span class="o">=</span><span class="n">make_mdp_spec</span><span class="p">(</span><span class="n">mdp</span><span class="p">),</span>
+    <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+    <span class="n">optimization_horizon</span><span class="o">=</span><span class="n">optimization_horizon</span><span class="p">,</span>
+    <span class="n">c_1</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="p">)</span>
+<span class="n">loop_ql</span> <span class="o">=</span> <span class="n">MDPLoop</span><span class="p">(</span><span class="n">mdp</span><span class="p">,</span> <span class="n">q_learning_agent</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">InMemoryLogger</span><span class="p">())</span>
+<span class="n">loop_ql</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">optimization_horizon</span><span class="p">,</span> <span class="n">log_every</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Plot the cumulative regret of the agents</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">loop_ensemble</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">baselines</span><span class="o">=</span><span class="p">[])</span>
+<span class="n">loop_ql</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/agent-implementation_7_0.png" src="../_images/agent-implementation_7_0.png" />
+</div>
+</div>
+</section>
+<section id="benchmarking">
+<h3>Benchmarking<a class="headerlink" href="#benchmarking" title="Permalink to this headline">#</a></h3>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>For further details on running a <span class="math notranslate nohighlight">\(\texttt{Colosseum}\)</span> benchmark, have a look at the
+<a class="reference internal" href="benchmark-running.html"><span class="doc std std-doc"><em>Benchmarks running</em> tutorial</span></a>.</p>
+</div>
+</aside>
+<p>We now briefly benchmark the agent using the
+<a class="reference external" href="../pdoc_files/colosseum/benchmark/benchmark.html#ColosseumDefaultBenchmark.EPISODIC_QUICK_TEST"><code class="docutils literal notranslate"><span class="pre">EPISODIC_QUICK_TEST</span></code></a> benchmark,
+which is the default quick benchmark for the episodic setting.
+Note that, for simplicity, the hyperparameters are sampled from the agent’s hyparameter spaces, and no hyperparameters optimization is carried out.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Register the EnsembleQLearning as it is not implemented in the Colosseum package</span>
+<span class="n">config</span><span class="o">.</span><span class="n">register_agent_class</span><span class="p">(</span><span class="n">EnsembleQLearning</span><span class="p">)</span>
+
+<span class="c1"># Sample two random agent parameters</span>
+<span class="n">agents_configs</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">EnsembleQLearning</span> <span class="p">:</span> <span class="n">sample_agent_gin_configs_file</span><span class="p">(</span><span class="n">EnsembleQLearning</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># Instantiate the benchmark</span>
+<span class="n">benchmark</span> <span class="o">=</span> <span class="n">ColosseumDefaultBenchmark</span><span class="o">.</span><span class="n">EPISODIC_QUICK_TEST</span><span class="o">.</span><span class="n">get_benchmark</span><span class="p">()</span>
+
+<span class="c1"># Run the experiment instances</span>
+<span class="n">experiment_instances</span> <span class="o">=</span> <span class="n">instantiate_and_get_exp_instances_from_benchmark</span><span class="p">(</span><span class="n">agents_configs</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">)</span>
+<span class="n">run_experiment_instances</span><span class="p">(</span><span class="n">experiment_instances</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>For further details on the analysis of the results of a benchmarking procedure, have a look at the
+<span class="xref myst">Benchmark analysis_ tutorial</span>.</p>
+</div>
+</aside>
+<p>The results of the benchmarking procedure are now stored locally and can be analysed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">agent_performances_per_mdp_plot</span><span class="p">(</span>
+    <span class="n">benchmark</span><span class="o">.</span><span class="n">get_experiments_benchmark_log_folder</span><span class="p">(),</span>
+    <span class="s2">&quot;cumulative_regret&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/agent-implementation_11_0.png" src="../_images/agent-implementation_11_0.png" />
+</div>
+</div>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./tutorials"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="hardness-analysis.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Empirical hardness analysis</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="non-tabular.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Non-tabular setting</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Michelangelo Conserva<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

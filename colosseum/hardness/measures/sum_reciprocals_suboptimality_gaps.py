@@ -10,8 +10,11 @@ def get_sum_reciprocals_suboptimality_gaps(
     regularization: float = 0.1,
 ):
     """
-    returns the sum of the reciprocals of the sub-optimality gaps. The reachable_states parameter is necessary in the
-    episodic setting and it should be a list of tuple with in episode time step and state for each feasible combination
+    Returns
+    -------
+    float
+        The sum of the reciprocals of the sub-optimality gaps. The reachable_states parameter is necessary in the
+    episodic setting, and it should be a list of tuple with in episode time step and state for each feasible combination
     of in episode time step and state.
     """
     is_episodic = V.ndim == 2

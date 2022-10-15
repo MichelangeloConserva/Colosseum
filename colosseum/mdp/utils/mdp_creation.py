@@ -18,9 +18,15 @@ if TYPE_CHECKING:
 
 @dataclass()
 class NodeInfoClass:
+    """
+    The data class containing some quantities related to the nodes.
+    """
     transition_distributions: Dict[int, NextStateSampler]
+    """A dictionary that maps actions to next state distributions."""
     actions_visitation_count: Dict[int, int]
+    """The dictionary that keeps the count of how many times each action has been selected for the current node."""
     state_visitation_count: int = 0
+    """The counter for the number of times the node has been visited."""
 
     def update_visitation_counts(self, action: int = None):
         self.state_visitation_count += 1
@@ -42,6 +48,14 @@ def get_transition_matrix_and_rewards(
     node_to_index: Dict["NODE_TYPE", int],
     is_sparse: bool = False,
 ) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Returns
+    -------
+    np.ndarray
+        The transition 3d array of the MDP.
+    np.ndarray
+        The reward matrix of the MDP.
+    """
     if not is_sparse:
         mem_bytes = os.sysconf("SC_PAGE_SIZE") * os.sysconf("SC_PHYS_PAGES")
         is_sparse = n_states ** 2 * n_actions * np.float32().itemsize > 0.1 * mem_bytes
@@ -88,7 +102,12 @@ def get_episodic_transition_matrix_and_rewards(
     node_to_index: Dict["NODE_TYPE", int],
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
-    returns the |H| x |S| x |A| x |S| episodic transition matrix and the |H| x |S| x |A| matrix of expected rewards.
+    Returns
+    -------
+    np.ndarray
+        The episodic transition 4d array of the MDP.
+    np.ndarray
+        The 3d episodic reward array of the MDP.
     """
     n_states, n_actions = R.shape
     T_epi = np.zeros(
@@ -117,8 +136,12 @@ def get_continuous_form_episodic_transition_matrix_and_rewards(
     node_to_index: Dict["NODE_TYPE", int],
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
-    returns the transition matrix and the expected rewards matrix for the infinite horizon MDP obtained by augmenting
-    the state space with the time step.
+    Returns
+    -------
+    np.ndarray
+        The transition 3d array for the continuous form of the MDP.
+    np.ndarray
+        The reward matrix for the continuous form of the MDP.
     """
     _, n_action = R.shape
 
@@ -160,7 +183,10 @@ def get_episodic_graph(
     remove_label=False,
 ) -> nx.DiGraph:
     """
-    returns the graph of the MDP augmented with the time step in the state space.
+    Returns
+    -------
+    nx.DiGraph
+        The graph of the MDP augmented with the time step in the state space.
     """
 
     def add_successors(n, h):
@@ -182,9 +208,10 @@ def get_episodic_graph(
     return G_epi
 
 
-import time
-start = time.time()
 def instantiate_transitions(mdp: "BaseMDP", node: "NODE_TYPE"):
+    """
+    recursively instantiate the transitions of MDPs.
+    """
     if not mdp.G.has_node(node) or len(list(mdp.G.successors(node))) == 0:
         transition_distributions = dict()
         for a in range(mdp.n_actions):
@@ -201,11 +228,6 @@ def instantiate_transitions(mdp: "BaseMDP", node: "NODE_TYPE"):
             action in transition_distributions.keys() for action in range(mdp.n_actions)
         )
         _add_node_info_class(mdp, node, transition_distributions)
-
-    global start
-    if time.time() - start > 5:
-        start = time.time()
-        print(len(mdp.G.nodes))
 
 
 def _compute_transition(mdp: "BaseMDP", next_states, probs, node, action, next_node, p):
@@ -226,12 +248,12 @@ def _add_node_info_class(
     transition_distributions: Dict[int, NextStateSampler],
 ):
     """
-    adds a container class (NodeInfoClass) in the node n containing the transition distributions.
+    adds a container class (NodeInfoClass) in the state n containing the transition distributions.
 
     Parameters
     ----------
     n : NodeType
-        the node to which it adds the NodeInfoClass
+        the state to which it adds the NodeInfoClass
     transition_distributions : Dict[int, NextStateSampler]
         the dictionary containing the transition distributions.
     """

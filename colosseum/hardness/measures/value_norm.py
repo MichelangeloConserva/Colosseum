@@ -7,10 +7,8 @@ from colosseum import config
 from colosseum.dynamic_programming import discounted_value_iteration
 from colosseum.dynamic_programming.infinite_horizon import discounted_policy_evaluation
 from colosseum.dynamic_programming.utils import get_policy_from_q_values
-from colosseum.mdp.utils.markov_chain import (
-    get_average_rewards,
-    get_transition_probabilities,
-)
+from colosseum.mdp.utils.markov_chain import get_average_rewards
+from colosseum.mdp.utils.markov_chain import get_transition_probabilities
 
 
 def get_value_norm(
@@ -32,6 +30,11 @@ def get_value_norm(
         checks whether to compute the environmental value norm in the discounted or undiscounted form.
     policy : np.ndarray, optional
         is the policy for which it computes the environmental value norm. By default, it uses the optimal policy.
+
+    Returns
+    -------
+    float
+        The environmental value norm value.
     """
 
     if discount:
@@ -64,12 +67,12 @@ def _calculate_gain(tps, average_rewards, steps):
 
 
 def _calculate_bias(tps, average_rewards, steps=1000):
-    num_states = len(tps)
+    n_states = len(tps)
 
     gain = _calculate_gain(tps, average_rewards, steps)
 
-    h = np.zeros((num_states,))
-    P_i = np.eye(num_states)
+    h = np.zeros((n_states,))
+    P_i = np.eye(n_states)
     start = time.time()
     for i in trange(steps, desc="gain") if config.VERBOSE_LEVEL > 0 else range(steps):
         h += P_i @ (average_rewards - gain)

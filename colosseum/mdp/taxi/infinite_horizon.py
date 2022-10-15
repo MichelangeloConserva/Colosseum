@@ -10,7 +10,6 @@ from colosseum.mdp.taxi.base import TaxiMDP
 class TaxiContinuous(ContinuousMDP, TaxiMDP):
     @staticmethod
     def sample_parameters(n: int, seed: int = None) -> List[Dict[str, Any]]:
-        return TaxiMDP._sample_parameters(n, False, seed)
+        return TaxiMDP.sample_mdp_parameters(n, False, seed)
 
 
-MDPClass = TaxiContinuous

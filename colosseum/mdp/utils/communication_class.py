@@ -24,16 +24,25 @@ if TYPE_CHECKING:
 
 
 class MDPCommunicationClass(IntEnum):
+    """
+    The MDP communication classes.
+    """
     ERGODIC = 0
+    """The ergodic communication class."""
     COMMUNICATING = 1
+    """The communicating communication class."""
     WEAKLY_COMMUNICATING = 2
+    """The weakly-communicating communication class."""
 
 
 def get_recurrent_nodes_set(
     communication_type: MDPCommunicationClass, G: nx.DiGraph
 ) -> Iterable[NODE_TYPE]:
     """
-    returns the recurrent node set. Note that for ergodic and communicating MDPs this corresponds to the state space.
+    Returns
+    -------
+    Iterable[NODE_TYPE]
+        The recurrent states set. Note that for ergodic and communicating MDPs this corresponds to the state space.
     """
     if communication_type == MDPCommunicationClass.WEAKLY_COMMUNICATING:
         c = nx.condensation(G)
@@ -43,9 +52,12 @@ def get_recurrent_nodes_set(
     return G.nodes
 
 
-def get_communication_class(T: np.ndarray, G: nx.DiGraph):
+def get_communication_class(T: np.ndarray, G: nx.DiGraph) -> MDPCommunicationClass:
     """
-    returns the communication class for the MDP.
+    Returns
+    -------
+    MDPCommunicationClass
+        The communication class for the MDP.
     """
     if T.ndim == 4:  # episodic MDP
         assert (
@@ -128,7 +140,7 @@ def _condense_mpd_graph_old(G_ccs, T):
 
 @numba.njit()
 def _condense_mpd_graph(G_ccs, T, d):
-    _, num_actions, _ = T.shape
+    _, n_actions, _ = T.shape
     adj = np.zeros((d, d), dtype=bool_)
     for k in G_ccs:
         for l in G_ccs:
@@ -137,7 +149,7 @@ def _condense_mpd_graph(G_ccs, T, d):
             M = np.zeros(len(G_ccs[k]), np.float32)
             for i, r in enumerate(G_ccs[k]):
                 min_a = np.inf
-                for a in range(num_actions):
+                for a in range(n_actions):
                     summation = 0.0
                     for s in G_ccs[l]:
                         summation += T[r, a, s]
@@ -152,7 +164,7 @@ def _condense_mpd_graph(G_ccs, T, d):
 
 @numba.njit()
 def _condense_mpd_graph_episodic(G_ccs, T, d):
-    H, _, num_actions, _ = T.shape
+    H, _, n_actions, _ = T.shape
     adj = np.zeros((d, d), dtype=bool_)
     for k in G_ccs:
         for l in G_ccs:
@@ -161,7 +173,7 @@ def _condense_mpd_graph_episodic(G_ccs, T, d):
             M = np.zeros(len(G_ccs[k]), np.float32)
             for i, (hr, r) in enumerate(G_ccs[k]):
                 min_a = np.inf
-                for a in range(num_actions):
+                for a in range(n_actions):
                     summation = 0.0
                     for hs, s in G_ccs[l]:
                         if hr + 1 == hs or (hr + 1 == H and hs == 0):

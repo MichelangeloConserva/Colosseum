@@ -9,7 +9,8 @@ import sparse
 from tqdm import tqdm, trange
 
 from colosseum import config
-from colosseum.dynamic_programming import discounted_value_iteration, episodic_value_iteration
+from colosseum.dynamic_programming import episodic_value_iteration
+from colosseum.dynamic_programming import discounted_value_iteration
 from colosseum.utils import get_loop
 
 if TYPE_CHECKING:
@@ -18,7 +19,10 @@ if TYPE_CHECKING:
 
 def get_diameter(T: np.ndarray, is_episodic: bool, max_value: float = None) -> float:
     """
-    returns the diameter for the transition matrix given in input. The is_episodic is only necessary to check whether
+    Returns
+    -------
+    float
+        The diameter for the transition matrix given in input. The is_episodic is only necessary to check whether
     the dimensionality of the transition matrix is effectively correct. Note that, for the episodic setting, this
     computes the diameter for the augmented state space.
     """
@@ -42,7 +46,10 @@ def get_in_episodic_diameter(
     max_value: float = None,
 ) -> float:
     """
-    returns the diameter for the in episodic formulation. Note that in this case, the diameter will always be less than
+    Returns
+    -------
+    float
+        The diameter for the in episodic formulation. Note that in this case, the diameter will always be less than
     the time horizon.
     """
     if config.get_available_cores() >= 3:
@@ -52,7 +59,10 @@ def get_in_episodic_diameter(
 
 def get_diameter_for_determinsitic_MDPs(G: nx.DiGraph) -> float:
     """
-    returns the diameter for the given graph that represents an MDP. Note that this can be considerably slower than
+    Returns
+    -------
+    float
+        The diameter for the given graph that represents an MDP. Note that this can be considerably slower than
     the dynamic programming implementation we propose.
     """
     A = nx.to_numpy_array(G, nonedge=np.inf)
@@ -67,7 +77,10 @@ def _continuous_diam_calculation(
     es: int, T: np.ndarray, max_value: float = None
 ) -> float:
     """
-    returns the highest optimal expected number of time step to reach es among all other states in the continuous setting
+    Returns
+    -------
+    float
+        The highest optimal expected number of time step to reach es among all other states in the continuous setting.
     """
     T_es = T.copy()
     T_es[es] = 0
@@ -184,8 +197,8 @@ def _single_thread_episodic_diameter_calculation(
     max_value: float = None,
 ) -> float:
     if states is None:
-        num_states = T.shape[-1]
-        states = range(num_states)
+        n_states = T.shape[-1]
+        states = range(n_states)
 
     diameter = -np.inf
     states = list(reversed(states))
@@ -224,11 +237,11 @@ def _single_thread_episodic_diameter_calculation(
 def _d_imap(args):
     T, state_set, epsilon, sparse_T, max_value = args
     if sparse_T:
-        num_states, num_sa = T.shape[-2:]
+        n_states, num_sa = T.shape[-2:]
         diam = 0
         for es in state_set:
             diam = _sparse_diameter_calculation(
-                es, T, int(num_sa / num_states), num_states, diam, epsilon, max_value
+                es, T, int(num_sa / n_states), n_states, diam, epsilon, max_value
             )
         return diam
     return _single_thread_episodic_diameter_calculation(
@@ -242,16 +255,16 @@ def _multi_thread_episodic_diameter_calculation(
     force_sparse: bool = False,
     max_value: float = None,
 ) -> float:
-    num_actions, num_states = T.shape[-2:]
+    n_actions, n_states = T.shape[-2:]
     diameter = -np.inf
 
     sparse_T = False
-    if force_sparse or (num_states > 500 and T.ndim == 3):
-        T = np.moveaxis(T, -1, 0).reshape(num_states, num_states * num_actions)
+    if force_sparse or (n_states > 500 and T.ndim == 3):
+        T = np.moveaxis(T, -1, 0).reshape(n_states, n_states * n_actions)
         T = sparse.COO(T)
         sparse_T = True
 
-    states = np.arange(num_states)[::-1]
+    states = np.arange(n_states)[::-1]
     # np.random.shuffle(states)
     states_sets = np.array_split(states, config.get_available_cores())
     inputs = [(T, state_set, epsilon, sparse_T, max_value) for state_set in states_sets]
@@ -277,18 +290,18 @@ def _episodic_diameter_calculation(
     epsilon: float = 0.001,
     max_value: float = None,
 ) -> float:
-    H, num_states, num_actions, _ = T.shape
-    ETs = np.zeros((H, num_states), dtype=np.float32)
-    ET_minh = np.zeros((num_states,), dtype=np.float32)
+    H, n_states, n_actions, _ = T.shape
+    ETs = np.zeros((H, n_states), dtype=np.float32)
+    ET_minh = np.zeros((n_states,), dtype=np.float32)
     for t in range(1_000_000):
         ETs_old = ETs.copy()
         ETs[-1] = T[-1, 0, 0] @ (1 + ETs[0])
         for hh in range(1, H):
             h = H - hh
-            for j in range(num_states):
+            for j in range(n_states):
                 if j != es:
-                    s = np.zeros(num_actions, np.float32)
-                    for ns in range(num_states):
+                    s = np.zeros(n_actions, np.float32)
+                    for ns in range(n_states):
                         if ns != es:
                             s += T[h - 1, j, :, ns] * (1 + ETs[h, ns])
                     ETs[h - 1, j] = np.min(T[h - 1, j, :, es] + s)
@@ -296,7 +309,7 @@ def _episodic_diameter_calculation(
                         return None
 
         diff = np.abs(ETs_old - ETs).max()
-        for ss in range(num_states):
+        for ss in range(n_states):
             ccc = ETs[:, ss]
             ET_minh[ss] = np.min(ccc[ccc > 0])
         cur_diam = ET_minh.max()
@@ -313,14 +326,14 @@ def _continuous_diameter_calculation(
     epsilon: float = 0.001,
     max_value: float = None,
 ) -> float:
-    num_states, num_actions, _ = T.shape
-    ETs = np.zeros(num_states, dtype=np.float32)
+    n_states, n_actions, _ = T.shape
+    ETs = np.zeros(n_states, dtype=np.float32)
     for t in range(1_000_000):
         ETs_old = ETs.copy()
-        for j in range(num_states):
+        for j in range(n_states):
             if j != es:
-                s = np.zeros(num_actions, np.float32)
-                for ns in range(num_states):
+                s = np.zeros(n_actions, np.float32)
+                for ns in range(n_states):
                     if ns != es:
                         s += T[j, :, ns] * (1 + ETs[ns])
                 ETs[j] = np.min(T[j, :, es] + s)
@@ -336,23 +349,23 @@ def _continuous_diameter_calculation(
 def _sparse_diameter_calculation(
     es: "NODE_TYPE",
     T: np.ndarray,
-    num_actions: int,
-    num_states: int,
+    n_actions: int,
+    n_states: int,
     max_diam: float,
     epsilon: float = 0.001,
     max_value: float = None,
 ) -> float:
-    ETs = np.zeros(num_states - 1, dtype=np.float32)
+    ETs = np.zeros(n_states - 1, dtype=np.float32)
 
     next_ets = (
         lambda TT, ET: (TT * ET.reshape((-1, 1)))
-        .reshape((num_states - 1, num_states, num_actions))
+        .reshape((n_states - 1, n_states, n_actions))
         .sum(0)
         .todense()
     )
-    selector = np.ones(num_states, dtype=bool)
+    selector = np.ones(n_states, dtype=bool)
     selector[es] = False
-    Te = T[es].reshape((num_states, num_actions))
+    Te = T[es].reshape((n_states, n_actions))
     T_me = T[selector]
 
     for j in range(1_000_000):
@@ -369,31 +382,31 @@ def _sparse_diameter_calculation(
 def _get_sparse_diameter(
     T: np.ndarray, epsilon: float = 0.001, max_value: float = None
 ) -> float:
-    num_states, num_actions, _ = T.shape
+    n_states, n_actions, _ = T.shape
 
-    T = np.moveaxis(T, -1, 0).reshape(num_states, num_states * num_actions)
+    T = np.moveaxis(T, -1, 0).reshape(n_states, n_states * n_actions)
     T = sparse.COO(T)
     next_ets = (
         lambda TT, ET: (TT * ET.reshape(-1, 1))
-        .reshape((num_states - 1, num_states, num_actions))
+        .reshape((n_states - 1, n_states, n_actions))
         .sum(0)
         .todense()
     )
 
     diameter = -np.inf
     loop = (
-        trange(num_states, desc="Calculating diameter", mininterval=5)
+        trange(n_states, desc="Calculating diameter", mininterval=5)
         if config.VERBOSE_LEVEL > 0
-        else range(num_states)
+        else range(n_states)
     )
-    selector = np.ones(num_states, dtype=bool)
+    selector = np.ones(n_states, dtype=bool)
     for i in loop:
         selector[i] = False
         selector[i - 1] = True
-        Te = T[i].reshape((num_states, num_actions))
+        Te = T[i].reshape((n_states, n_actions))
         T_me = T[selector]
 
-        ETs = np.zeros(num_states - 1)
+        ETs = np.zeros(n_states - 1)
         diff = np.inf
         for j in range(1_000_000):
             ETs_old = ETs.copy()

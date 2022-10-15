@@ -8,30 +8,32 @@ if TYPE_CHECKING:
 
 
 class NextStateSampler:
+    """
+    The `NextStateSampler` handles the sampling of states.
+    """
+
     @property
     def next_nodes_and_probs(self) -> Iterable[Tuple["NODE_TYPE", float]]:
         """
-        returns an iterable with next state and probability pairs.
+        Returns
+        -------
+        Iterable[Tuple["NODE_TYPE", float]]
+            The iterable over next state and probability pairs.
         """
         return zip(self.next_nodes, self.probs)
 
     def __init__(
-        self,
-        next_nodes: List["NODE_TYPE"],
-        seed: int = None,
-        probs: List[float] = None,
+        self, next_nodes: List["NODE_TYPE"], seed: int = None, probs: List[float] = None
     ):
         """
-        creates a custom sampler for next states.
-
         Parameters
         ----------
-        next_states : List["NODE_TYPE"]
-            are the next states from which the sampler will sample.
+        next_nodes : List["NODE_TYPE"]
+            The next nodes from which the sampler will sample.
         seed : int
-            is the random seed.
+            The random seed.
         probs : List[float]
-            are the probabilities corresponding to each state.
+            The probabilities corresponding to each state.
         """
         assert len(next_nodes) > 0
         self.next_nodes = next_nodes
@@ -56,7 +58,10 @@ class NextStateSampler:
 
     def sample(self) -> "NODE_TYPE":
         """
-        returns a sample of the next state distribution.
+        Returns
+        -------
+        NODE_TYPE
+            A sample of the next state distribution.
         """
         if self.is_deterministic:
             return self.next_state
@@ -68,7 +73,10 @@ class NextStateSampler:
 
     def mode(self) -> "NODE_TYPE":
         """
-        returns the most probable next state.
+        Returns
+        -------
+        NODE_TYPE
+            The most probable next state.
         """
         if self.is_deterministic:
             return self.next_state
@@ -76,7 +84,10 @@ class NextStateSampler:
 
     def prob(self, n: "NODE_TYPE") -> float:
         """
-        returns the probability of sampling the given node.
+        Returns
+        -------
+        float
+            The probability of sampling the given state.
         """
         if n not in self._probs:
             if n not in self.next_nodes:

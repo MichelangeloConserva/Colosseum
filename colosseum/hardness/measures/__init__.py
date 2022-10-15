@@ -1,3 +1,7 @@
+"""
+The module containing the implementations of the hardness measures.
+"""
+
 from colosseum.hardness.measures.diameter import get_diameter
 from colosseum.hardness.measures.sum_reciprocals_suboptimality_gaps import (
     get_sum_reciprocals_suboptimality_gaps,

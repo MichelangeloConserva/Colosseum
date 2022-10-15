@@ -9,7 +9,12 @@ from scipy.stats import beta, rv_continuous
 
 from colosseum.mdp import BaseMDP
 from colosseum.mdp.utils.custom_samplers import NextStateSampler
-from colosseum.utils.miscellanea import check_distributions, deterministic, get_dist
+from colosseum.utils.miscellanea import (
+    check_distributions,
+    deterministic,
+    get_dist,
+    rounding_nested_structure,
+)
 
 if TYPE_CHECKING:
     from colosseum.mdp import ACTION_TYPE, NODE_TYPE
@@ -17,8 +22,14 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class SimpleGridNode:
+    """
+    The node for the SimpleGrid MDP.
+    """
+
     X: int
+    """x coordinate."""
     Y: int
+    """y coordinate."""
 
     def __str__(self):
         return f"X={self.X},Y={self.Y}"
@@ -28,7 +39,9 @@ class SimpleGridNode:
 
 
 class SimpleGridAction(IntEnum):
-    """The action available in the SimpleGrid MDP."""
+    """
+    The actions available in the SimpleGrid MDP.
+    """
 
     UP = 0
     RIGHT = 1
@@ -39,7 +52,9 @@ class SimpleGridAction(IntEnum):
 
 @gin.constants_from_enum
 class SimpleGridReward(IntEnum):
-    """The reward types available in the SimpleGrid MDP."""
+    """
+    The reward types available in the SimpleGrid MDP. It controls the rewards for the corner states.
+    """
 
     AND = 0
     NAND = 1
@@ -48,23 +63,35 @@ class SimpleGridReward(IntEnum):
 
 
 class SimpleGridMDP(BaseMDP, abc.ABC):
+    """
+    The base class for the SimpleGrid family.
+    """
+
+    @staticmethod
+    def get_action_class():
+        return SimpleGridAction
+
+    @staticmethod
+    def get_unique_symbols() -> List[str]:
+        return [" ", "A", "+", "-"]
+
     @staticmethod
     def does_seed_change_MDP_structure() -> bool:
         return True
 
     @staticmethod
-    def _sample_parameters(
+    def sample_mdp_parameters(
         n: int, is_episodic: bool, seed: int = None
     ) -> List[Dict[str, Any]]:
         rng = np.random.RandomState(np.random.randint(10_000) if seed is None else seed)
         samples = []
         for _ in range(n):
-            p_rand, p_lazy, _ = 0.9 * np.random.dirichlet([0.2, 0.2, 5])
+            p_rand, p_lazy, _ = 0.9 * rng.dirichlet([0.2, 0.2, 5])
             sample = dict(
                 size=int(
                     (
                         1
-                        + np.minimum((800 / (100 * np.random.random() + 35)), 25)
+                        + np.minimum((800 / (100 * rng.random() + 35)), 25)
                         * (0.8 if is_episodic else 1)
                     )
                 ),
@@ -72,34 +99,73 @@ class SimpleGridMDP(BaseMDP, abc.ABC):
                 p_rand=p_rand,
                 p_lazy=p_lazy,
                 make_reward_stochastic=rng.choice([True, False]),
-                variance_multipliers=2 * rng.random() + 0.005,
+                reward_variance_multiplier=2 * rng.random() + 0.005,
             )
             sample["p_rand"] = None if sample["p_rand"] < 0.01 else sample["p_rand"]
             sample["p_lazy"] = None if sample["p_lazy"] < 0.01 else sample["p_lazy"]
 
+            sample["reward_type"] = rng.randint(4)
+
             if sample["make_reward_stochastic"]:
-                sample["sub_optimal_distribution"] = beta(
-                    sample["variance_multipliers"],
-                    sample["variance_multipliers"] * (10 / 0.2 - 1),
+                sample["sub_optimal_distribution"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"],
+                        sample["reward_variance_multiplier"] * (10 / 0.2 - 1),
+                    ),
                 )
-                sample["optimal_distribution"] = beta(
-                    sample["variance_multipliers"],
-                    sample["variance_multipliers"] * (1 / 0.9 - 1),
+                sample["optimal_distribution"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"],
+                        sample["reward_variance_multiplier"] * (1 / 0.9 - 1),
+                    ),
                 )
-                sample["other_distribution"] = beta(
-                    sample["variance_multipliers"],
-                    sample["variance_multipliers"] * (1 / 0.2 - 1),
+                sample["other_distribution"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"],
+                        sample["reward_variance_multiplier"] * (1 / 0.2 - 1),
+                    ),
                 )
             else:
-                sample["sub_optimal_distribution"] = deterministic(0.0)
-                sample["optimal_distribution"] = deterministic(1.0)
-                sample["other_distribution"] = deterministic(0.5)
-            samples.append(sample)
+                sample["sub_optimal_distribution"] = ("deterministic", (0.0,))
+                sample["optimal_distribution"] = ("deterministic", (1.0,))
+                sample["other_distribution"] = ("deterministic", (0.5,))
+
+            samples.append(rounding_nested_structure(sample))
         return samples
 
     @staticmethod
     def get_node_class() -> Type["NODE_TYPE"]:
         return SimpleGridNode
+
+    def get_gin_parameters(self, index: int) -> str:
+        prms = dict(
+            size=self._size,
+            n_starting_states=self._n_starting_states,
+            reward_type=int(self._reward_type),
+            make_reward_stochastic=self._make_reward_stochastic,
+            reward_variance_multiplier=self._reward_variance_multiplier,
+            sub_optimal_distribution=(
+                self._sub_optimal_distribution.dist.name,
+                self._sub_optimal_distribution.args,
+            ),
+            optimal_distribution=(
+                self._optimal_distribution.dist.name,
+                self._optimal_distribution.args,
+            ),
+            other_distribution=(
+                self._other_distribution.dist.name,
+                self._other_distribution.args,
+            ),
+        )
+        if self._p_rand is not None:
+            prms["p_rand"] = self._p_rand
+
+        return SimpleGridMDP.produce_gin_file_from_mdp_parameters(
+            prms, type(self).__name__, index
+        )
 
     @property
     def n_actions(self) -> int:
@@ -198,7 +264,7 @@ class SimpleGridMDP(BaseMDP, abc.ABC):
             self._make_reward_stochastic,
         )
 
-    def _get_grid_representation(self, node: "NODE_TYPE"):
+    def _get_grid_representation(self, node: "NODE_TYPE") -> np.ndarray:
         grid = np.zeros((self._size, self._size), dtype=str)
         grid[:, :] = " "
 
@@ -259,19 +325,53 @@ class SimpleGridMDP(BaseMDP, abc.ABC):
         sub_optimal_distribution: Union[Tuple, rv_continuous] = None,
         other_distribution: Union[Tuple, rv_continuous] = None,
         make_reward_stochastic=False,
-        variance_multipliers: float = 1.0,
+        reward_variance_multiplier: float = 1.0,
         **kwargs,
     ):
+        """
+
+        Parameters
+        ----------
+        seed : int
+            The seed used for sampling rewards and next states.
+        size : int
+            The size of the grid.
+        reward_type : SimpleGridReward
+            The type of reward for the MDP. By default, the XOR type is used.
+        n_starting_states : int
+            The number of possible starting states.
+        optimal_mean_reward : float
+            If the rewards are made stochastic, this parameter controls the mean reward for the optimal trajectory.
+            By default, it is set to 0.9.
+        sub_optimal_mean_reward : float
+            If the rewards are made stochastic, this parameter controls the mean reward for suboptimal trajectories.
+            By default, it is set to 0.2.
+        optimal_distribution : Union[Tuple, rv_continuous]
+            The distribution of the highly rewarding state. It can be either passed as a tuple containing Beta parameters
+            or as a rv_continuous object.
+        sub_optimal_distribution : Union[Tuple, rv_continuous]
+            The distribution of the suboptimal rewarding states. It can be either passed as a tuple containing Beta
+            parameters or as a rv_continuous object.
+        other_distribution : Union[Tuple, rv_continuous]
+            The distribution of the other states. It can be either passed as a tuple containing Beta parameters or as a
+            rv_continuous object.
+        make_reward_stochastic : bool
+            If True, the rewards of the MDP will be stochastic. By default, it is set to False.
+        reward_variance_multiplier : float
+            A constant that can be used to increase the variance of the reward distributions without changing their means.
+            The lower the value, the higher the variance. By default, it is set to 1.
+        """
+
         if type(sub_optimal_distribution) == tuple:
             sub_optimal_distribution = get_dist(
-                sub_optimal_distribution[0], sub_optimal_distribution[1:]
+                sub_optimal_distribution[0], sub_optimal_distribution[1]
             )
         if type(optimal_distribution) == tuple:
             optimal_distribution = get_dist(
-                optimal_distribution[0], optimal_distribution[1:]
+                optimal_distribution[0], optimal_distribution[1]
             )
         if type(other_distribution) == tuple:
-            other_distribution = get_dist(other_distribution[0], other_distribution[1:])
+            other_distribution = get_dist(other_distribution[0], other_distribution[1])
 
         self._size = size
         self._reward_type = SimpleGridReward(reward_type)
@@ -291,16 +391,16 @@ class SimpleGridMDP(BaseMDP, abc.ABC):
         else:
             if make_reward_stochastic:
                 self._sub_optimal_distribution = beta(
-                    variance_multipliers,
-                    variance_multipliers * (10 / sub_optimal_mean_reward - 1),
+                    reward_variance_multiplier,
+                    reward_variance_multiplier * (10 / sub_optimal_mean_reward - 1),
                 )
                 self._optimal_distribution = beta(
-                    variance_multipliers,
-                    variance_multipliers * (1 / optimal_mean_reward - 1),
+                    reward_variance_multiplier,
+                    reward_variance_multiplier * (1 / optimal_mean_reward - 1),
                 )
                 self._other_distribution = beta(
-                    variance_multipliers,
-                    variance_multipliers * (1 / sub_optimal_mean_reward - 1),
+                    reward_variance_multiplier,
+                    reward_variance_multiplier * (1 / sub_optimal_mean_reward - 1),
                 )
             else:
                 self._sub_optimal_distribution = deterministic(0.0)
@@ -309,7 +409,7 @@ class SimpleGridMDP(BaseMDP, abc.ABC):
 
         super(SimpleGridMDP, self).__init__(
             seed=seed,
-            variance_multipliers=variance_multipliers,
+            reward_variance_multiplier=reward_variance_multiplier,
             make_reward_stochastic=make_reward_stochastic,
             **kwargs,
         )

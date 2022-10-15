@@ -1,0 +1,4 @@
+n_seeds: 20
+n_steps: 500000
+max_interaction_time_s: 600
+log_performance_indicators_every: 100

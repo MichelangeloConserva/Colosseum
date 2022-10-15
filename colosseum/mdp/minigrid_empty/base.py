@@ -9,7 +9,12 @@ from scipy.stats import beta, rv_continuous
 
 from colosseum.mdp import BaseMDP
 from colosseum.mdp.utils.custom_samplers import NextStateSampler
-from colosseum.utils.miscellanea import check_distributions, deterministic, get_dist
+from colosseum.utils.miscellanea import (
+    check_distributions,
+    deterministic,
+    get_dist,
+    rounding_nested_structure,
+)
 
 if TYPE_CHECKING:
     from colosseum.mdp import ACTION_TYPE, NODE_TYPE
@@ -19,12 +24,17 @@ class MiniGridEmptyAction(IntEnum):
     """The action available in the MiniGridEmpty MDP."""
 
     MoveForward = 0
+    """Move the agent forward."""
     TurnRight = 1
+    """Turn the agent towards the right."""
     TurnLeft = 2
+    """Turn the agent towards the left."""
 
 
 class MiniGridEmptyDirection(IntEnum):
-    """The possible agent directions in the MiniGridEmpty MDP."""
+    """
+    The actions available in the MiniGridEmpty MDP.
+    """
 
     UP = 0
     RIGHT = 1
@@ -34,60 +44,105 @@ class MiniGridEmptyDirection(IntEnum):
 
 @dataclass(frozen=True)
 class MiniGridEmptyNode:
+    """
+    The node for the MiniGridEmpty MDP.
+    """
+
     X: int
+    """x coordinate."""
     Y: int
+    """y coordinate."""
     Dir: MiniGridEmptyDirection
+    """The direction the agent is facing."""
 
     def __str__(self):
         return f"X={self.X},Y={self.Y},Dir={self.Dir.name}"
 
 
 class MiniGridEmptyMDP(BaseMDP, abc.ABC):
+    """
+    The base class for the MiniGridEmpty family.
+    """
+
+    @staticmethod
+    def get_unique_symbols() -> List[str]:
+        return [" ", ">", "<", "v", "^", "G"]
+
     @staticmethod
     def does_seed_change_MDP_structure() -> bool:
         return True
 
     @staticmethod
-    def _sample_parameters(
+    def sample_mdp_parameters(
         n: int, is_episodic: bool, seed: int = None
     ) -> List[Dict[str, Any]]:
         rng = np.random.RandomState(np.random.randint(10_000) if seed is None else seed)
         samples = []
         for _ in range(n):
-            p_rand, p_lazy, _ = 0.9 * np.random.dirichlet([0.2, 0.2, 5])
+            p_rand, p_lazy, _ = 0.9 * rng.dirichlet([0.2, 0.2, 5])
             sample = dict(
-                size=int(np.minimum(5 + (14 / (8 * np.random.random() + 1.0)), 20))
+                size=int(np.minimum(5 + (14 / (8 * rng.random() + 1.0)), 20))
                 if is_episodic
-                else int(
-                    1.5 * np.minimum(5 + (14 / (8 * np.random.random() + 1.0)), 20)
-                ),
+                else int(1.5 * np.minimum(5 + (14 / (8 * rng.random() + 1.0)), 20)),
                 n_starting_states=rng.randint(1, 5),
                 p_rand=p_rand,
                 p_lazy=p_lazy,
                 make_reward_stochastic=rng.choice([True, False]),
-                variance_multipliers=2 * rng.random() + 0.005,
+                reward_variance_multiplier=2 * rng.random() + 0.005,
             )
             sample["p_rand"] = None if sample["p_rand"] < 0.01 else sample["p_rand"]
             sample["p_lazy"] = None if sample["p_lazy"] < 0.01 else sample["p_lazy"]
 
             if sample["make_reward_stochastic"]:
-                sample["optimal_distribution"] = beta(
-                    sample["variance_multipliers"],
-                    sample["variance_multipliers"] * (sample["size"] ** 2 - 1),
+                sample["optimal_distribution"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"],
+                        sample["reward_variance_multiplier"] * (sample["size"] ** 2 - 1),
+                    ),
                 )
-                sample["other_distribution"] = beta(
-                    sample["variance_multipliers"] * (sample["size"] ** 2 - 1),
-                    sample["variance_multipliers"],
+                sample["other_distribution"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"] * (sample["size"] ** 2 - 1),
+                        sample["reward_variance_multiplier"],
+                    ),
                 )
             else:
-                sample["optimal_distribution"] = deterministic(1.0)
-                sample["other_distribution"] = deterministic(0.0)
-            samples.append(sample)
+                sample["optimal_distribution"] = ("deterministic", (1.0,))
+                sample["other_distribution"] = ("deterministic", (0.0,))
+
+            samples.append(rounding_nested_structure(sample))
         return samples
 
     @staticmethod
     def get_node_class() -> Type["NODE_TYPE"]:
         return MiniGridEmptyNode
+
+    def get_gin_parameters(self, index: int) -> str:
+        prms = dict(
+            size=self._size,
+            n_starting_states=self._n_starting_states,
+            make_reward_stochastic=self._make_reward_stochastic,
+            reward_variance_multiplier=self._reward_variance_multiplier,
+            optimal_distribution=(
+                self._optimal_distribution.dist.name,
+                self._optimal_distribution.args,
+            ),
+            other_distribution=(
+                self._other_distribution.dist.name,
+                self._other_distribution.args,
+            ),
+        )
+
+        if self._p_rand is not None:
+            prms["p_rand"] = self._p_rand
+        if self._p_lazy is not None:
+            prms["p_lazy"] = self._p_lazy
+
+        return MiniGridEmptyMDP.produce_gin_file_from_mdp_parameters(
+            prms, type(self).__name__, index
+        )
 
     @property
     def n_actions(self) -> int:
@@ -192,7 +247,7 @@ class MiniGridEmptyMDP(BaseMDP, abc.ABC):
             self._make_reward_stochastic,
         )
 
-    def _get_grid_representation(self, node: "NODE_TYPE"):
+    def _get_grid_representation(self, node: "NODE_TYPE") -> np.ndarray:
         grid = np.zeros((self._size, self._size), dtype=str)
         grid[:, :] = " "
         grid[self.goal_position[1], self.goal_position[0]] = "G"
@@ -226,16 +281,37 @@ class MiniGridEmptyMDP(BaseMDP, abc.ABC):
         optimal_distribution: Union[Tuple, rv_continuous] = None,
         other_distribution: Union[Tuple, rv_continuous] = None,
         make_reward_stochastic=False,
-        variance_multipliers: float = 1.0,
+        reward_variance_multiplier: float = 1.0,
         **kwargs,
     ):
+        """
+        Parameters
+        ----------
+        seed : int
+            The seed used for sampling rewards and next states.
+        size : int
+            The size of the grid.
+        n_starting_states : int
+            The number of possible starting states.
+        optimal_distribution : Union[Tuple, rv_continuous]
+            The distribution of the highly rewarding state. It can be either passed as a tuple containing Beta parameters
+            or as a rv_continuous object.
+        other_distribution : Union[Tuple, rv_continuous]
+            The distribution of the other states. It can be either passed as a tuple containing Beta parameters or as a
+            rv_continuous object.
+        make_reward_stochastic : bool
+            If True, the rewards of the MDP will be stochastic. By default, it is set to False.
+        reward_variance_multiplier : float
+            A constant that can be used to increase the variance of the reward distributions without changing their means.
+            The lower the value, the higher the variance. By default, it is set to 1.
+        """
 
         if type(optimal_distribution) == tuple:
             optimal_distribution = get_dist(
-                optimal_distribution[0], optimal_distribution[1:]
+                optimal_distribution[0], optimal_distribution[1]
             )
         if type(other_distribution) == tuple:
-            other_distribution = get_dist(other_distribution[0], other_distribution[1:])
+            other_distribution = get_dist(other_distribution[0], other_distribution[1])
 
         self._n_starting_states = n_starting_states
         self._size = size
@@ -250,10 +326,10 @@ class MiniGridEmptyMDP(BaseMDP, abc.ABC):
         else:
             if make_reward_stochastic:
                 self._other_distribution = beta(
-                    variance_multipliers, variance_multipliers * (size ** 2 - 1)
+                    reward_variance_multiplier, reward_variance_multiplier * (size ** 2 - 1)
                 )
                 self._optimal_distribution = beta(
-                    variance_multipliers * (size ** 2 - 1), variance_multipliers
+                    reward_variance_multiplier * (size ** 2 - 1), reward_variance_multiplier
                 )
             else:
                 self._optimal_distribution = deterministic(1.0)
@@ -261,7 +337,7 @@ class MiniGridEmptyMDP(BaseMDP, abc.ABC):
 
         super(MiniGridEmptyMDP, self).__init__(
             seed=seed,
-            variance_multipliers=variance_multipliers,
+            reward_variance_multiplier=reward_variance_multiplier,
             make_reward_stochastic=make_reward_stochastic,
             **kwargs,
         )

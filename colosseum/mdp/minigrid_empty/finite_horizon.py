@@ -8,9 +8,12 @@ from colosseum.mdp.minigrid_empty.base import MiniGridEmptyMDP
 
 @gin.configurable
 class MiniGridEmptyEpisodic(EpisodicMDP, MiniGridEmptyMDP):
+    """
+    The episodic MiniGridEmpty MDP.
+    """
+
     @staticmethod
     def sample_parameters(n: int, seed: int = None) -> List[Dict[str, Any]]:
-        return MiniGridEmptyMDP._sample_parameters(n, True, seed)
+        return MiniGridEmptyMDP.sample_mdp_parameters(n, True, seed)
 
 
-MDPClass = MiniGridEmptyEpisodic

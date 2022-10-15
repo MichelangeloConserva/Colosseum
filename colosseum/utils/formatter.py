@@ -5,6 +5,12 @@ import toolz
 
 
 def clear_agent_mdp_class_name(class_name: str) -> str:
+    """
+    Returns
+    -------
+    str
+        A nicely formatted version of the class name.
+    """
     return (
         class_name.replace("Continuous", "")
         .replace("Episodic", "")
@@ -14,7 +20,10 @@ def clear_agent_mdp_class_name(class_name: str) -> str:
 
 def cleaner(x) -> Union[float, str]:
     """
-    returns a cleaned version of the object given in input that is ready to be transformed to string.
+    Returns
+    -------
+    Union[float, str]
+        A cleaned version of the object given in input that is ready to be transformed to string.
     """
     from colosseum.mdp.simple_grid.base import SimpleGridReward
     from colosseum.mdp.utils import MDPCommunicationClass
@@ -35,7 +44,10 @@ def cleaner(x) -> Union[float, str]:
 
 def clean_for_storing(inp: Union[dict, list]) -> Union[dict, list]:
     """
-    returns the list or the values of the dictionary given in input to a form that is ready to be stored.
+    Returns
+    -------
+    Union[dict, list]
+        The list or the values of the dictionary given in input to a form that is ready to be stored.
     """
     if type(inp) == dict:
         return toolz.valmap(cleaner, inp)
@@ -47,6 +59,12 @@ def clean_for_storing(inp: Union[dict, list]) -> Union[dict, list]:
 
 
 def clean_for_file_path(s: str) -> str:
+    """
+    Returns
+    -------
+    str
+        The string given in input with all symbols that are not allowed for file names removed.
+    """
     return (
         s.replace("_", "-")
         .replace(".", "_")

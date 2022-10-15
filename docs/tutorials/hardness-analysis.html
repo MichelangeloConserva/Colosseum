@@ -1,0 +1,829 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Empirical hardness analysis &#8212; The hitchhiker&#39;s guide to Colosseum</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/myfile.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"bR": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <link rel="shortcut icon" href="../_static/colosseum_icon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Agent implementation" href="agent-implementation.html" />
+    <link rel="prev" title="MDP class" href="mdp-functionalities.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/colosseum_banner.svg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">The hitchhiker's guide to Colosseum</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    What is Colosseum?
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/manifesto.html">
+   Motivation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../documentation.html">
+   API reference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../introduction/participating.html">
+   Participating
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="introduction.html">
+   Tutorials overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="colosseum-configurations.html">
+   Configurations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="agent-performance-analysis.html">
+   Agent performance analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-visual-representations.html">
+   MDP visual inspections
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-introduction.html">
+   Colosseum benchmark
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-analysis.html">
+   Benchmark analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-custom.html">
+   Custom benchmarks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-running.html">
+   Running benchmarks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hyperopt.html">
+   Hyperparameters optimization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-scaling.html">
+   Scaling up Colosseum
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-functionalities.html">
+   MDP class
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Empirical hardness analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="agent-implementation.html">
+   Agent implementation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="non-tabular.html">
+   Non-tabular setting
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/MichelangeloConserva/Colosseum/main?urlpath=tree/docs/book/tutorials/hardness-analysis.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum/issues/new?title=Issue%20on%20page%20%2Ftutorials/hardness-analysis.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/tutorials/hardness-analysis.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="../_sources/tutorials/hardness-analysis.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#measures-of-hardness">
+   Measures of hardness
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#hardness-scenarios">
+   Hardness scenarios
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#scenario-1">
+     Scenario 1
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#scenario-2">
+     Scenario 2
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#scenario-3">
+     Scenario 3
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#scenario-4">
+     Scenario 4
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#custom-scenario">
+     Custom scenario
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Empirical hardness analysis</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#measures-of-hardness">
+   Measures of hardness
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#hardness-scenarios">
+   Hardness scenarios
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#scenario-1">
+     Scenario 1
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#scenario-2">
+     Scenario 2
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#scenario-3">
+     Scenario 3
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#scenario-4">
+     Scenario 4
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#custom-scenario">
+     Custom scenario
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="empirical-hardness-analysis">
+<h1>Empirical hardness analysis<a class="headerlink" href="#empirical-hardness-analysis" title="Permalink to this headline">#</a></h1>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+Necessary imports<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">colosseum.hardness.analysis</span> <span class="kn">import</span> <span class="n">HardnessAnalysisParams</span><span class="p">,</span> <span class="n">run_scenario_analysis</span>
+<span class="kn">from</span> <span class="nn">colosseum.mdp</span> <span class="kn">import</span> <span class="n">BaseMDP</span>
+<span class="kn">from</span> <span class="nn">colosseum.mdp.simple_grid</span> <span class="kn">import</span> <span class="n">SimpleGridContinuous</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details></aside>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+<p>Measuring and understanding the hardness of MDPs represent a fundamental step in the development of a reinforcement learning benchmark.
+This tutorial introduces the hardness measures available in <span class="math notranslate nohighlight">\(\texttt{Colosseum}\)</span> and illustrates how to carry out the empirical analysis presented in the paper for the measures available in the package and for custom ones.</p>
+<section id="measures-of-hardness">
+<h2>Measures of hardness<a class="headerlink" href="#measures-of-hardness" title="Permalink to this headline">#</a></h2>
+<p>The three efficiently computable theoretical measures of hardness available are the diameter, the environmental value norm, and the sum of the reciprocals of the sub-optimality gaps.
+Their code names in the package can be obtained from the
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.get_available_hardness_measures"><code class="docutils literal notranslate"><span class="pre">get_available_hardness_measures</span></code></a>
+function.</p>
+<p>There are two ways in which it is possible to compute the measures for a
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP"><code class="docutils literal notranslate"><span class="pre">BaseMDP</span></code></a>
+object.
+You can either call the corresponding properties,
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.diameter"><code class="docutils literal notranslate"><span class="pre">diameter</span></code></a>,
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.value_norm"><code class="docutils literal notranslate"><span class="pre">value_norm</span></code></a>, and
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.sum_reciprocals_suboptimality_gaps"><code class="docutils literal notranslate"><span class="pre">sum_reciprocals_suboptimality_gaps</span></code></a>,
+or alternatively you can use the
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.get_measure_from_name"><code class="docutils literal notranslate"><span class="pre">get_measure_from_name</span></code></a>
+function, which takes the code name of the measure as input.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Instantiate an MDP</span>
+<span class="n">mdp</span> <span class="o">=</span> <span class="n">SimpleGridContinuous</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">p_rand</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">n_starting_states</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Diameter</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Diameter: </span><span class="si">{</span><span class="n">mdp</span><span class="o">.</span><span class="n">diameter</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Environmental value norm</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Environmental value norm: </span><span class="si">{</span><span class="n">mdp</span><span class="o">.</span><span class="n">value_norm</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Sum of the reciprocals of the suboptimality gaps</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sum of the reciprocals of the suboptimality gaps: </span><span class="si">{</span><span class="n">mdp</span><span class="o">.</span><span class="n">sum_reciprocals_suboptimality_gaps</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Or alternatively</span>
+<span class="c1"># for measure_name in BaseMDP.get_available_hardness_measures():</span>
+<span class="c1">#  print(f&quot;{measure_name}: {mdp.get_measure_from_name(measure_name):.2f}&quot;)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Diameter: 6.05
+Environmental value norm: 0.50
+Sum of the reciprocals of the suboptimality gaps: 361.30
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="hardness-scenarios">
+<h2>Hardness scenarios<a class="headerlink" href="#hardness-scenarios" title="Permalink to this headline">#</a></h2>
+<p>The accompanying <a href="https://www.investopedia.com/thmb/8eqLLlAayH0avgNDllcSC_MyN-A=/2121x1414/filters:fill(auto,1)/toy-foam-letter-in-word-tba--abbreviation-of-to-be-announced---on-green-grass-background-1160797545-6c35b6e874564114ab52f0ab5f48cda2.jpg">paper</a> proposes four scenarios to analyse the two different types of complexities that arise in reinforcement learning: the <em>visitation complexity</em>, which relates to the difficulty of visiting all the states, and the <em>estimation complexity</em>, which relates to the discrepancy between the optimal policy and the best policy an agent can derive from a given estimate of the transition and reward kernels.</p>
+<p>In order to define a scenario, we need to create a
+<a class="reference external" href="../pdoc_files/colosseum/hardness/analysis.html#HardnessAnalysisParams"><code class="docutils literal notranslate"><span class="pre">HardnessAnalysisParams</span></code></a>
+object, which encodes the configurations for the scenario.
+The <a class="reference external" href="../pdoc_files/colosseum/hardness/analysis.html#run_scenario_analysis"><code class="docutils literal notranslate"><span class="pre">run_scenario_analysis</span></code></a> function runs a <code class="docutils literal notranslate"><span class="pre">HardnessAnalysisParams</span></code> and produces the corresponding figure.
+Note the <code class="docutils literal notranslate"><span class="pre">run_scenario_analysis</span></code> is built on top of the <a class="reference external" href="../pdoc_files/colosseum/hardness/analysis.html#get_varying_parameter_dfs"><code class="docutils literal notranslate"><span class="pre">get_varying_parameter_dfs</span></code></a>, which computes the hardness measures for the MDP instances.
+If multiprocessing is enabled <code class="docutils literal notranslate"><span class="pre">get_varying_parameter_dfs</span></code> will use multiple cores.</p>
+<p>The <a class="reference external" href="../pdoc_files/colosseum/mdp/simple_grid/base.html#SimpleGridContinuous"><code class="docutils literal notranslate"><span class="pre">SimpleGridContinuous</span></code></a> class is used as a running example for the tutorial.</p>
+<section id="scenario-1">
+<h3>Scenario 1<a class="headerlink" href="#scenario-1" title="Permalink to this headline">#</a></h3>
+<p>We vary the probability <code class="docutils literal notranslate"><span class="pre">p_rand</span></code> that an MDP executes a random action instead of the action selected by an agent. As <code class="docutils literal notranslate"><span class="pre">p_rand</span></code> approaches one, value estimation becomes easier, since outcomes depend less on agent choices. However, intentionally visiting states becomes harder.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SCENARIO_1_SimpleGridContinuous</span> <span class="o">=</span> <span class="n">HardnessAnalysisParams</span><span class="p">(</span>
+    <span class="n">mdp_class</span><span class="o">=</span><span class="n">SimpleGridContinuous</span><span class="p">,</span>
+    <span class="n">varying_params_name</span><span class="o">=</span><span class="s2">&quot;p_rand&quot;</span><span class="p">,</span>
+    <span class="n">varying_params_name_clean</span><span class="o">=</span><span class="s2">&quot;Probability of a random action&quot;</span><span class="p">,</span>
+    <span class="n">varying_params_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">fixed_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">make_reward_stochastic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">n_starting_states</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+    <span class="n">n_seeds_mdp</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">run_scenario_analysis</span><span class="p">(</span><span class="n">SCENARIO_1_SimpleGridContinuous</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/hardness-analysis_5_0.png" src="../_images/hardness-analysis_5_0.png" />
+</div>
+</div>
+</section>
+<section id="scenario-2">
+<h3>Scenario 2<a class="headerlink" href="#scenario-2" title="Permalink to this headline">#</a></h3>
+<p>We vary the probability <code class="docutils literal notranslate"><span class="pre">p_lazy</span></code> that an MDP stays in the same state instead of executing
+the action selected by an agent. Contrary to increasing p_rand, increasing <code class="docutils literal notranslate"><span class="pre">p_lazy</span></code> never benefits
+exploration. Increasing <code class="docutils literal notranslate"><span class="pre">p_lazy</span></code> decreases estimation complexity and increases visitation complexity.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SCENARIO_2_SimpleGridContinuous</span> <span class="o">=</span> <span class="n">HardnessAnalysisParams</span><span class="p">(</span>
+    <span class="n">mdp_class</span><span class="o">=</span><span class="n">SimpleGridContinuous</span><span class="p">,</span>
+    <span class="n">varying_params_name</span><span class="o">=</span><span class="s2">&quot;p_lazy&quot;</span><span class="p">,</span>
+    <span class="n">varying_params_name_clean</span><span class="o">=</span><span class="s2">&quot;Probability of lazy action&quot;</span><span class="p">,</span>
+    <span class="n">varying_params_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">fixed_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">make_reward_stochastic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">n_starting_states</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+    <span class="n">n_seeds_mdp</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">run_scenario_analysis</span><span class="p">(</span><span class="n">SCENARIO_2_SimpleGridContinuous</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/hardness-analysis_7_0.png" src="../_images/hardness-analysis_7_0.png" />
+</div>
+</div>
+</section>
+<section id="scenario-3">
+<h3>Scenario 3<a class="headerlink" href="#scenario-3" title="Permalink to this headline">#</a></h3>
+<p>We vary the number of states across MDPs from the same family. Increasing the number of states simultaneously increases the estimation complexity and the visitation complexity.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SCENARIO_3_SimpleGridContinuous</span> <span class="o">=</span> <span class="n">HardnessAnalysisParams</span><span class="p">(</span>
+    <span class="n">mdp_class</span><span class="o">=</span><span class="n">SimpleGridContinuous</span><span class="p">,</span>
+    <span class="n">varying_params_name</span><span class="o">=</span><span class="s2">&quot;size&quot;</span><span class="p">,</span>
+    <span class="n">varying_params_name_clean</span><span class="o">=</span><span class="s2">&quot;Number of states&quot;</span><span class="p">,</span>
+    <span class="n">varying_params_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">fixed_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">make_reward_stochastic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_starting_states</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+    <span class="n">n_seeds_mdp</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">run_scenario_analysis</span><span class="p">(</span><span class="n">SCENARIO_3_SimpleGridContinuous</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/hardness-analysis_9_0.png" src="../_images/hardness-analysis_9_0.png" />
+</div>
+</div>
+</section>
+<section id="scenario-4">
+<h3>Scenario 4<a class="headerlink" href="#scenario-4" title="Permalink to this headline">#</a></h3>
+<p>We vary the number of states across MDPs from the same family with a fixed value of <code class="docutils literal notranslate"><span class="pre">p_rand</span> <span class="pre">=</span> <span class="pre">0.1</span></code>. Increasing the number of states simultaneously increases the estimation complexity and the visitation complexity.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SCENARIO_4_SimpleGridContinuous</span> <span class="o">=</span> <span class="n">HardnessAnalysisParams</span><span class="p">(</span>
+    <span class="n">mdp_class</span><span class="o">=</span><span class="n">SimpleGridContinuous</span><span class="p">,</span>
+    <span class="n">varying_params_name</span><span class="o">=</span><span class="s2">&quot;size&quot;</span><span class="p">,</span>
+    <span class="n">varying_params_name_clean</span><span class="o">=</span><span class="s2">&quot;Number of states&quot;</span><span class="p">,</span>
+    <span class="n">varying_params_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">fixed_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">make_reward_stochastic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">p_rand</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_starting_states</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+    <span class="n">n_seeds_mdp</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">run_scenario_analysis</span><span class="p">(</span><span class="n">SCENARIO_4_SimpleGridContinuous</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/hardness-analysis_11_0.png" src="../_images/hardness-analysis_11_0.png" />
+</div>
+</div>
+</section>
+<section id="custom-scenario">
+<h3>Custom scenario<a class="headerlink" href="#custom-scenario" title="Permalink to this headline">#</a></h3>
+<p>Running custom scenarios with custom measures of hardness is straightforward since it is possible to specify custom measures of hardness in the <code class="docutils literal notranslate"><span class="pre">HardnessAnalysisParams</span></code> configuration.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">number_of_states</span><span class="p">(</span><span class="n">mdp</span><span class="p">:</span> <span class="n">BaseMDP</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A trivial measure of hardness that simply counts the number of states.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">mdp</span><span class="o">.</span><span class="n">n_states</span>
+
+<span class="k">def</span> <span class="nf">value_norm_by_diameter</span><span class="p">(</span><span class="n">mdp</span><span class="p">:</span> <span class="n">BaseMDP</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A measure of hardness obtained by multiplying the diameter by the environmental value norm.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">mdp</span><span class="o">.</span><span class="n">diameter</span> <span class="o">*</span> <span class="n">mdp</span><span class="o">.</span><span class="n">value_norm</span>
+    
+<span class="n">custom_scenario_SimpleGridContinuous</span> <span class="o">=</span> <span class="n">HardnessAnalysisParams</span><span class="p">(</span>
+    <span class="n">mdp_class</span><span class="o">=</span><span class="n">SimpleGridContinuous</span><span class="p">,</span>
+    <span class="n">varying_params_name</span><span class="o">=</span><span class="s2">&quot;p_rand&quot;</span><span class="p">,</span>
+    <span class="n">varying_params_name_clean</span><span class="o">=</span><span class="s2">&quot;Probability of a random action&quot;</span><span class="p">,</span>
+    <span class="n">varying_params_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">fixed_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">make_reward_stochastic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">n_starting_states</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+    <span class="n">hardness_measures</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;diameter&quot;</span><span class="p">,</span> <span class="n">value_norm_by_diameter</span><span class="p">,</span> <span class="n">number_of_states</span><span class="p">),</span>
+    <span class="n">n_seeds_mdp</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">run_scenario_analysis</span><span class="p">(</span><span class="n">custom_scenario_SimpleGridContinuous</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/hardness-analysis_13_0.png" src="../_images/hardness-analysis_13_0.png" />
+</div>
+</div>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./tutorials"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="mdp-functionalities.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">MDP class</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="agent-implementation.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Agent implementation</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Michelangelo Conserva<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

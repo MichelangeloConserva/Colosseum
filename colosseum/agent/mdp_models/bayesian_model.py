@@ -4,10 +4,8 @@ import dm_env
 import numpy as np
 
 from colosseum.agent.mdp_models.base import BaseMDPModel
-from colosseum.agent.mdp_models.bayesian_models import (
-    RewardsConjugateModel,
-    TransitionsConjugateModel,
-)
+from colosseum.agent.mdp_models.bayesian_models import RewardsConjugateModel
+from colosseum.agent.mdp_models.bayesian_models import TransitionsConjugateModel
 from colosseum.utils.acme.specs import MDPSpec
 
 if TYPE_CHECKING:
@@ -15,16 +13,37 @@ if TYPE_CHECKING:
 
 
 class BayesianMDPModel(BaseMDPModel):
+    """
+    The `BayesianMDPModel` is the wrapper for Bayesian tabular MDP models.
+    """
+
     def __init__(
         self,
         seed: int,
-        environment_spec: MDPSpec,
+        mdp_specs: MDPSpec,
         reward_prior_model: RewardsConjugateModel = None,
         transitions_prior_model: TransitionsConjugateModel = None,
         rewards_prior_prms=None,
         transitions_prior_prms=None,
     ):
-        super(BayesianMDPModel, self).__init__(seed, environment_spec)
+        """
+        Parameters
+        ----------
+        seed : int
+            The random seed.
+        mdp_specs : MDPSpec
+            The full specification of the MDP.
+        reward_prior_model : RewardsConjugateModel, optional
+            The reward priors.
+        transitions_prior_model : TransitionsConjugateModel, optional
+            The transitions priors.
+        rewards_prior_prms : Any
+            The reward prior parameters.
+        transitions_prior_prms : Any
+            The transitions prior parameters.
+        """
+
+        super(BayesianMDPModel, self).__init__(seed, mdp_specs)
 
         if reward_prior_model is None:
             reward_prior_model = RewardsConjugateModel.N_NIG
@@ -60,7 +79,7 @@ class BayesianMDPModel(BaseMDPModel):
         )
 
     def step_update(
-        self, ts_t: dm_env.TimeStep, a_t: "ACTION_TYPE", ts_tp1: dm_env.TimeStep, h: int
+        self, ts_t: dm_env.TimeStep, a_t: "ACTION_TYPE", ts_tp1: dm_env.TimeStep, time: int
     ):
         self._rewards_model.update_single_transition(
             ts_t.observation, a_t, ts_tp1.reward

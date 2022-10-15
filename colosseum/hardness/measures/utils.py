@@ -22,6 +22,10 @@ def find_hardness_report_file(
         the MDP instance for which it will be looking for the hardness report.
     hardness_reports_folder : str
         the folder in which the hardness reports are stored
+    Returns
+    -------
+    Union[str, None]
+        The file path for the cache file or None if no file has been found.
     """
     seed_report = glob(f"{hardness_reports_folder}{os.sep}{type(mdp).__name__}_*.yml")
     for existing_report in seed_report:
@@ -50,22 +54,26 @@ def get_average_measure_values(
     measure_names_max_values: Dict[str, float] = None,
 ) -> Union[None, Dict[str, float]]:
     """
-    returns the values of the measures given in inputs averaged across several seed if necessary. Note that this is only
-    necessary when the MDP structure changes for different seeds. If any of the measure produces a value that is higher
-    than the limit, the function returns None.
+    computes the values of the measures given in inputs averaged across several seed if necessary. Note that this is
+    only necessary when the MDP structure changes for different seeds.
 
     Parameters
     ----------
     mdp_class : Type["BaseMDP"]
-        is the MDP class for which the measures will be computed.
+        The MDP class for which the measures will be computed.
     mdp_kwargs : Dict[str, Any]
-        is the parameters that are used to instantiate the MDP.
+        The parameters that are used to instantiate the MDP.
     n_seeds : int, optional
-        is the number of seeds for the average. By default, it is set to five when necessary.
+        The number of seeds for the average. By default, it is set to five when necessary.
     measure_names_max_values : Dict[str, float], optional
-        is the dictionary whose keys are the names of the measure of hardness and the values are the maximum value that
+        The dictionary whose keys are the names of the measure of hardness and the values are the maximum value that
         we allow them to be. By default, it is set to 'dict(diameter=200, value_norm=5.0)'.
 
+    Returns
+    -------
+    Union[None, Dict[str, float]]
+        The values of the measures. If any of the measure produces a value that is higher than the limit, the function
+        returns None.
     """
     if mdp_class.does_seed_change_MDP_structure():
         n_seeds = 5 if n_seeds is None else n_seeds

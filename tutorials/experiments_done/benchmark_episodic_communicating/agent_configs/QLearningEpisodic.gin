@@ -1,5 +1,0 @@
-prms_0/QLearningEpisodic.p=0.05
-prms_0/QLearningEpisodic.UCB_type="Bernstein"
-prms_0/QLearningEpisodic.c_1 = 0.9415278732894797
-prms_0/QLearningEpisodic.c_2 = 0.013873778519317169
-prms_0/QLearningEpisodic.min_at = 0.07263563483119442

@@ -10,14 +10,21 @@ from scipy.stats import beta, rv_continuous
 
 from colosseum.mdp import BaseMDP
 from colosseum.mdp.utils.custom_samplers import NextStateSampler
-from colosseum.utils.miscellanea import check_distributions, deterministic, get_dist
+from colosseum.utils.miscellanea import (
+    check_distributions,
+    deterministic,
+    get_dist,
+    rounding_nested_structure,
+)
 
 if TYPE_CHECKING:
     from colosseum.mdp import ACTION_TYPE, NODE_TYPE
 
 
 class TaxiAction(IntEnum):
-    """The action available in the MiniGridEmpty MDP."""
+    """
+    The actions available in the Taxi MDP.
+    """
 
     MoveSouth = 0
     MoveNorth = 1
@@ -29,30 +36,48 @@ class TaxiAction(IntEnum):
 
 @dataclass(frozen=True)
 class TaxiNode:
+    """
+    The node for the Taxi MDP.
+    """
+
     X: int
+    """x coordinate of the taxi."""
     Y: int
+    """y coordinate of the taxi."""
     XPass: int
+    """x coordinate of the passenger, -1 if it is on board."""
     YPass: int
+    """y coordinate of the taxi, -1 if it is on board."""
     XDest: int
+    """x coordinate of the destination."""
     YDest: int
+    """y coordinate of the destination."""
 
     def __str__(self):
         return f"X={self.X},Y={self.Y},XPass={self.XPass},YPass={self.YPass},XDest={self.XDest},YDest={self.YDest}"
 
 
 class TaxiMDP(BaseMDP, abc.ABC):
+    """
+    The base class for the Taxi family.
+    """
+
+    @staticmethod
+    def get_unique_symbols() -> List[str]:
+        return [" ", "A", "X", "D", "P"]
+
     @staticmethod
     def does_seed_change_MDP_structure() -> bool:
         return True
 
     @staticmethod
-    def _sample_parameters(
+    def sample_mdp_parameters(
         n: int, is_episodic: bool, seed: int = None
     ) -> List[Dict[str, Any]]:
         rng = np.random.RandomState(np.random.randint(10_000) if seed is None else seed)
         samples = []
         for _ in range(n):
-            p_rand, p_lazy, _ = 0.5 * np.random.dirichlet([0.2, 0.2, 5])
+            p_rand, p_lazy, _ = 0.5 * rng.dirichlet([0.2, 0.2, 5])
             sample = dict(
                 size=5
                 if is_episodic
@@ -60,29 +85,39 @@ class TaxiMDP(BaseMDP, abc.ABC):
                 p_rand=p_rand * (0.8 if is_episodic else 1),
                 p_lazy=p_lazy * (0.8 if is_episodic else 1),
                 make_reward_stochastic=rng.choice([True, False]),
-                variance_multipliers=2 * rng.random() + 0.005,
+                reward_variance_multiplier=2 * rng.random() + 0.005,
             )
             sample["p_rand"] = None if sample["p_rand"] < 0.01 else sample["p_rand"]
             sample["p_lazy"] = None if sample["p_lazy"] < 0.01 else sample["p_lazy"]
 
             if sample["make_reward_stochastic"]:
-                sample["default_r"] = beta(
-                    sample["variance_multipliers"],
-                    sample["variance_multipliers"] * (1 / 0.2 - 1),
+                sample["default_r"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"],
+                        sample["reward_variance_multiplier"] * (1 / 0.2 - 1),
+                    ),
                 )
-                sample["successfully_delivery_r"] = beta(
-                    sample["variance_multipliers"],
-                    sample["variance_multipliers"] * (1 / 0.9 - 1),
+                sample["successfully_delivery_r"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"],
+                        sample["reward_variance_multiplier"] * (1 / 0.9 - 1),
+                    ),
                 )
-                sample["failure_delivery_r"] = beta(
-                    sample["variance_multipliers"],
-                    sample["variance_multipliers"] * (10 / 0.2 - 1),
+                sample["failure_delivery_r"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"],
+                        sample["reward_variance_multiplier"] * (10 / 0.2 - 1),
+                    ),
                 )
             else:
-                sample["default_r"] = deterministic(0.1)
-                sample["successfully_delivery_r"] = deterministic(1.0)
-                sample["failure_delivery_r"] = deterministic(0.0)
-            samples.append(sample)
+                sample["default_r"] = ("deterministic", (0.1,))
+                sample["successfully_delivery_r"] = ("deterministic", (1.0,))
+                sample["failure_delivery_r"] = ("deterministic", (0.0,))
+
+            samples.append(rounding_nested_structure(sample))
         return samples
 
     @property
@@ -164,6 +199,31 @@ class TaxiMDP(BaseMDP, abc.ABC):
     def get_node_class() -> Type["NODE_TYPE"]:
         return TaxiNode
 
+    def get_gin_parameters(self, index: int) -> str:
+        prms = dict(
+            size=self._size,
+            make_reward_stochastic=self._make_reward_stochastic,
+            reward_variance_multiplier=self._reward_variance_multiplier,
+            default_r=(
+                self._default_r.dist.name,
+                self._default_r.args,
+            ),
+            successfully_delivery_r=(
+                self._successfully_delivery_r.dist.name,
+                self._successfully_delivery_r.args,
+            ),
+            failure_delivery_r=(
+                self._failure_delivery_r.dist.name,
+                self._failure_delivery_r.args,
+            ),
+        )
+        if self._p_rand is not None:
+            prms["p_rand"] = self._p_rand
+
+        return TaxiMDP.produce_gin_file_from_mdp_parameters(
+            prms, type(self).__name__, index
+        )
+
     @property
     def n_actions(self) -> int:
         return len(TaxiAction)
@@ -174,7 +234,7 @@ class TaxiMDP(BaseMDP, abc.ABC):
         next_node_prms = asdict(node)
 
         if action == TaxiAction.DropOffPassenger:
-            # we have the passenger and we are dropping h(er/im) in the right place
+            # we have the passenger and we are dropping time(er/im) in the right place
             if node.XPass == -1 and node.X == node.XDest and node.Y == node.YDest:
                 next_nodes_prms = []
 
@@ -292,7 +352,7 @@ class TaxiMDP(BaseMDP, abc.ABC):
             self._make_reward_stochastic,
         )
 
-    def _get_grid_representation(self, node: "NODE_TYPE"):
+    def _get_grid_representation(self, node: "NODE_TYPE") -> np.ndarray:
         grid = np.zeros((self._size, self._size), dtype=str)
         grid[:, :] = "X"
         for coo_x, coo_y in self._admissible_coordinate:
@@ -336,23 +396,57 @@ class TaxiMDP(BaseMDP, abc.ABC):
         n_locations=2 ** 2,
         optimal_mean_reward: float = 0.9,
         sub_optimal_mean_reward: float = 0.2,
-        default_r: rv_continuous = None,
+        default_r: Union[Tuple, rv_continuous] = None,
         successfully_delivery_r: Union[Tuple, rv_continuous] = None,
         failure_delivery_r: Union[Tuple, rv_continuous] = None,
         make_reward_stochastic=False,
-        variance_multipliers: float = 1.0,
+        reward_variance_multiplier: float = 1.0,
         **kwargs,
     ):
+        """
+        Parameters
+        ----------
+        seed : int
+            The seed used for sampling rewards and next states.
+        size : int
+            The size of the grid.
+        length : int
+            The length of the walls.
+        width : int
+            The width of the walls.
+        space : int
+            The space between walls.
+        n_locations : int
+            The number of possible spawn locations. It must be a squared number.
+        optimal_mean_reward : float
+            If the rewards are made stochastic, this parameter controls the mean reward for the optimal trajectory.
+            By default, it is set to 0.9.
+        sub_optimal_mean_reward: float
+            If the rewards are made stochastic, this parameter controls the mean reward for suboptimal trajectories.
+            By default, it is set to 0.1.
+        default_r
+        successfully_delivery_r : Union[Tuple, rv_continuous]
+            The reward distribution for successfully delivering a passenger. It can be either passed as a tuple
+            containing Beta parameters or as a rv_continuous object.
+        failure_delivery_r
+            The reward distribution for failing to deliver a passenger. It can be either passed as a tuple containing
+            Beta parameters or as a rv_continuous object.
+        make_reward_stochastic : bool
+            If True, the rewards of the MDP will be stochastic. By default, it is set to False.
+        reward_variance_multiplier : float
+            A constant that can be used to increase the variance of the reward distributions without changing their means.
+            The lower the value, the higher the variance. By default, it is set to 1.
+        """
 
         if type(successfully_delivery_r) == tuple:
             successfully_delivery_r = get_dist(
-                successfully_delivery_r[0], successfully_delivery_r[1:]
+                successfully_delivery_r[0], successfully_delivery_r[1]
             )
         if type(failure_delivery_r) == tuple:
-            failure_delivery_r = get_dist(failure_delivery_r[0], failure_delivery_r[1:])
+            failure_delivery_r = get_dist(failure_delivery_r[0], failure_delivery_r[1])
 
         if type(default_r) == tuple:
-            default_r = get_dist(default_r[0], default_r[1:])
+            default_r = get_dist(default_r[0], default_r[1])
 
         self._size = size
         self._length = length
@@ -372,16 +466,16 @@ class TaxiMDP(BaseMDP, abc.ABC):
         else:
             if make_reward_stochastic:
                 self._default_r = beta(
-                    variance_multipliers,
-                    variance_multipliers * (1 / sub_optimal_mean_reward - 1),
+                    reward_variance_multiplier,
+                    reward_variance_multiplier * (1 / sub_optimal_mean_reward - 1),
                 )
                 self._successfully_delivery_r = beta(
-                    variance_multipliers,
-                    variance_multipliers * (1 / optimal_mean_reward - 1),
+                    reward_variance_multiplier,
+                    reward_variance_multiplier * (1 / optimal_mean_reward - 1),
                 )
                 self._failure_delivery_r = beta(
-                    variance_multipliers,
-                    variance_multipliers * (10 / sub_optimal_mean_reward - 1),
+                    reward_variance_multiplier,
+                    reward_variance_multiplier * (10 / sub_optimal_mean_reward - 1),
                 )
             else:
                 self._default_r = deterministic(0.1)
@@ -394,7 +488,7 @@ class TaxiMDP(BaseMDP, abc.ABC):
 
         super(TaxiMDP, self).__init__(
             seed=seed,
-            variance_multipliers=variance_multipliers,
+            reward_variance_multiplier=reward_variance_multiplier,
             make_reward_stochastic=make_reward_stochastic,
             **kwargs,
         )

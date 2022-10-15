@@ -9,7 +9,12 @@ from scipy.stats import beta, rv_continuous
 
 from colosseum.mdp import BaseMDP
 from colosseum.mdp.utils.custom_samplers import NextStateSampler
-from colosseum.utils.miscellanea import check_distributions, deterministic, get_dist
+from colosseum.utils.miscellanea import (
+    check_distributions,
+    deterministic,
+    get_dist,
+    rounding_nested_structure,
+)
 
 if TYPE_CHECKING:
     from colosseum.mdp import ACTION_TYPE, NODE_TYPE
@@ -17,8 +22,14 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class FrozenLakeNode:
+    """
+    The node for the FrozenLake MDP.
+    """
+
     X: int
+    """x coordinate."""
     Y: int
+    """y coordinate."""
 
     def __str__(self):
         return f"X={self.X},Y={self.Y}"
@@ -31,55 +42,101 @@ class FrozenLakeAction(IntEnum):
     """The action available in the FrozenLake MDP."""
 
     UP = 0
+    """Move up."""
     RIGHT = 1
+    """Move towards the right."""
     DOWN = 2
+    """Move down."""
     LEFT = 3
+    """Move towards the left."""
 
 
 class FrozenLakeMDP(BaseMDP, abc.ABC):
+    """
+    The base class for the FrozenLake family.
+    """
+
+    @staticmethod
+    def get_unique_symbols() -> List[str]:
+        return ["A", "F", "H", "G"]
+
     @staticmethod
     def does_seed_change_MDP_structure() -> bool:
         return True
 
     @staticmethod
-    def _sample_parameters(
+    def sample_mdp_parameters(
         n: int, is_episodic: bool, seed: int = None
     ) -> List[Dict[str, Any]]:
         rng = np.random.RandomState(np.random.randint(10_000) if seed is None else seed)
         samples = []
         for _ in range(n):
-            p_rand, p_lazy, _ = 0.9 * np.random.dirichlet([0.2, 0.2, 5])
+            p_rand, p_lazy, _ = 0.9 * rng.dirichlet([0.2, 0.2, 5])
             sample = dict(
-                size=np.random.choice(range(5, 7), None, True, [0.665, 0.335])
+                size=rng.choice(range(5, 7), None, True, [0.665, 0.335])
                 if is_episodic
                 else int((2.5 + np.minimum((400 / (150 * rng.random() + 35)), 15))),
-                p_frozen=min((0.2 * rng.random() + 0.7) ** 1.3, 0.95),
+                p_frozen=min((0.55 * rng.random() + 0.45) ** 0.3, 0.95),
                 p_rand=p_rand,
                 p_lazy=p_lazy,
                 make_reward_stochastic=rng.choice([True, False]),
-                variance_multipliers=2 * rng.random() + 0.005,
+                reward_variance_multiplier=2 * rng.random() + 0.005,
             )
             sample["p_rand"] = None if sample["p_rand"] < 0.01 else sample["p_rand"]
             sample["p_lazy"] = None if sample["p_lazy"] < 0.01 else sample["p_lazy"]
 
             if sample["make_reward_stochastic"]:
-                sample["default_r"] = beta(
-                    sample["variance_multipliers"],
-                    sample["variance_multipliers"] * (sample["size"] ** 2 / 0.1 - 1),
+                sample["default_r"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"],
+                        sample["reward_variance_multiplier"]
+                        * (sample["size"] ** 2 / 0.1 - 1),
+                    ),
                 )
-                sample["goal_r"] = beta(
-                    sample["variance_multipliers"] * (sample["size"] ** 2 - 1),
-                    sample["variance_multipliers"],
+                sample["goal_r"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"]
+                        * (sample["size"] ** 2 - 1),
+                        sample["reward_variance_multiplier"],
+                    ),
                 )
             else:
-                sample["default_r"] = deterministic(0.0)
-                sample["goal_r"] = deterministic(1.0)
-            samples.append(sample)
+                sample["default_r"] = ("deterministic", (0.0,))
+                sample["goal_r"] = ("deterministic", (1.0,))
+
+            samples.append(rounding_nested_structure(sample))
         return samples
 
     @staticmethod
     def get_node_class() -> Type["NODE_TYPE"]:
         return FrozenLakeNode
+
+    def get_gin_parameters(self, index: int) -> str:
+        prms = dict(
+            size=self._size,
+            p_frozen=self._p_frozen,
+            make_reward_stochastic=self._make_reward_stochastic,
+            reward_variance_multiplier=self._reward_variance_multiplier,
+            default_r=(
+                self._default_r.dist.name,
+                self._default_r.args,
+            ),
+            goal_r=(
+                self._goal_r.dist.name,
+                self._goal_r.args,
+            ),
+        )
+
+        if self._p_rand is not None:
+            prms["p_rand"] = self._p_rand
+        if self._p_lazy is not None:
+            prms["p_lazy"] = self._p_lazy
+
+        return FrozenLakeMDP.produce_gin_file_from_mdp_parameters(
+            prms, type(self).__name__, index
+        )
 
     @property
     def n_actions(self) -> int:
@@ -141,8 +198,9 @@ class FrozenLakeMDP(BaseMDP, abc.ABC):
             self._make_reward_stochastic,
         )
 
-    def _get_grid_representation(self, node: "NODE_TYPE"):
+    def _get_grid_representation(self, node: "NODE_TYPE") -> np.ndarray:
         grid = self.lake.copy()
+        grid[0, 0] = "F"
         grid[node.X, node.Y] = "A"
         return grid.T[::-1, :]
 
@@ -176,14 +234,45 @@ class FrozenLakeMDP(BaseMDP, abc.ABC):
         goal_r: Union[Tuple, rv_continuous] = None,
         default_r: Union[Tuple, rv_continuous] = None,
         make_reward_stochastic=False,
-        variance_multipliers: float = 1.0,
+        reward_variance_multiplier: float = 1.0,
         **kwargs,
     ):
+        """
+
+        Parameters
+        ----------
+        seed : int
+            The seed used for sampling rewards and next states.
+        size : int
+            The size of the grid.
+        p_frozen : float
+            The probability that a tile of the lake is frozen and does not contain a hole.
+        optimal_return: float
+            If the rewards are made stochastic, this parameter controls the mean reward for the optimal trajectory.
+            By default, it is set to 1.
+        suboptimal_return: float
+            If the rewards are made stochastic, this parameter controls the mean reward for suboptimal trajectories.
+            By default, it is set to 0.1.
+        is_slippery : bool
+            If True, the outcome of the action is stochastic due to the frozen tiles being slippery. By default, it is
+            set to True.
+        goal_r : Union[Tuple, rv_continuous]
+            The distribution of the highly rewarding state. It can be either passed as a tuple containing Beta parameters
+            or as a rv_continuous object.
+        default_r : Union[Tuple, rv_continuous]
+            The distribution of the other states. It can be either passed as a tuple containing Beta parameters or as a
+            rv_continuous object.
+        make_reward_stochastic : bool
+            If True, the rewards of the MDP will be stochastic. By default, it is set to False.
+        reward_variance_multiplier : float
+            A constant that can be used to increase the variance of the reward distributions without changing their means.
+            The lower the value, the higher the variance. By default, it is set to 1.
+        """
 
         if type(goal_r) == tuple:
-            goal_r = get_dist(goal_r[0], goal_r[1:])
+            goal_r = get_dist(goal_r[0], goal_r[1])
         if type(default_r) == tuple:
-            default_r = get_dist(default_r[0], default_r[1:])
+            default_r = get_dist(default_r[0], default_r[1])
 
         self._size = size
         self._p_frozen = p_frozen
@@ -209,12 +298,13 @@ class FrozenLakeMDP(BaseMDP, abc.ABC):
         else:
             if make_reward_stochastic:
                 self._default_r = beta(
-                    variance_multipliers,
-                    variance_multipliers * (size ** 2 / self._suboptimal_return - 1),
+                    reward_variance_multiplier,
+                    reward_variance_multiplier
+                    * (size ** 2 / self._suboptimal_return - 1),
                 )
                 self._goal_r = beta(
-                    variance_multipliers * (size ** 2 / self._optimal_return - 1),
-                    variance_multipliers,
+                    reward_variance_multiplier * (size ** 2 / self._optimal_return - 1),
+                    reward_variance_multiplier,
                 )
             else:
                 self._default_r = deterministic(0.0)
@@ -222,7 +312,7 @@ class FrozenLakeMDP(BaseMDP, abc.ABC):
 
         super(FrozenLakeMDP, self).__init__(
             seed=seed,
-            variance_multipliers=variance_multipliers,
+            reward_variance_multiplier=reward_variance_multiplier,
             make_reward_stochastic=make_reward_stochastic,
             **kwargs,
         )

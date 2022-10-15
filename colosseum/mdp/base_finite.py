@@ -4,34 +4,84 @@ from typing import TYPE_CHECKING, Any, Dict, List, Tuple
 import networkx as nx
 import numpy as np
 
-from colosseum.dynamic_programming import (
-    discounted_policy_iteration,
-    discounted_value_iteration,
-    episodic_policy_evaluation,
-    episodic_value_iteration,
-)
+from colosseum.dynamic_programming import discounted_policy_iteration
+from colosseum.dynamic_programming import discounted_value_iteration
+from colosseum.dynamic_programming import episodic_policy_evaluation
+from colosseum.dynamic_programming import episodic_value_iteration
 from colosseum.dynamic_programming.utils import get_policy_from_q_values
 from colosseum.mdp import BaseMDP
 from colosseum.mdp.utils.mdp_creation import (
     get_continuous_form_episodic_transition_matrix_and_rewards,
-    get_episodic_graph,
-    get_episodic_transition_matrix_and_rewards,
 )
+from colosseum.mdp.utils.mdp_creation import get_episodic_graph
+from colosseum.mdp.utils.mdp_creation import get_episodic_transition_matrix_and_rewards
+
 
 if TYPE_CHECKING:
     from colosseum.mdp import NODE_TYPE
 
 
 class EpisodicMDP(BaseMDP, abc.ABC):
+    """
+    The base class for episodic MDPs.
+    """
+
     @staticmethod
     def is_episodic() -> bool:
         return True
+
+    @property
+    def H(self) -> int:
+        """
+        Returns
+        -------
+        int
+            The episode length.
+        """
+        if self._H is None:
+            self._set_time_horizon(self._input_H)
+        return self._H
+
+
+    @property
+    def random_policy_cf(self) -> np.ndarray:
+        """
+        Returns
+        -------
+        np.ndarray
+            The random policy for the continuous form the episodic MDP.
+        """
+        if self._random_policy_cf is None:
+            self._random_policy_cf = (
+                np.ones(
+                    (len(self.get_episodic_graph(True).nodes), self.n_actions),
+                    np.float32,
+                )
+                / self.n_actions
+            )
+        return self._random_policy_cf
+
+    @property
+    def random_policy(self) -> np.ndarray:
+        """
+        Returns
+        -------
+        np.ndarray
+            The random uniform policy.
+        """
+        if self._random_policy is None:
+            self._random_policy = (
+                np.ones((self.H, self.n_states, self.n_actions), np.float32)
+                / self.n_actions
+            )
+        return self._random_policy
 
     def __init__(self, H: int = None, **kwargs):
         super(EpisodicMDP, self).__init__(**kwargs)
 
         # Computing the time horizon
-        self._set_time_horizon(H)
+        self._input_H = H
+        self._H = None
 
         # Episodic setting specific caching variables
         self._reachable_states = None
@@ -46,20 +96,16 @@ class EpisodicMDP(BaseMDP, abc.ABC):
         self._eoar = None
         self._woar = None
         self._roar = None
-        self.random_policy_cf = (
-            np.ones(
-                (len(self.get_episodic_graph(True).nodes), self.n_actions), np.float32
-            )
-            / self.n_actions
-        )
-        self.random_policy = (
-            np.ones((self.H, self.n_states, self.n_actions), np.float32)
-            / self.n_actions
-        )
+        self._random_policy_cf = None
+        self._random_policy = None
+        self._average_optimal_episodic_reward = None
+        self._average_worst_episodic_reward = None
+        self._average_random_episodic_reward = None
 
-    def _set_time_horizon(self, H: int):
+
+    def _set_time_horizon(self, H: int) -> int:
         """
-        calculates a meaningful minimal horizon for the MDP.
+        sets a meaningful minimal horizon for the MDP.
         """
         if "Taxi" in str(type(self)):
             # it is complicated to give the same horizon to different seed of the same MDP instance
@@ -74,9 +120,9 @@ class EpisodicMDP(BaseMDP, abc.ABC):
                 + 1
             )
         if H is None:
-            self.H = self._H = minimal_H
+            self._H = self._H = minimal_H
         else:
-            self.H = self._H = max(minimal_H, H)
+            self._H = self._H = max(minimal_H, H)
 
     def _vi(self, *args):
         return episodic_value_iteration(self.H, *args)
@@ -87,13 +133,17 @@ class EpisodicMDP(BaseMDP, abc.ABC):
     @property
     def parameters(self) -> Dict[str, Any]:
         parameters = super(EpisodicMDP, self).parameters
-        parameters["H"] = self.H
+        if not self._exclude_horizon_from_parameters:
+            parameters["H"] = self.H
         return parameters
 
     @property
     def reachable_states(self) -> List[Tuple[int, "NODE_TYPE"]]:
         """
-        returns the pairs of in episode time step and state that are feasible.
+        Returns
+        -------
+        List[Tuple[int, "NODE_TYPE"]]
+            The pairs of in episode time step and states that is possible to reach with the given episode time.
         """
         if self._reachable_states is None:
             self._reachable_states = [
@@ -119,7 +169,12 @@ class EpisodicMDP(BaseMDP, abc.ABC):
     @property
     def optimal_value_continuous_form(self) -> Tuple[np.ndarray, np.ndarray]:
         """
-        returns the optimal q and state values computed for the continuous form.
+        Returns
+        -------
+        np.ndarray
+            The q-value function of the optimal policy for the continuous form of the MDP.
+        np.ndarray
+            The state-value function of the optimal policy for the continuous form of the MDP.
         """
         if self._optimal_value_cf is None:
             self._optimal_value_cf = discounted_value_iteration(self.T_cf, self.R_cf)
@@ -128,7 +183,12 @@ class EpisodicMDP(BaseMDP, abc.ABC):
     @property
     def worst_value_continuous_form(self) -> np.ndarray:
         """
-        returns the q and state values for the worst performing policy computed for the continuous form.
+        Returns
+        -------
+        np.ndarray
+            The q-value function of the worst policy for the continuous form of the MDP.
+        np.ndarray
+            The state-value function of the worst policy for the continuous form of the MDP.
         """
         if self._worst_value_cf is None:
             self._worst_value_cf = discounted_value_iteration(self.T_cf, -self.R_cf)
@@ -137,7 +197,12 @@ class EpisodicMDP(BaseMDP, abc.ABC):
     @property
     def random_value_continuous_form(self):
         """
-        returns the q and state values for the randomly acting policy computed for the continuous form.
+        Returns
+        -------
+        np.ndarray
+            The q-value function of the random uniform policy for the continuous form of the MDP.
+        np.ndarray
+            The state-value function of the random uniform policy for the continuous form of the MDP.
         """
         if self._random_value_cf is None:
             self._random_value_cf = discounted_policy_iteration(
@@ -145,10 +210,14 @@ class EpisodicMDP(BaseMDP, abc.ABC):
             )
         return self._random_value_cf
 
+
     @property
     def episodic_optimal_average_reward(self) -> float:
         """
-        returns the expected value of time step zero under the starting state distribution for the optimal policy.
+        Returns
+        -------
+        float
+            The average episodic reward for the optimal policy.
         """
         if self._eoar is None:
             _eoar = 0.0
@@ -157,10 +226,14 @@ class EpisodicMDP(BaseMDP, abc.ABC):
             self._eoar = _eoar / self.H
         return self._eoar
 
+
     @property
     def episodic_worst_average_reward(self) -> float:
         """
-        returns the expected value of time step zero under the starting state distribution for the worst performing policy.
+        Returns
+        -------
+        float
+            The average episodic reward for the worst policy.
         """
         if self._woar is None:
             _woar = 0.0
@@ -172,7 +245,10 @@ class EpisodicMDP(BaseMDP, abc.ABC):
     @property
     def episodic_random_average_reward(self) -> float:
         """
-        returns the expected value of time step zero under the starting state distribution for the randomly acting policy.
+        Returns
+        -------
+        float
+            The average episodic reward for the random uniform policy.
         """
         if self._roar is None:
             _roar = 0.0
@@ -182,10 +258,14 @@ class EpisodicMDP(BaseMDP, abc.ABC):
         return self._roar
 
     @property
-    def continuous_form_episodic_transition_matrix_and_rewards(self):
+    def continuous_form_episodic_transition_matrix_and_rewards(self) -> Tuple[np.ndarray, np.ndarray]:
         """
-        returns the transition matrix and rewards matrix for the continous form, i.e. when the state space is augmented
-        with the in episode time step.
+        Returns
+        -------
+        np.ndarray
+            The transition 3d array for the continuous form of the MDP.
+        np.ndarray
+            The reward matrix for the continuous form of the MDP.
         """
         if self._continuous_form_episodic_transition_matrix_and_rewards is None:
             self._continuous_form_episodic_transition_matrix_and_rewards = (
@@ -200,10 +280,14 @@ class EpisodicMDP(BaseMDP, abc.ABC):
         return self._continuous_form_episodic_transition_matrix_and_rewards
 
     @property
-    def episodic_transition_matrix_and_rewards(self):
+    def episodic_transition_matrix_and_rewards(self) -> Tuple[np.ndarray, np.ndarray]:
         """
-        returns the episodic transition matrix and episodic rewards matrix, i.e. with an additional dimensional to
-        account for the in episode time step.
+        Returns
+        -------
+        np.ndarray
+            The transition 3d array for the MDP.
+        np.ndarray
+            The reward matrix for the MDP.
         """
         if self._episodic_transition_matrix_and_rewards is None:
             self._episodic_transition_matrix_and_rewards = (
@@ -218,7 +302,10 @@ class EpisodicMDP(BaseMDP, abc.ABC):
 
     def get_optimal_policy_continuous_form(self, stochastic_form: bool) -> np.ndarray:
         """
-        returns the optimal policy computed for the continuous form.
+        Returns
+        ------
+        np.ndarray
+            The optimal policy computed for the continuous form.
         """
         if stochastic_form not in self._optimal_policy_cf:
             self._optimal_policy_cf[stochastic_form] = get_policy_from_q_values(
@@ -228,7 +315,10 @@ class EpisodicMDP(BaseMDP, abc.ABC):
 
     def get_worst_policy_continuous_form(self, stochastic_form) -> np.ndarray:
         """
-        returns the worst policy computed for the continuous form.
+        Returns
+        ------
+        np.ndarray
+            The worst policy computed for the continuous form.
         """
         if stochastic_form not in self._worst_policy_cf:
             self._worst_policy_cf[stochastic_form] = get_policy_from_q_values(
@@ -236,35 +326,62 @@ class EpisodicMDP(BaseMDP, abc.ABC):
             )
         return self._worst_policy_cf[stochastic_form]
 
-    def get_minimal_regret_for_starting_node(self, node: "NODE_TYPE"):
+    def get_random_policy_continuous_form(self, stochastic_form) -> np.ndarray:
         """
-        returns the minimal possible regret obtained from the given starting state.
+        Returns
+        ------
+        np.ndarray
+            The random uniform policy computed for the continuous form.
+        """
+        if stochastic_form not in self._worst_policy_cf:
+            self._random_policy_cf[stochastic_form] = get_policy_from_q_values(
+                self.random_value_continuous_form[0], stochastic_form
+            )
+        return self._random_policy_cf[stochastic_form]
+
+    def get_minimal_regret_for_starting_node(self, node: "NODE_TYPE") -> float:
+        """
+        Returns
+        -------
+        float
+            The minimal possible regret obtained from the given starting state.
         """
         return self.get_optimal_policy_starting_value(
             node
         ) - self.get_worst_policy_starting_value(node)
 
-    def get_optimal_policy_starting_value(self, node: "NODE_TYPE"):
+    def get_optimal_policy_starting_value(self, node: "NODE_TYPE") -> float:
         """
-        returns the value of the given node at in episode time step zero for the optimal policy.
+        Returns
+        -------
+        float
+            The value of the given state at in episode time step zero for the optimal policy.
         """
-        return self.optimal_value[1][0, self.node_to_index[node]]
+        return self.optimal_value_functions[1][0, self.node_to_index[node]]
 
     def get_worst_policy_starting_value(self, node: "NODE_TYPE"):
         """
-        returns the value of the given node at in episode time step zero for the worst performing policy.
+        Returns
+        -------
+        float
+            The value of the given state at in episode time step zero for the worst policy.
         """
-        return self.worst_value[1][0, self.node_to_index[node]]
+        return self.worst_value_functions[1][0, self.node_to_index[node]]
 
     def get_random_policy_starting_value(self, node: "NODE_TYPE"):
         """
-        returns the value of the given node at in episode time step zero for the randomly acting policy.
+        Returns
+        -------
+        float
+            The value of the given state at in episode time step zero for the random uniform policy.
         """
-        return self.random_value[1][0, self.node_to_index[node]]
+        return self.random_value_functions[1][0, self.node_to_index[node]]
 
     def get_episodic_graph(self, remove_labels: bool) -> nx.DiGraph:
         """
-        returns the graph corresponding the state space augmented with the in episode time step. It is possible to remove
+        Returns
+        -------
+        The graph corresponding the state space augmented with the in episode time step. It is possible to remove
         the labels that mark the nodes.
         """
         if remove_labels not in self._episodic_graph:
@@ -273,7 +390,7 @@ class EpisodicMDP(BaseMDP, abc.ABC):
             )
         return self._episodic_graph[remove_labels]
 
-    def get_grid_representation(self, node: "NODE_TYPE", h : int = None) -> np.array:
+    def get_grid_representation(self, node: "NODE_TYPE", h: int = None) -> np.array:
         if h is None:
             h = self.h
         grid = self._get_grid_representation(node)

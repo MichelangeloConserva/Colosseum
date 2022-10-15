@@ -10,7 +10,5 @@ from colosseum.mdp.minigrid_rooms.base import MiniGridRoomsMDP
 class MiniGridRoomsContinuous(ContinuousMDP, MiniGridRoomsMDP):
     @staticmethod
     def sample_parameters(n: int, seed: int = None) -> List[Dict[str, Any]]:
-        return MiniGridRoomsMDP._sample_parameters(n, False, seed)
+        return MiniGridRoomsMDP.sample_mdp_parameters(n, False, seed)
 
-
-MDPClass = MiniGridRoomsContinuous

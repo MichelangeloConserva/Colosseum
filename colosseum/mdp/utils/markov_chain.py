@@ -6,7 +6,7 @@ import numba
 import numpy as np
 import scipy
 from pydtmc import MarkovChain
-from scipy.sparse import coo_matrix, csr_matrix, lil_matrix
+from scipy.sparse import coo_matrix, csr_matrix
 
 
 def get_average_reward(
@@ -17,9 +17,14 @@ def get_average_reward(
     sparse_threshold_size: int = 500 * 500,
 ) -> float:
     """
-    returns the expected average reward when following policy for the MDP defined by the given transition matrix and
+    Returns
+    -------
+    float
+        The expected average reward when following policy for the MDP defined by the given transition matrix and
     rewards matrix.
     """
+    assert np.isclose(policy.sum(-1), 1).all(), "the policy specification is incorrect."
+
     average_rewards = get_average_rewards(R, policy)
     tps = get_transition_probabilities(T, policy)
     sd = get_stationary_distribution(tps, next_states_and_probs, sparse_threshold_size)
@@ -28,21 +33,30 @@ def get_average_reward(
 
 def get_average_rewards(R: np.ndarray, policy: np.ndarray) -> np.ndarray:
     """
-    returns the expected rewards for each state when following the given policy.
+    Returns
+    -------
+    np.ndarray
+        The expected rewards for each state when following the given policy.
     """
     return np.einsum("sa,sa->s", R, policy)
 
 
 def get_transition_probabilities(T: np.ndarray, policy: np.ndarray) -> np.ndarray:
     """
-    returns the transition probability matrix of the Markov chain yielded by the given policy.
+    Returns
+    -------
+    np.ndarray
+        The transition probability matrix of the Markov chain yielded by the given policy.
     """
     return np.minimum(1.0, np.einsum("saj,sa->sj", T, policy))
 
 
 def get_markov_chain(transition_probabilities: np.ndarray) -> MarkovChain:
     """
-    returns a Markov chain object from the pydtmc package.
+    Returns
+    -------
+    MarkovChain
+        The Markov chain object from the pydtmc package.
     """
     return MarkovChain(transition_probabilities)
 
@@ -60,12 +74,17 @@ def get_stationary_distribution(
     Parameters
     ----------
     tps : np.ndarray
-        is the transition probabilities matrix.
+        The transition probabilities matrix.
     starting_states_and_probs : List[Tuple[int, float]]
-        is an iterable over the starting states and their corresponding probabilities.
+        The iterable over the starting states and their corresponding probabilities.
     sparse_threshold_size : int
-        is a threshold for the size of the transition probabilities matrix that flags whether it is better to use sparse
+        The threshold for the size of the transition probabilities matrix that flags whether it is better to use sparse
         matrices.
+
+    Returns
+    -------
+    np.ndarray
+        The stationary distribution of the transition matrix.
     """
     if tps.size > sparse_threshold_size:
         G = nx.DiGraph(coo_matrix(tps))
@@ -87,13 +106,6 @@ def get_stationary_distribution(
 
     elif len(recurrent_classes) > 1 and len(recurrent_classes[0]) < len(tps):
 
-        # Calculate the stationary distribution for each recurrent class
-        recurrent_classes_sds = dict()
-        for recurrent_class in recurrent_classes:
-            recurrent_classes_sds[recurrent_class] = _get_stationary_distribution(
-                tps[np.ix_(recurrent_class, recurrent_class)], sparse_threshold_size
-            )
-
         sd = np.zeros(len(tps))
         if len(recurrent_classes) > 1:
             # Weight the stationary distribution of the recurrent classes with starting states distribution
@@ -102,15 +114,21 @@ def get_stationary_distribution(
                     try:
                         # this means that the starting state ss is connected to recurrent_class
                         nx.shortest_path_length(G, ss, recurrent_class[0])
-                        sd[list(recurrent_class)] += (
-                            p * recurrent_classes_sds[recurrent_class]
+
+                        # Weighting the stationary distribution with the probability of the starting state
+                        sd[list(recurrent_class)] += p * _get_stationary_distribution(
+                            tps[np.ix_(recurrent_class, recurrent_class)],
+                            sparse_threshold_size,
                         )
                         break
                     except nx.exception.NetworkXNoPath:
                         pass
         else:
             # No need to weight with the starting state distribution since there is only one recurrent class
-            sd[list(recurrent_class)] += recurrent_classes_sds[recurrent_class]
+            sd[list(recurrent_classes[0])] += _get_stationary_distribution(
+                tps[np.ix_(recurrent_classes[0], recurrent_classes[0])],
+                sparse_threshold_size,
+            )
 
         return sd
 
@@ -178,6 +196,11 @@ def _eigen_method(tps, tol=1e-8, maxiter=1e5):
 def _get_stationary_distribution(
     tps: np.ndarray, sparse_threshold_size: int = 500 * 500
 ) -> np.ndarray:
+    os.makedirs("tmp", exist_ok=True)
+
+    if len(tps) == 1:
+        return np.ones(1, np.float32)
+
     if tps.size > sparse_threshold_size:
         sd = _eigen_method(csr_matrix(tps))
         if np.isnan(sd).any() or not np.isclose(sd.sum(), 1.0):
@@ -189,11 +212,21 @@ def _get_stationary_distribution(
                     break
 
             sd = _gth_solve_numba(tps)
+            if not np.isclose(sd.sum(), 1.0) and np.isclose(sd.sum(), 1, rtol=4):
+                sd /= sd.sum()
             assert not (np.isnan(sd).any() or not np.isclose(sd.sum(), 1.0)), np.save(
                 "tmp/tps.npy", tps
             )
-    else:
-        sd = _gth_solve_numba(tps)
+            return sd
+
+    sd = _gth_solve_numba(tps)
+    if np.isnan(sd).any() or not np.isclose(sd.sum(), 1.0):
+        np.save("tmp/tps.npy", tps)
+
+        tps = tps / tps.sum(1, keepdims=True)
+        sd = _eigen_method(csr_matrix(tps))
+        if not np.isclose(sd.sum(), 1.0) and np.isclose(sd.sum(), 1, rtol=4):
+            sd /= sd.sum()
         assert not (np.isnan(sd).any() or not np.isclose(sd.sum(), 1.0)), np.save(
             "tmp/tps.npy", tps
         )

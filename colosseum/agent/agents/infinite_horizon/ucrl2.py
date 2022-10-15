@@ -7,18 +7,19 @@ import gin
 import numpy as np
 from ray import tune
 
+from colosseum.agent.actors import QValuesActor
+from colosseum.agent.agents.base import BaseAgent
 from colosseum.dynamic_programming import discounted_value_iteration
 from colosseum.dynamic_programming.infinite_horizon import extended_value_iteration
 from colosseum.dynamic_programming.utils import get_policy_from_q_values
-from colosseum.agent.actors import QValuesActor
-from colosseum.agent.agents.base import BaseAgent
+from colosseum.emission_maps import EmissionMap
 
 if TYPE_CHECKING:
     from colosseum.mdp import ACTION_TYPE
     from colosseum.utils.acme.specs import MDPSpec
 
 
-def chernoff(it, N, delta, sqrt_C, log_C, range=1.0):
+def _chernoff(it, N, delta, sqrt_C, log_C, range=1.0):
     ci = range * np.sqrt(sqrt_C * math.log(log_C * (it + 1) / delta) / np.maximum(1, N))
     return ci
 
@@ -28,15 +29,26 @@ def bernstein(scale_a, log_scale_a, scale_b, log_scale_b, alpha_1, alpha_2):
     B = scale_b * math.log(log_scale_b)
     return alpha_1 * np.sqrt(A) + alpha_2 * B
 
-
 @gin.configurable
 class UCRL2Continuous(BaseAgent):
+    """
+    The second version of upper confidence for reinforcement learning algorithm.
+
+    Auer, Peter, Thomas Jaksch, and Ronald Ortner. "Near-optimal regret bounds for reinforcement learning." Advances in
+    neural information processing systems 21 (2008).
+
+    Fruit, Ronan, Matteo Pirotta, and Alessandro Lazaric. "Improved analysis of ucrl2 with empirical bernstein inequality."
+    arXiv preprint arXiv:2007.05456 (2020).
+    """
+
     @staticmethod
-    def produce_gin_file_from_hyperparameters(
-        hyperparameters: Dict[str, Any], index: int = 0
-    ):
+    def is_emission_map_accepted(emission_map: "EmissionMap") -> bool:
+        return emission_map.is_tabular
+
+    @staticmethod
+    def produce_gin_file_from_parameters(parameters: Dict[str, Any], index: int = 0):
         string = f"prms_{index}/UCRL2Continuous.bound_type_p='bernstein'\n"
-        for k, v in hyperparameters.items():
+        for k, v in parameters.items():
             string += f"prms_{index}/UCRL2Continuous.{k} = {v}\n"
         return string[:-1]
 
@@ -46,21 +58,21 @@ class UCRL2Continuous(BaseAgent):
 
     @staticmethod
     def get_hyperparameters_search_spaces() -> Dict[str, tune.sample.Domain]:
-        return {"alpha_p": tune.uniform(0.0001, 1), "alpha_r": tune.uniform(0.001, 1)}
+        return {"alpha_p": tune.uniform(0.1, 3), "alpha_r": tune.uniform(0.1, 3)}
 
     @staticmethod
-    def get_agent_instance_from_hyperparameters(
+    def get_agent_instance_from_parameters(
         seed: int,
         optimization_horizon: int,
         mdp_specs: "MDPSpec",
-        hyperparameters: Dict[str, Any],
+        parameters: Dict[str, Any],
     ) -> "BaseAgent":
         return UCRL2Continuous(
-            environment_spec=mdp_specs,
+            mdp_specs=mdp_specs,
             seed=seed,
             optimization_horizon=optimization_horizon,
-            alpha_p=hyperparameters["alpha_p"],
-            alpha_r=hyperparameters["alpha_r"],
+            alpha_p=parameters["alpha_p"],
+            alpha_r=parameters["alpha_r"],
             bound_type_p="bernstein",
         )
 
@@ -72,26 +84,53 @@ class UCRL2Continuous(BaseAgent):
     def __init__(
         self,
         seed: int,
-        environment_spec: "MDPSpec",
+        mdp_specs: "MDPSpec",
         optimization_horizon: int,
-        # MDP model hyperparameters
-        alpha_r=None,
-        alpha_p=None,
-        bound_type_p="chernoff",
-        bound_type_rew="chernoff",
-        # Actor hyperparameters
+        # MDP model parameters
+        alpha_r=1.0,
+        alpha_p=1.0,
+        bound_type_p="_chernoff",
+        bound_type_rew="_chernoff",
+        # Actor parameters
         epsilon_greedy: Union[float, Callable] = None,
         boltzmann_temperature: Union[float, Callable] = None,
     ):
-        n_states = self._n_states = environment_spec.observations.num_values
-        n_actions = self._n_actions = environment_spec.actions.num_values
-        self.reward_range = environment_spec.rewards_range
+        r"""
+        Parameters
+        ----------
+        seed : int
+            The random seed.
+        mdp_specs : MDPSpec
+            The full specification of the MDP.
+        optimization_horizon : int
+            The total number of interactions that the agent is expected to have with the MDP.
+        alpha_r : float
+            The :math:`\alpha` parameter for the rewards. By default, it is set to one.
+        alpha_p : float
+            The :math:`\alpha` parameter for the transitions. By default, it is set to one.
+        bound_type_p : str
+            The upper confidence bound type for the transitions. It can either be '_chernoff' or 'bernstein'. By default,
+            it is set to '_chernoff'.
+        bound_type_rew : str
+            The upper confidence bound type for the rewards. It can either be '_chernoff' or 'bernstein'. By default,
+            it is set to '_chernoff'.
+        epsilon_greedy : Union[float, Callable], optional
+            The probability of selecting an action at random. It can be provided as a float or as a function of the
+            total number of interactions. By default, the probability is set to zero.
+        boltzmann_temperature : Union[float, Callable], optional
+            The parameter that controls the Boltzmann exploration. It can be provided as a float or as a function of
+            the total number of interactions. By default, Boltzmann exploration is disabled.
+        """
 
-        assert bound_type_p in ["chernoff", "bernstein"]
-        assert bound_type_rew in ["chernoff", "bernstein"]
+        n_states = self._n_states = mdp_specs.observations.num_values
+        n_actions = self._n_actions = mdp_specs.actions.num_values
+        self.reward_range = mdp_specs.rewards_range
 
-        self.alpha_p = 1.0 if alpha_p is None else alpha_p
-        self.alpha_r = 1.0 if alpha_r is None else alpha_r
+        assert bound_type_p in ["_chernoff", "bernstein"]
+        assert bound_type_rew in ["_chernoff", "bernstein"]
+
+        self.alpha_p = alpha_p
+        self.alpha_r = alpha_r
 
         # initialize matrices
         self.policy = np.zeros((n_states,), dtype=np.int_)
@@ -107,8 +146,7 @@ class UCRL2Continuous(BaseAgent):
         self.P = np.ones((n_states, n_actions, n_states), np.float32) / n_states
 
         self.estimated_rewards = (
-            np.ones((n_states, n_actions), np.float32)
-            * environment_spec.rewards_range[1]
+            np.ones((n_states, n_actions), np.float32) * mdp_specs.rewards_range[1]
         )
         self.variance_proxy_reward = np.zeros((n_states, n_actions), np.float32)
         self.estimated_holding_times = np.ones((n_states, n_actions), np.float32)
@@ -121,9 +159,9 @@ class UCRL2Continuous(BaseAgent):
 
         super(UCRL2Continuous, self).__init__(
             seed,
-            environment_spec,
+            mdp_specs,
             None,
-            QValuesActor(seed, environment_spec, epsilon_greedy, boltzmann_temperature),
+            QValuesActor(seed, mdp_specs, epsilon_greedy, boltzmann_temperature),
             optimization_horizon,
         )
 
@@ -132,7 +170,7 @@ class UCRL2Continuous(BaseAgent):
         ts_t: dm_env.TimeStep,
         a_t: "ACTION_TYPE",
         ts_tp1: dm_env.TimeStep,
-        time_step: int,
+        time: int,
     ) -> bool:
         nu_k = len(self.episode_transition_data[ts_t.observation, a_t])
         return nu_k >= max(1, self.N[ts_t.observation, a_t].sum() - nu_k)
@@ -172,6 +210,9 @@ class UCRL2Continuous(BaseAgent):
                 ]
 
     def model_update(self):
+        """
+        updates the model given the transitions obtained during the artificial episode.
+        """
         for (s_tm1, action), r_ts in self.episode_reward_data.items():
             # updated observations
             scale_f = self.N[s_tm1, action].sum()
@@ -197,14 +238,16 @@ class UCRL2Continuous(BaseAgent):
 
     def beta_r(self, nb_observations) -> np.ndarray:
         """
-        Calculates the confidence bounds on the reward.
-        Returns:
-            np.array: the vector of confidence bounds on the reward function (|S| x |A|)
+        calculates the confidence bounds on the reward.
+        Returns
+        -------
+        np.array
+            The vector of confidence bounds on the reward function (|S| x |A|)
         """
         S = self._n_states
         A = self._n_actions
         if self.bound_type_rew != "bernstein":
-            ci = chernoff(
+            ci = _chernoff(
                 it=self.iteration,
                 N=nb_observations,
                 range=self.reward_range[1],
@@ -230,14 +273,16 @@ class UCRL2Continuous(BaseAgent):
 
     def beta_p(self, nb_observations) -> np.ndarray:
         """
-        Calculates the confidence bounds on the transition probabilities.
-        Returns:
-            np.array: the vector of confidence bounds on the reward function (|S| x |A|)
+        calculates the confidence bounds on the transition probabilities.
+        Returns
+        -------
+        np.array
+            The vector of confidence bounds on the reward function (|S| x |A|)
         """
         S = self._n_states
         A = self._n_actions
         if self.bound_type_p != "bernstein":
-            beta = chernoff(
+            beta = _chernoff(
                 it=self.iteration,
                 N=nb_observations,
                 range=1.0,
@@ -263,9 +308,10 @@ class UCRL2Continuous(BaseAgent):
 
     def solve_optimistic_model(self) -> Union[None, float]:
         """
-        Solves the optimistic value iteration.
+        solves the optimistic value iteration.
         Returns
         -------
+        Union[None, float]
             The span value of the estimates from the optimistic value iteration or None if no solution has been found.
         """
         nb_observations = self.N.sum(-1)
@@ -284,6 +330,7 @@ class UCRL2Continuous(BaseAgent):
                 T, estimated_rewards, beta_r, beta_p, self.reward_range[1]
             )
         except SystemError:
+            # Debug logs if the optimistic value iteration fails
             os.makedirs(f"tmp{os.sep}error_ext_vi", exist_ok=True)
             for i in range(100):
                 if not os.path.isfile(f"tmp{os.sep}error_ext_vi{os.sep}T{i}.npy"):

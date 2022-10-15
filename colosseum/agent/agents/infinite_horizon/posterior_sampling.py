@@ -5,51 +5,137 @@ import gin
 import numpy as np
 from ray import tune
 
-from colosseum.dynamic_programming import discounted_value_iteration
-from colosseum.dynamic_programming.utils import get_policy_from_q_values
 from colosseum.agent.actors import QValuesActor
 from colosseum.agent.agents.base import BaseAgent
 from colosseum.agent.mdp_models.bayesian_model import BayesianMDPModel
-from colosseum.agent.mdp_models.bayesian_models import (
-    RewardsConjugateModel,
-    TransitionsConjugateModel,
-)
+from colosseum.agent.mdp_models.bayesian_models import RewardsConjugateModel
+from colosseum.agent.mdp_models.bayesian_models import TransitionsConjugateModel
+from colosseum.dynamic_programming import discounted_value_iteration
+from colosseum.dynamic_programming.utils import get_policy_from_q_values
+from colosseum.emission_maps import EmissionMap
 from colosseum.utils.acme.specs import MDPSpec
 
 if TYPE_CHECKING:
-    from colosseum.mdp import ACTION_TYPE, OBSERVATION_TYPE
+    from colosseum.mdp import ACTION_TYPE
 
 
-def get_psi(num_states, num_actions, T, p) -> float:
-    return num_states * np.log(num_states * num_actions / p)
+def get_psi(n_states, n_actions, T, p) -> float:
+    r"""
+    computes the theoretical value of the :math:`\psi` parameter.
+
+    Parameters
+    ----------
+    n_states : int
+        The number of states.
+    n_actions : int
+        The number of actions.
+    T : int
+        The optimization horizon.
+    p : float
+        The probability of failure.
+
+    Returns
+    -------
+    float
+        The theoretical value of the :math:`\psi` parameter.
+    """
+    return n_states * np.log(n_states * n_actions / p)
 
 
-def get_omega(num_states, num_actions, T, p) -> float:
+def get_omega(n_states, n_actions, T, p) -> float:
+    r"""
+    computes the theoretical value of the :math:`\omega` parameter.
+
+    Parameters
+    ----------
+    n_states : int
+        The number of states.
+    n_actions : int
+        The number of actions.
+    T : int
+        The optimization horizon.
+    p : float
+        The probability of failure.
+
+    Returns
+    -------
+    float
+        The theoretical value of the :math:`\omega` parameter.
+    """
     return np.log(T / p)
 
 
-def get_kappa(num_states, num_actions, T, p) -> float:
+def get_kappa(n_states, n_actions, T, p) -> float:
+    r"""
+    computes the theoretical value of the :math:`\kappa` parameter.
+
+    Parameters
+    ----------
+    n_states : int
+        The number of states.
+    n_actions : int
+        The number of actions.
+    T : int
+        The optimization horizon.
+    p : float
+        The probability of failure.
+
+    Returns
+    -------
+    float
+        The theoretical value of the :math:`\kappa` parameter.
+    """
     return np.log(T / p)
 
 
-def get_eta(num_states, num_actions, T, p, omega) -> float:
-    return np.sqrt(T * num_states / num_actions) + 12 * omega * num_states ** 4
+def get_eta(n_states, n_actions, T, p, omega) -> float:
+    r"""
+    computes the theoretical value of the :math:`\eta` parameter.
+
+    Parameters
+    ----------
+    n_states : int
+        The number of states.
+    n_actions : int
+        The number of actions.
+    T : int
+        The optimization horizon.
+    p : float
+        The probability of failure.
+    omega : float
+        The omega parameter.
+
+    Returns
+    -------
+    float
+        The theoretical value of the :math:`\eta` parameter.
+    """
+    return np.sqrt(T * n_states / n_actions) + 12 * omega * n_states ** 4
 
 
 @gin.configurable
 class PSRLContinuous(BaseAgent):
+    """
+    The posterior sampling for reinforcement learning algorithm with optimism.
+
+    Agrawal, Shipra, and Randy Jia. "Posterior sampling for reinforcement learning: worst-case regret bounds." arXiv
+    preprint arXiv:1705.07041 (2017).
+    """
+
     @staticmethod
-    def produce_gin_file_from_hyperparameters(
-        hyperparameters: Dict[str, Any], index: int = 0
-    ):
+    def is_emission_map_accepted(emission_map: "EmissionMap") -> bool:
+        return emission_map.is_tabular
+
+    @staticmethod
+    def produce_gin_file_from_parameters(parameters: Dict[str, Any], index: int = 0):
         return (
             "from colosseum.agent.mdp_models import bayesian_models\n"
             f"prms_{index}/PSRLContinuous.reward_prior_model = %bayesian_models.RewardsConjugateModel.N_NIG\n"
-            f"prms_{index}/PSRLContinuous.rewards_prior_prms = [{hyperparameters['rewards_prior_mean']}, 1, 1, 1]\n"
-            f"prms_{index}/PSRLContinuous.psi_weight = {hyperparameters['psi_weight']}\n"
-            f"prms_{index}/PSRLContinuous.omega_weight = {hyperparameters['omega_weight']}\n"
-            f"prms_{index}/PSRLContinuous.kappa_weight = {hyperparameters['kappa_weight']}\n"
-            f"prms_{index}/PSRLContinuous.eta_weight = {hyperparameters['eta_weight']}"
+            f"prms_{index}/PSRLContinuous.rewards_prior_prms = [{parameters['rewards_prior_mean']}, 1, 1, 1]\n"
+            f"prms_{index}/PSRLContinuous.psi_weight = {parameters['psi_weight']}\n"
+            f"prms_{index}/PSRLContinuous.omega_weight = {parameters['omega_weight']}\n"
+            f"prms_{index}/PSRLContinuous.kappa_weight = {parameters['kappa_weight']}\n"
+            f"prms_{index}/PSRLContinuous.eta_weight = {parameters['eta_weight']}"
         )
 
     @staticmethod
@@ -67,22 +153,22 @@ class PSRLContinuous(BaseAgent):
         }
 
     @staticmethod
-    def get_agent_instance_from_hyperparameters(
+    def get_agent_instance_from_parameters(
         seed: int,
         optimization_horizon: int,
         mdp_specs: MDPSpec,
-        hyperparameters: Dict[str, Any],
+        parameters: Dict[str, Any],
     ) -> "BaseAgent":
         return PSRLContinuous(
-            environment_spec=mdp_specs,
+            mdp_specs=mdp_specs,
             seed=seed,
             optimization_horizon=optimization_horizon,
             reward_prior_model=RewardsConjugateModel.N_NIG,
-            rewards_prior_prms=[hyperparameters["rewards_prior_mean"], 1, 1, 1],
-            psi_weight=hyperparameters["psi_weight"],
-            omega_weight=hyperparameters["omega_weight"],
-            kappa_weight=hyperparameters["kappa_weight"],
-            eta_weight=hyperparameters["eta_weight"],
+            rewards_prior_prms=[parameters["rewards_prior_mean"], 1, 1, 1],
+            psi_weight=parameters["psi_weight"],
+            omega_weight=parameters["omega_weight"],
+            kappa_weight=parameters["kappa_weight"],
+            eta_weight=parameters["eta_weight"],
         )
 
     @property
@@ -94,32 +180,93 @@ class PSRLContinuous(BaseAgent):
     def __init__(
         self,
         seed: int,
-        environment_spec: MDPSpec,
+        mdp_specs: MDPSpec,
         optimization_horizon: int,
-        # MDP model hyperparameters
+        # MDP model parameters
         reward_prior_model: RewardsConjugateModel = None,
         transitions_prior_model: TransitionsConjugateModel = None,
         rewards_prior_prms=None,
         transitions_prior_prms=None,
-        # Actor hyperparameters
+        # Actor parameters
         epsilon_greedy: Union[float, Callable] = None,
         boltzmann_temperature: Union[float, Callable] = None,
         psi_weight: float = 1.0,
         omega_weight: float = 1.0,
         kappa_weight: float = 1.0,
         eta_weight: float = 1.0,
-        get_psi: Callable = get_psi,
-        get_omega: Callable = get_omega,
-        get_kappa: Callable = get_kappa,
-        get_eta: Callable = get_eta,
+        get_psi: Callable[[int, int, int, float], float] = get_psi,
+        get_omega: Callable[[int, int, int, float], float] = get_omega,
+        get_kappa: Callable[[int, int, int, float], float] = get_kappa,
+        get_eta: Callable[[int, int, int, float, float], float] = get_eta,
         p: float = 0.05,
         no_optimistic_sampling: bool = False,
         truncate_reward_with_max: bool = False,
         min_steps_before_new_episode: int = 0,
         max_psi: int = 60,
     ):
-        self._n_states = environment_spec.observations.num_values
-        self._n_actions = environment_spec.actions.num_values
+        r"""
+        Parameters
+        ----------
+        seed : int
+            The random seed.
+        mdp_specs : MDPSpec
+            The full specification of the MDP.
+        optimization_horizon : int
+            The total number of interactions that the agent is expected to have with the MDP.
+        reward_prior_model : RewardsConjugateModel, optional
+            The reward priors.
+        transitions_prior_model : TransitionsConjugateModel, optional
+            The transitions priors.
+        rewards_prior_prms : Any
+            The reward prior parameters.
+        transitions_prior_prms : Any
+            The transitions prior parameters.
+        epsilon_greedy : Union[float, Callable], optional
+            The probability of selecting an action at random. It can be provided as a float or as a function of the
+            total number of interactions. By default, the probability is set to zero.
+        boltzmann_temperature : Union[float, Callable], optional
+            The parameter that controls the Boltzmann exploration. It can be provided as a float or as a function of
+            the total number of interactions. By default, Boltzmann exploration is disabled.
+        psi_weight : float
+            The coefficient for which the theoretical value of the :math:`\psi` parameter is multiplied for. By default,
+            it is set to one.
+        omega_weight : float
+            The coefficient for which the theoretical value of the :math:`\omega` parameter is multiplied for. By default,
+            it is set to one.
+        kappa_weight : float
+            The coefficient for which the theoretical value of the :math:`\kappa` parameter is multiplied for. By default,
+            it is set to one.
+        eta_weight : float
+            The coefficient for which the theoretical value of the :math:`\eta` parameter is multiplied for. By default,
+            it is set to one.
+        get_psi : Callable[[int, int, int, float], float]
+            The function that computes the value of the :math:`\psi` parameter given number of states, number of action,
+             optimization horizon, and probability of failure. By default, it is set to the theoretical value.
+        get_omega : Callable[[int, int, int, float], float]
+            The function that computes the value of the :math:`\omega` parameter given number of states, number of action,
+             optimization horizon, and probability of failure. By default, it is set to the theoretical value.
+        get_kappa : Callable[[int, int, int, float], float]
+            The function that computes the value of the :math:`\kappa` parameter given number of states, number of action,
+             optimization horizon, and probability of failure. By default, it is set to the theoretical value.
+        get_eta : Callable[[int, int, int, float, float], float]
+            The function that computes the value of the :math:`\eta` parameter given number of states, number of action,
+             optimization horizon, probability of failure, and the omega parameter. By default, it is set to the
+             theoretical value.
+        p : float
+            The probability of failure. By default, it is set to :math:`0.05`.
+        no_optimistic_sampling : bool
+            If True the optimistic sampling procedure is disabled.
+        truncate_reward_with_max : bool
+            If True, the sampled rewards are truncated to the maximum possible value of the reward. By default, it is
+            set to False.
+        min_steps_before_new_episode : int
+            The minimum interval length between artificial episodes. By default, it is set to zero.
+        max_psi : int
+            The maximum value of the :math:`\psi` parameter. By default, it is set to :math:`60`.
+        """
+
+        self._n_states = mdp_specs.observations.num_values
+        self._n_actions = mdp_specs.actions.num_values
 
         self.truncate_reward_with_max = truncate_reward_with_max
         self.no_optimistic_sampling = (
@@ -159,7 +306,7 @@ class PSRLContinuous(BaseAgent):
             ),
         )
 
-        self._n_states = environment_spec.observations.num_values
+        self._n_states = mdp_specs.observations.num_values
         self.episode = 0
         self.min_steps_before_new_episode = min_steps_before_new_episode
         self.last_change = 0
@@ -181,7 +328,7 @@ class PSRLContinuous(BaseAgent):
 
         mdp_model = BayesianMDPModel(
             seed,
-            environment_spec,
+            mdp_specs,
             reward_prior_model=reward_prior_model,
             transitions_prior_model=transitions_prior_model,
             rewards_prior_prms=rewards_prior_prms,
@@ -190,9 +337,9 @@ class PSRLContinuous(BaseAgent):
 
         super(PSRLContinuous, self).__init__(
             seed,
-            environment_spec,
+            mdp_specs,
             mdp_model,
-            QValuesActor(seed, environment_spec, epsilon_greedy, boltzmann_temperature),
+            QValuesActor(seed, mdp_specs, epsilon_greedy, boltzmann_temperature),
             optimization_horizon,
         )
 
@@ -201,11 +348,11 @@ class PSRLContinuous(BaseAgent):
         ts_t: dm_env.TimeStep,
         a_t: "ACTION_TYPE",
         ts_tp1: dm_env.TimeStep,
-        time_step: int,
+        time: int,
     ) -> bool:
-        if time_step - self.last_change < self.min_steps_before_new_episode:
+        if time - self.last_change < self.min_steps_before_new_episode:
             return False
-        self.last_change = time_step
+        self.last_change = time
         nu_k = len(self.episode_transition_data[ts_t.observation, a_t])
         N_tau = self.N[ts_t.observation, a_t].sum()
         return N_tau >= 2 * (N_tau - nu_k)
@@ -235,11 +382,9 @@ class PSRLContinuous(BaseAgent):
         )
         self.episode_end_update()
 
-    def select_action(
-        self, ts: dm_env.TimeStep, time_step: int
-    ) -> "ACTION_TYPE":
+    def select_action(self, ts: dm_env.TimeStep, time: int) -> "ACTION_TYPE":
         return self.extended_action_to_real(
-            super(PSRLContinuous, self).select_action(ts.observation, time_step)
+            super(PSRLContinuous, self).select_action(ts, time)
         )
 
     def step_update(
@@ -264,6 +409,9 @@ class PSRLContinuous(BaseAgent):
                 ]
 
     def optimistic_sampling(self):
+        """
+        performs the optimistic sampling procedure.
+        """
         Nsum = self.N.sum(-1)
         cond = Nsum < self.eta
         indices_2 = list(np.where(cond))
@@ -296,7 +444,7 @@ class PSRLContinuous(BaseAgent):
 
     def extended_action_to_real(self, action) -> int:
         """
-        Transform the extended action used to induce optimistic to a real action of the MDP.
+        transform the extended action used to induce optimistic to a real action of the MDP.
         """
         if self.no_optimistic_sampling:
             return action

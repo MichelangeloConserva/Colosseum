@@ -4,7 +4,7 @@ from typing import Tuple, Dict, Any, List, Type, Union, TYPE_CHECKING
 
 import numpy as np
 import toolz
-from scipy.stats import rv_continuous, beta
+from scipy.stats import rv_continuous
 
 from colosseum.mdp import BaseMDP, EpisodicMDP, ContinuousMDP
 from colosseum.mdp.utils.custom_samplers import NextStateSampler
@@ -17,13 +17,18 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class CustomNode:
+    """
+    The node for the CustomMDP.
+    """
+
     ID: int
+    """The id associated to the node."""
 
     def __str__(self):
         return str(self.ID + 1)
 
 
-def merge_grid(grid, axis):
+def _merge_grid(grid, axis):
     indices = np.where(
         (grid == -1).sum(1 if axis == 0 else 0) == grid.shape[1 if axis == 0 else 0] - 1
     )[0][::2]
@@ -39,6 +44,14 @@ def merge_grid(grid, axis):
 
 
 class CustomMDP(BaseMDP, abc.ABC):
+    """
+    The base class for the Custom MDP.
+    """
+
+    @staticmethod
+    def get_unique_symbols() -> List[str]:
+        return ["X", " ", "A"]
+
     @staticmethod
     def does_seed_change_MDP_structure() -> bool:
         raise NotImplementedError(
@@ -52,11 +65,11 @@ class CustomMDP(BaseMDP, abc.ABC):
         )
 
     @staticmethod
-    def _sample_parameters(
+    def sample_mdp_parameters(
         n: int, is_episodic: bool, seed: int = None
     ) -> List[Dict[str, Any]]:
         raise NotImplementedError(
-            "_sample_parameters is not implemented for the Custom MDP."
+            "sample_mdp_parameters is not implemented for the Custom MDP."
         )
 
     @staticmethod
@@ -104,6 +117,9 @@ class CustomMDP(BaseMDP, abc.ABC):
                     f"is not a well defined probability distribution."
                 )
 
+    def get_gin_parameters(self, index: int) -> str:
+        raise NotImplementedError()
+
     @property
     def str_grid_node_order(self):
         if self._str_grid_node_order is None:
@@ -113,6 +129,12 @@ class CustomMDP(BaseMDP, abc.ABC):
         return self._str_grid_node_order
 
     def get_node_pos_in_grid(self, node) -> Tuple[int, int]:
+        """
+        Returns
+        -------
+        Tuple[int, int]
+            The position of the node in the visualization grid.
+        """
         if node not in self._nodes_pos_in_grid:
             x, y = np.where((self.str_grid_node_order[node] == self.grid))
             self._nodes_pos_in_grid[node] = x[0], y[0]
@@ -135,16 +157,16 @@ class CustomMDP(BaseMDP, abc.ABC):
             while has_changed:
                 has_changed = False
                 if any((grid == -1).sum(0) == grid.shape[0] - 1):
-                    grid = merge_grid(grid, 1)
+                    grid = _merge_grid(grid, 1)
                     has_changed = True
                 if any((grid == -1).sum(1) == grid.shape[1] - 1):
-                    grid = merge_grid(grid, 0)
+                    grid = _merge_grid(grid, 0)
                     has_changed = True
 
             self._grid = grid
         return self._grid
 
-    def _get_grid_representation(self, node: "NODE_TYPE"):
+    def _get_grid_representation(self, node: "NODE_TYPE") -> np.ndarray:
         str_grid = np.zeros(self.grid.shape[:2], dtype=str)
         str_grid[self.grid == -1] = "X"
         str_grid[self.grid != -1] = " "
@@ -169,7 +191,6 @@ class CustomMDP(BaseMDP, abc.ABC):
         **kwargs,
     ):
         """
-
         Parameters
         ----------
         seed : int
@@ -187,7 +208,7 @@ class CustomMDP(BaseMDP, abc.ABC):
 
         if type(R) == dict:
             _R = np.zeros((self.n_states, self._num_actions), np.float32)
-            for (s,a), d in R.items():
+            for (s, a), d in R.items():
                 _R[s, a] = d.mean()
         elif type(R) == np.ndarray:
             pass
@@ -213,7 +234,12 @@ class CustomMDP(BaseMDP, abc.ABC):
 
 
 class CustomEpisodic(CustomMDP, EpisodicMDP):
-    pass
+    """
+    The episodic Custom MDP.
+    """
+
 
 class CustomContinuous(CustomMDP, ContinuousMDP):
-    pass
+    """
+    The continuous Custom MDP.
+    """

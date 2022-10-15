@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING, Any, NamedTuple, Tuple
 import numpy as np
 from dm_env import specs
 
+from colosseum.emission_maps import EmissionMap
+
 if TYPE_CHECKING:
     from colosseum.mdp import BaseMDP
 
@@ -20,9 +22,11 @@ class MDPSpec(NamedTuple):
     discounts: Any
     time_horizon: Any
     rewards_range: Tuple[float, float]
+    emission_map: "EmissionMap"
+    n_states: int
 
 
-def make_environment_spec(mdp: "BaseMDP") -> MDPSpec:
+def make_mdp_spec(mdp: "BaseMDP") -> MDPSpec:
     """Returns an `MDPSpec` describing values used by an environment."""
     return MDPSpec(
         observations=mdp.observation_spec(),
@@ -31,4 +35,6 @@ def make_environment_spec(mdp: "BaseMDP") -> MDPSpec:
         discounts=mdp.discount_spec(),
         time_horizon=mdp.H if mdp.is_episodic() else np.inf,
         rewards_range=mdp.rewards_range,
+        emission_map=mdp.emission_map,
+        n_states=mdp.n_states,
     )

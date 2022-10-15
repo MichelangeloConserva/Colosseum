@@ -8,7 +8,12 @@ from scipy.stats import beta, rv_continuous
 
 from colosseum.mdp import BaseMDP
 from colosseum.mdp.utils.custom_samplers import NextStateSampler
-from colosseum.utils.miscellanea import check_distributions, deterministic, get_dist
+from colosseum.utils.miscellanea import (
+    check_distributions,
+    deterministic,
+    get_dist,
+    rounding_nested_structure,
+)
 
 if TYPE_CHECKING:
     from colosseum.mdp import ACTION_TYPE, NODE_TYPE
@@ -16,8 +21,14 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class DeepSeaNode:
+    """
+    The node for the DeepSea MDP.
+    """
+
     X: int
+    """x coordinate."""
     Y: int
+    """y coordinate."""
 
     def __str__(self):
         return f"X={self.X},Y={self.Y}"
@@ -27,19 +38,31 @@ class DeepSeaNode:
 
 
 class DeepSeaAction(IntEnum):
-    """The action available in the DeepSea MDP."""
+    """
+    The actions available in the DeepSea MDP.
+    """
 
     LEFT = 0
+    """Move towards the left."""
     RIGHT = 1
+    """Move towards the right."""
 
 
 class DeepSeaMDP(BaseMDP, abc.ABC):
+    """
+    The base class for the DeepSea family.
+    """
+    
+    @staticmethod
+    def get_unique_symbols() -> List[str]:
+        return ["A", " "]
+
     @staticmethod
     def does_seed_change_MDP_structure() -> bool:
         return False
 
     @staticmethod
-    def _sample_parameters(
+    def sample_mdp_parameters(
         n: int, is_episodic: bool, seed: int = None
     ) -> List[Dict[str, Any]]:
         rng = np.random.RandomState(np.random.randint(10_000) if seed is None else seed)
@@ -47,40 +70,80 @@ class DeepSeaMDP(BaseMDP, abc.ABC):
         for _ in range(n):
             sample = dict(
                 size=int(
-                    (1 + np.minimum((800 / (100 * np.random.random() + 35)), 25))
+                    (1 + np.minimum((800 / (100 * rng.random() + 35)), 25))
                     * (0.8 if is_episodic else 1)
                 ),
-                p_rand=min(2 / (8 * np.random.random() + 3), 0.95),
+                p_rand=min(2 / (8 * rng.random() + 3), 0.95),
                 make_reward_stochastic=rng.choice([True, False]),
-                variance_multipliers=2 * rng.random() + 0.005,
+                reward_variance_multiplier=2 * rng.random() + 0.005,
             )
             sample["p_rand"] = None if sample["p_rand"] < 0.01 else sample["p_rand"]
 
             if sample["make_reward_stochastic"]:
-                sample["sub_optimal_distribution"] = beta(
-                    sample["variance_multipliers"],
-                    sample["variance_multipliers"] * (sample["size"] / 0.5 - 1),
+                sample["sub_optimal_distribution"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"],
+                        sample["reward_variance_multiplier"]
+                        * (sample["size"] / 0.5 - 1),
+                    ),
                 )
-                sample["optimal_distribution"] = beta(
-                    sample["variance_multipliers"] * (sample["size"] / 1 - 1),
-                    sample["variance_multipliers"],
+                sample["optimal_distribution"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"] * (sample["size"] / 1 - 1),
+                        sample["reward_variance_multiplier"],
+                    ),
                 )
-                sample["other_distribution"] = beta(
-                    sample["variance_multipliers"],
-                    sample["variance_multipliers"] * 10 * (sample["size"] / 0.5 - 1),
+                sample["other_distribution"] = (
+                    "beta",
+                    (
+                        sample["reward_variance_multiplier"],
+                        sample["reward_variance_multiplier"]
+                        * 10
+                        * (sample["size"] / 0.5 - 1),
+                    ),
                 )
             else:
-                sample["sub_optimal_distribution"] = deterministic(
-                    1.0 / (sample["size"] ** 2)
+                sample["sub_optimal_distribution"] = (
+                    "deterministic",
+                    (1.0 / (sample["size"] ** 2),),
                 )
-                sample["optimal_distribution"] = deterministic(1.0)
-                sample["other_distribution"] = deterministic(0.0)
-            samples.append(sample)
+                sample["optimal_distribution"] = ("deterministic", (1.0,))
+                sample["other_distribution"] = ("deterministic", (0.0,))
+
+            samples.append(rounding_nested_structure(sample))
+
         return samples
 
     @staticmethod
     def get_node_class() -> Type[DeepSeaNode]:
         return DeepSeaNode
+
+    def get_gin_parameters(self, index: int) -> str:
+        prms = dict(
+            size=self._size,
+            make_reward_stochastic=self._make_reward_stochastic,
+            reward_variance_multiplier=self._reward_variance_multiplier,
+            sub_optimal_distribution=(
+                self._sub_optimal_distribution.dist.name,
+                self._sub_optimal_distribution.args,
+            ),
+            optimal_distribution=(
+                self._optimal_distribution.dist.name,
+                self._optimal_distribution.args,
+            ),
+            other_distribution=(
+                self._other_distribution.dist.name,
+                self._other_distribution.args,
+            ),
+        )
+        if self._p_rand is not None:
+            prms["p_rand"] = self._p_rand
+
+        return DeepSeaMDP.produce_gin_file_from_mdp_parameters(
+            prms, type(self).__name__, index
+        )
 
     @property
     def n_actions(self) -> int:
@@ -96,53 +159,48 @@ class DeepSeaMDP(BaseMDP, abc.ABC):
         sub_optimal_distribution: Union[Tuple, rv_continuous] = None,
         other_distribution: Union[Tuple, rv_continuous] = None,
         make_reward_stochastic=False,
-        variance_multipliers: float = 1.0,
+        reward_variance_multiplier: float = 1.0,
         **kwargs,
     ):
         """
-
         Parameters
         ----------
         seed : int
-            the seed used for sampling rewards and next states.
-        randomize_actions : bool, optional
-            whether the effect of the actions changes for every node. It is particularly important to set this value to
-             true when doing experiments to avoid immediately reaching highly rewarding states in some MDPs by just
-             selecting the same action repeatedly. By default, it is set to true.
+            The seed used for sampling rewards and next states.
         size : int
-            the size of the grid.
-        make_reward_stochastic : bool, optional
-            checks whether the rewards are to be made stochastic. By default, it is set to False.
-        variance_multipliers : float, optional
-            A constant that can be used to increase the variance of the reward distributions without changing their means.
-            The lower the value, the higher the variance. By default, it is set to 1.
-        suboptimal_return: float, optional
-            if the rewards are made stochastic, this parameter controls the mean reward for suboptimal trajectories.
-            By default, it is set to 0.5.
-        optimal_return: float, optional
-            if the rewards are made stochastic, this parameter controls the mean reward for the optimal trajectory.
+            The size of the grid.
+        optimal_return : float
+            If the rewards are made stochastic, this parameter controls the mean reward for the optimal trajectory.
             By default, it is set to 1.
-        sub_optimal_distribution : Union[Tuple, rv_continuous], optional
-            The distribution of the suboptimal rewarding states. It can be either passed as a tuple containing Beta
-            parameters or as a rv_continuous object.
-        optimal_distribution : Union[Tuple, rv_continuous], optional
+        suboptimal_return: float
+            If the rewards are made stochastic, this parameter controls the mean reward for suboptimal trajectories.
+            By default, it is set to 0.5.
+        optimal_distribution : Union[Tuple, rv_continuous]
             The distribution of the highly rewarding state. It can be either passed as a tuple containing Beta parameters
             or as a rv_continuous object.
-        other_distribution : Union[Tuple, rv_continuous], optional
+        sub_optimal_distribution : Union[Tuple, rv_continuous]
+            The distribution of the suboptimal rewarding states. It can be either passed as a tuple containing Beta
+            parameters or as a rv_continuous object.
+        other_distribution : Union[Tuple, rv_continuous]
             The distribution of the other states. It can be either passed as a tuple containing Beta parameters or as a
             rv_continuous object.
+        make_reward_stochastic : bool
+            If True, the rewards of the MDP will be stochastic. By default, it is set to False.
+        reward_variance_multiplier : float
+            A constant that can be used to increase the variance of the reward distributions without changing their means.
+            The lower the value, the higher the variance. By default, it is set to 1.
         """
 
         if type(sub_optimal_distribution) == tuple:
             sub_optimal_distribution = get_dist(
-                sub_optimal_distribution[0], sub_optimal_distribution[1:]
+                sub_optimal_distribution[0], sub_optimal_distribution[1]
             )
         if type(optimal_distribution) == tuple:
             optimal_distribution = get_dist(
-                optimal_distribution[0], optimal_distribution[1:]
+                optimal_distribution[0], optimal_distribution[1]
             )
         if type(other_distribution) == tuple:
-            other_distribution = get_dist(other_distribution[0], other_distribution[1:])
+            other_distribution = get_dist(other_distribution[0], other_distribution[1])
 
         self._size = size
         self._optimal_return = optimal_return
@@ -163,16 +221,18 @@ class DeepSeaMDP(BaseMDP, abc.ABC):
         else:
             if make_reward_stochastic:
                 self._sub_optimal_distribution = beta(
-                    variance_multipliers,
-                    variance_multipliers * (size / self._suboptimal_return - 1),
+                    reward_variance_multiplier,
+                    reward_variance_multiplier * (size / self._suboptimal_return - 1),
                 )
                 self._optimal_distribution = beta(
-                    variance_multipliers * (size / self._optimal_return - 1),
-                    variance_multipliers,
+                    reward_variance_multiplier * (size / self._optimal_return - 1),
+                    reward_variance_multiplier,
                 )
                 self._other_distribution = beta(
-                    variance_multipliers,
-                    variance_multipliers * 10 * (size / self._suboptimal_return - 1),
+                    reward_variance_multiplier,
+                    reward_variance_multiplier
+                    * 10
+                    * (size / self._suboptimal_return - 1),
                 )
             else:
                 self._sub_optimal_distribution = deterministic(1.0 / (size ** 2))
@@ -181,7 +241,7 @@ class DeepSeaMDP(BaseMDP, abc.ABC):
 
         super(DeepSeaMDP, self).__init__(
             seed=seed,
-            variance_multipliers=variance_multipliers,
+            reward_variance_multiplier=reward_variance_multiplier,
             make_reward_stochastic=make_reward_stochastic,
             **kwargs,
         )
@@ -246,7 +306,7 @@ class DeepSeaMDP(BaseMDP, abc.ABC):
             self._make_reward_stochastic,
         )
 
-    def _get_grid_representation(self, node: "NODE_TYPE"):
+    def _get_grid_representation(self, node: "NODE_TYPE") -> np.ndarray:
         grid = np.zeros((self._size, self._size), dtype=str)
         grid[:, :] = " "
         grid[node.Y, node.X] = "A"

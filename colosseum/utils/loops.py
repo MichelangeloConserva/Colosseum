@@ -14,10 +14,6 @@ def human_loop(mdp: Union["ContinuousMDP", "EpisodicMDP"], other_policies: dict 
     allows a human to control an MDP.
     """
 
-    # assert not isinstance(
-    #     mdp, CustomMDP
-    # ), "Custom MDPs do not have a textual representation so are not currently supported for the human_loop."
-
     verba = lambda: print(mdp.get_grid_representation(mdp.cur_node))
 
     print("Start calculating the optimal policy")
@@ -68,13 +64,18 @@ def random_loop(
     Parameters
     ----------
     mdp: Union["ContinuousMDP", "EpisodicMDP"]
-        the MDP instance.
+        The MDP instance.
     N : int
-        the number of interactions.
+        The number of interactions.
     return_actions: bool, optional
-        checks whether to return the action played. By default, it is set to False,
+        If True, the selected actions are returned. By default, it is set to False,
     human_readable: bool
-        checks whether to print the state information in a human interpretable form. By default, it is set to False.
+        If True, the state information is printed in a human interpretable form. By default, it is set to False.
+
+    Returns
+    -------
+    Union[Tuple[List[TimeStep], List[int]], List[TimeStep]]
+        The data generated from the interactions.
     """
 
     if human_readable:
@@ -116,11 +117,16 @@ def prefixed_action_loop(
     Parameters
     ----------
     mdp: Union["ContinuousMDP", "EpisodicMDP"]
-        the MDP instance.
+        The MDP instance.
     actions : Iterable[int]
-        the action that are to be played.
+        The actions to be selected.
     human_readable: bool
-        checks whether to print the state information in a human interpretable form. By default, it is set to False.
+        If True, the state information is printed in a human interpretable form. By default, it is set to False.
+
+    Returns
+    -------
+    Union[Tuple[List[TimeStep], List[int]], List[TimeStep]]
+        The data generated from the interactions.
     """
 
     if human_readable:

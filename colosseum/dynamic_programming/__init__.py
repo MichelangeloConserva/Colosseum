@@ -1,3 +1,7 @@
+"""
+The module containing the implementation of dynamic programming algorithms.
+"""
+
 DP_MAX_ITERATION = int(1e6)
 
 from colosseum.dynamic_programming.finite_horizon import (

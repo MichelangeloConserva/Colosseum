@@ -1,12 +1,10 @@
-import os
+"""
+The module containing the episodic agents.
+"""
 
+from colosseum.agent.agents.episodic.actor_critic import ActorCriticEpisodic
+from colosseum.agent.agents.episodic.actor_critic_rnn import ActorCriticRNNEpisodic
+from colosseum.agent.agents.episodic.boot_dqn import BootDQNEpisodic
+from colosseum.agent.agents.episodic.dqn import DQNEpisodic
 from colosseum.agent.agents.episodic.posterior_sampling import PSRLEpisodic
 from colosseum.agent.agents.episodic.q_learning import QLearningEpisodic
-
-EPISODIC_AGENT_CLASSES = [QLearningEpisodic, PSRLEpisodic]
-
-files = os.listdir(__file__[: __file__.rfind(os.sep)])
-n_agents = len(list(filter(lambda x: ".py" in x, files)))
-assert (
-    n_agents == len(EPISODIC_AGENT_CLASSES) + 1
-), f"The EPISODIC_AGENT_CLASSES list in {__file__} is incomplete."

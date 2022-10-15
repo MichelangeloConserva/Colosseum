@@ -20,7 +20,7 @@ def discounted_value_iteration(
     sparse_n_states_threshold: int = 300 * 3 * 300,
     sparse_nnz_per_threshold: float = 0.2,
 ) -> Tuple[np.ndarray, np.ndarray]:
-    num_states, num_actions, _ = T.shape
+    n_states, n_actions, _ = T.shape
 
     if type(T) == sparse.COO:
         return _discounted_value_iteration_sparse(T, R, gamma, epsilon, max_abs_value)
@@ -53,11 +53,11 @@ def discounted_policy_evaluation(
     sparse_n_states_threshold: int = 200,
     sparse_nnz_per_threshold: float = 0.2,
 ) -> Tuple[np.ndarray, np.ndarray]:
-    num_states, num_actions, _ = T.shape
+    n_states, n_actions, _ = T.shape
 
     if type(T) == sparse.COO:
         return _discounted_policy_evaluation_sparse(T, R, pi, gamma, epsilon)
-    if num_states > sparse_n_states_threshold:
+    if n_states > sparse_n_states_threshold:
         T_sparse = sparse.COO(T)
         if T_sparse.nnz / T.size < sparse_nnz_per_threshold:
             return _discounted_policy_evaluation_sparse(T_sparse, R, pi, gamma, epsilon)
@@ -77,22 +77,22 @@ def extended_value_iteration(
     if successful, it returns the span of the value function, the Q matrix and the V matrix. It returns None when it was
     not possible to complete the extended value iteration procedure.
     """
-    num_states, num_actions = beta_r.shape
+    n_states, n_actions = beta_r.shape
 
-    Q = np.zeros((num_states, num_actions), dtype=np.float32)
-    V = np.zeros((num_states,), dtype=np.float32)
+    Q = np.zeros((n_states, n_actions), dtype=np.float32)
+    V = np.zeros((n_states,), dtype=np.float32)
 
-    u1 = np.zeros(num_states, np.float32)
-    sorted_indices = np.arange(num_states)
-    u2 = np.zeros(num_states, np.float32)
-    vec = np.zeros(num_states, np.float32)
+    u1 = np.zeros(n_states, np.float32)
+    sorted_indices = np.arange(n_states)
+    u2 = np.zeros(n_states, np.float32)
+    vec = np.zeros(n_states, np.float32)
 
     for _ in range(DP_MAX_ITERATION):
-        for s in range(num_states):
+        for s in range(n_states):
             first_action = True
-            for a in range(num_actions):
+            for a in range(n_actions):
                 vec = _max_proba(
-                    T[s, a], sorted_indices, beta_p[s, a], num_states, num_actions
+                    T[s, a], sorted_indices, beta_p[s, a], n_states, n_actions
                 )
                 vec[s] -= 1
                 r_optimal = min(
@@ -113,7 +113,7 @@ def extended_value_iteration(
             return np.ptp(u1), Q, V
         else:
             u1 = u2
-            u2 = np.empty(num_states, np.float32)
+            u2 = np.empty(n_states, np.float32)
             sorted_indices = np.argsort(u1)
     return None
 
@@ -123,14 +123,14 @@ def _discounted_value_iteration(
     T: np.ndarray, R: np.ndarray, gamma=0.99, epsilon=1e-3, max_abs_value: float = None
 ) -> Tuple[np.ndarray, np.ndarray]:
 
-    num_states, num_actions, _ = T.shape
+    n_states, n_actions, _ = T.shape
     gamma = np.float32(gamma)
 
-    V = np.zeros(num_states, dtype=np.float32)
-    Q = np.zeros((num_states, num_actions), dtype=np.float32)
+    V = np.zeros(n_states, dtype=np.float32)
+    Q = np.zeros((n_states, n_actions), dtype=np.float32)
     for _ in range(DP_MAX_ITERATION):
         V_old = V.copy()
-        for s in range(num_states):
+        for s in range(n_states):
             Q[s] = R[s] + gamma * T[s] @ V
             V[s] = Q[s].max()
             if max_abs_value is not None:
@@ -145,10 +145,10 @@ def _discounted_value_iteration(
 def _discounted_value_iteration_sparse(
     T: sparse.COO, R: np.ndarray, gamma=0.99, epsilon=1e-3, max_abs_value: float = None
 ) -> Tuple[np.ndarray, np.ndarray]:
-    num_states, num_actions, _ = T.shape
+    n_states, n_actions, _ = T.shape
     gamma = np.float32(gamma)
 
-    V = np.zeros(num_states, dtype=np.float32)
+    V = np.zeros(n_states, dtype=np.float32)
     for _ in range(DP_MAX_ITERATION):
         V_old = V.copy()
         Q = R + gamma * (T @ V).squeeze()
@@ -168,29 +168,33 @@ def _discounted_value_iteration_sparse(
 def _discounted_policy_evaluation(
     T: np.ndarray, R: np.ndarray, pi: np.ndarray, gamma=0.99, epsilon=1e-7
 ) -> Tuple[np.ndarray, np.ndarray]:
-    num_states, num_actions, _ = T.shape
+    n_states, n_actions, _ = T.shape
     gamma = np.array([gamma], dtype=np.float32)
 
-    V = np.zeros(num_states, dtype=np.float32)
-    Q = np.zeros((num_states, num_actions), dtype=np.float32)
+    V = np.zeros(n_states, dtype=np.float32)
+    Q = np.zeros((n_states, n_actions), dtype=np.float32)
     for _ in range(DP_MAX_ITERATION):
         V_old = V.copy()
-        for s in range(num_states):
+        for s in range(n_states):
             Q[s] = R[s] + gamma * T[s] @ V
             V[s] = (Q[s] * pi[s]).sum()
-        diff = np.abs(V_old.squeeze() - V.squeeze()).max()
+        diff = np.abs(V_old - V).max()
         if diff < epsilon:
             return Q, V
     raise DynamicProgrammingMaxIterationExceeded()
 
 
 def _discounted_policy_evaluation_sparse(
-    T: Union[np.ndarray, sparse.COO], R: np.ndarray, pi: np.ndarray, gamma=0.99, epsilon=1e-7
+    T: Union[np.ndarray, sparse.COO],
+    R: np.ndarray,
+    pi: np.ndarray,
+    gamma=0.99,
+    epsilon=1e-7,
 ) -> Tuple[np.ndarray, np.ndarray]:
-    num_states, num_actions, _ = T.shape
+    n_states, n_actions, _ = T.shape
     gamma = np.array([gamma], dtype=np.float32)
 
-    V = np.zeros(num_states, dtype=np.float32)
+    V = np.zeros(n_states, dtype=np.float32)
     for _ in range(DP_MAX_ITERATION):
         V_old = V.copy()
         Q = R + gamma * T @ V
@@ -202,9 +206,9 @@ def _discounted_policy_evaluation_sparse(
 
 
 def discounted_policy_iteration(T: np.ndarray, R: np.ndarray, gamma=0.99, epsilon=1e-7):
-    num_states, num_actions, _ = T.shape
+    n_states, n_actions, _ = T.shape
 
-    Q = np.random.rand(num_states, num_actions)
+    Q = np.random.rand(n_states, n_actions)
     pi = argmax_2d(Q)
     for t in range(DP_MAX_ITERATION):
         old_pi = pi.copy()
@@ -220,22 +224,22 @@ def _max_proba(
     p: np.ndarray,
     sorted_indices: np.ndarray,
     beta: np.ndarray,
-    num_states: int,
-    num_actions: int,
+    n_states: int,
+    n_actions: int,
 ) -> np.ndarray:
-    min1 = min(1.0, (p[sorted_indices[num_states - 1]] + beta / 2)[0])
+    min1 = min(1.0, (p[sorted_indices[n_states - 1]] + beta / 2)[0])
     if min1 == 1:
-        p2 = np.zeros(num_states, np.float32)
-        p2[sorted_indices[num_states - 1]] = 1
+        p2 = np.zeros(n_states, np.float32)
+        p2[sorted_indices[n_states - 1]] = 1
     else:
         sorted_p = p[sorted_indices]
         support_sorted_p = np.nonzero(sorted_p)[0]
         restricted_sorted_p = sorted_p[support_sorted_p]
         support_p = sorted_indices[support_sorted_p]
-        p2 = np.zeros(num_states, np.float32)
+        p2 = np.zeros(n_states, np.float32)
         p2[support_p] = restricted_sorted_p
-        p2[sorted_indices[num_states - 1]] = min1
-        s = 1 - p[sorted_indices[num_states - 1]] + min1
+        p2[sorted_indices[n_states - 1]] = min1
+        s = 1 - p[sorted_indices[n_states - 1]] + min1
         s2 = s
         for i, proba in enumerate(restricted_sorted_p):
             max1 = max(0, 1 - s + proba)
