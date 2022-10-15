@@ -1,7 +1,7 @@
 
 
 <p align="center">
-   <img src="book/colosseum_banner.svg"  style="width:100%" title="hover text">
+   <img src="imgs/colosseum_banner.svg"  style="width:100%" title="hover text">
 </p>
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
