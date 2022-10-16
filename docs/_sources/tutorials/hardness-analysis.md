@@ -38,7 +38,6 @@ np.random.seed(42)
 Measuring and understanding the hardness of MDPs represent a fundamental step in the development of a {{rl}} benchmark.
 This tutorial introduces the hardness measures available in {{col}} and illustrates how to carry out the empirical analysis presented in the paper for the measures available in the package and for custom ones.
 
-
 ## Measures of hardness
 
 The three efficiently computable theoretical measures of hardness available are the diameter, the environmental value norm, and the {{subgaps}}.
@@ -58,21 +57,42 @@ or alternatively you can use the
 function, which takes the code name of the measure as input.
 
 ```{code-cell}
-# Instantiate an MDP
 mdp = SimpleGridContinuous(seed=0, size=4, p_rand=0.01, n_starting_states=3)
-
-# Diameter
-print(f"Diameter: {mdp.diameter:.2f}")
-# Environmental value norm
-print(f"Environmental value norm: {mdp.value_norm:.2f}")
-# Sum of the reciprocals of the suboptimality gaps
-print(f"Sum of the reciprocals of the suboptimality gaps: {mdp.sum_reciprocals_suboptimality_gaps:.2f}")
-
-# Or alternatively
-# for measure_name in BaseMDP.get_available_hardness_measures():
-#  print(f"{measure_name}: {mdp.get_measure_from_name(measure_name):.2f}")
 ```
 
+```{code-cell}
+:tags: [remove-output]
+mdp.diameter
+```
+```{code-cell}
+:tags: [remove-input]
+print(f"Diameter: {mdp.diameter:.2f}")
+```
+
+```{code-cell}
+:tags: [remove-output]
+mdp.value_norm
+```
+```{code-cell}
+:tags: [remove-input]
+print(f"Environmental value norm: {mdp.value_norm:.2f}")
+```
+
+```{code-cell}
+:tags: [remove-output]
+mdp.sum_reciprocals_suboptimality_gaps
+```
+```{code-cell}
+:tags: [remove-input]
+print(f"Sum of the reciprocals of the suboptimality gaps: {mdp.sum_reciprocals_suboptimality_gaps:.2f}")
+```
+
+Or alternatively,
+```{code-cell}
+mdp = SimpleGridContinuous(seed=0, size=4, p_rand=0.01, n_starting_states=3)
+for measure_name in BaseMDP.get_available_hardness_measures():
+    print(f"{measure_name}: {mdp.get_measure_from_name(measure_name):.2f}")
+```
 
 ## Hardness scenarios
 

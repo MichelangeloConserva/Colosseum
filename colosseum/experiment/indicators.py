@@ -2,8 +2,8 @@ from typing import Tuple
 
 import numpy as np
 
-from colosseum.dynamic_programming import episodic_value_iteration
 from colosseum.dynamic_programming import episodic_policy_evaluation
+from colosseum.dynamic_programming import episodic_value_iteration
 
 
 def get_episodic_regret_at_time_zero(

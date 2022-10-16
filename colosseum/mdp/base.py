@@ -1,5 +1,4 @@
 import abc
-import os
 import random
 import sys
 from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Tuple, Type, Union
@@ -23,6 +22,9 @@ from colosseum.hardness.measures import calculate_norm_discounted
 from colosseum.hardness.measures import find_hardness_report_file
 from colosseum.hardness.measures import get_diameter
 from colosseum.hardness.measures import get_sum_reciprocals_suboptimality_gaps
+from colosseum.mdp.utils.communication_class import MDPCommunicationClass
+from colosseum.mdp.utils.communication_class import get_communication_class
+from colosseum.mdp.utils.communication_class import get_recurrent_nodes_set
 from colosseum.mdp.utils.custom_samplers import NextStateSampler
 from colosseum.mdp.utils.markov_chain import get_average_rewards, get_markov_chain
 from colosseum.mdp.utils.markov_chain import get_stationary_distribution
@@ -30,9 +32,6 @@ from colosseum.mdp.utils.markov_chain import get_transition_probabilities
 from colosseum.mdp.utils.mdp_creation import NodeInfoClass
 from colosseum.mdp.utils.mdp_creation import get_transition_matrix_and_rewards
 from colosseum.mdp.utils.mdp_creation import instantiate_transitions
-from colosseum.mdp.utils.communication_class import MDPCommunicationClass
-from colosseum.mdp.utils.communication_class import get_communication_class
-from colosseum.mdp.utils.communication_class import get_recurrent_nodes_set
 from colosseum.utils import clean_for_storing
 from colosseum.utils.acme.specs import DiscreteArray
 from colosseum.utils.formatter import clean_for_file_path
@@ -1317,7 +1316,9 @@ class BaseMDP(dm_env.Environment, abc.ABC):
             return dm_env.termination(reward=reward, observation=observation)
         return dm_env.transition(reward=reward, observation=observation)
 
-    def random_steps(self, n: int, auto_reset=False) -> List[Tuple[dm_env.TimeStep, int]]:
+    def random_steps(
+        self, n: int, auto_reset=False
+    ) -> List[Tuple[dm_env.TimeStep, int]]:
         """
         takes n a step with a random action and returns both the next step and the random action. If auto_reset is set to
         True than it automatically resets episodic MDPs.

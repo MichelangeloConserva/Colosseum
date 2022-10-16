@@ -8,6 +8,7 @@ from colosseum.mdp.simple_grid.base import SimpleGridMDP
 if TYPE_CHECKING:
     from colosseum.mdp import NODE_TYPE
 
+
 @gin.configurable
 class SimpleGridContinuous(ContinuousMDP, SimpleGridMDP):
     @staticmethod
@@ -16,4 +17,3 @@ class SimpleGridContinuous(ContinuousMDP, SimpleGridMDP):
 
     def custom_graph_layout(self) -> Dict["NODE_TYPE", Tuple[float, float]]:
         return {node: list(node) for node in self.G}
-

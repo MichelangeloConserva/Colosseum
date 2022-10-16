@@ -51,7 +51,11 @@ class QValuesModel(BaseMDPModel):
             self.beta = np.zeros((self._H, self._n_states, self._n_actions), np.float32)
 
     def step_update(
-        self, ts_t: dm_env.TimeStep, a_t: "ACTION_TYPE", ts_tp1: dm_env.TimeStep, time: int
+        self,
+        ts_t: dm_env.TimeStep,
+        a_t: "ACTION_TYPE",
+        ts_tp1: dm_env.TimeStep,
+        time: int,
     ):
         s_t = ts_t.observation
         s_tp1 = ts_tp1.observation
@@ -73,7 +77,10 @@ class QValuesModel(BaseMDPModel):
                     np.sqrt(
                         (
                             self._H
-                            * ((self.sigma[time, s_t, a_t] - self.mu[time, s_t, a_t]) ** 2)
+                            * (
+                                (self.sigma[time, s_t, a_t] - self.mu[time, s_t, a_t])
+                                ** 2
+                            )
                             / t ** 2
                             + self._H
                         )

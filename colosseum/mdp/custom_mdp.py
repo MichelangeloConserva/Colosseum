@@ -10,7 +10,6 @@ from colosseum.mdp import BaseMDP, EpisodicMDP, ContinuousMDP
 from colosseum.mdp.utils.custom_samplers import NextStateSampler
 from colosseum.utils.miscellanea import deterministic
 
-
 if TYPE_CHECKING:
     from colosseum.mdp import ACTION_TYPE, NODE_TYPE
 

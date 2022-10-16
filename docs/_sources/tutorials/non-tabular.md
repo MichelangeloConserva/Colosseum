@@ -116,7 +116,7 @@ mdp = SimpleGridContinuous(seed=42, size=4, emission_map=StateLinearOptimal)
 ts = mdp.reset()
 
 print("Observation for the StateLinearOptimal emission map.")
-print(ts.observation)
+print(ts.observation.round(2))
 ```
 
 **Linear random value**
@@ -129,7 +129,7 @@ mdp = SimpleGridContinuous(seed=42, size=4, emission_map=StateLinearRandom)
 ts = mdp.reset()
 
 print("Observation for the StateLinearRandom emission map.")
-print(ts.observation)
+print(ts.observation.round(2))
 ```
 
 Before presenting the `StateInfo`, `ImageEncoding`, and `TensorEncoding` emission maps, we review the textual
@@ -227,13 +227,11 @@ plt.show()
 ```
 
 ## Non-tabular hyperparameters optimization and benchmarking
-
 Similarly, the hyperparameters optimization and benchmarking procedures for the non-tabular setting can be carried out
 in the exact same way as for the tabular case.
 
 In order to obtain the default {{col}} benchmarks, it is only required to set `non_tabular=True` when calling the
 `get_benchmark` function as shown below.
-
 ```{code-block} python
 ColosseumDefaultBenchmark.CONTINUOUS_ERGODIC.get_benchmark(
     "non_tabular_ce", non_tabular=True

@@ -27,6 +27,7 @@ class MDPCommunicationClass(IntEnum):
     """
     The MDP communication classes.
     """
+
     ERGODIC = 0
     """The ergodic communication class."""
     COMMUNICATING = 1

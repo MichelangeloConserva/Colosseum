@@ -31,7 +31,11 @@ class BaseMDPModel(abc.ABC):
 
     @abc.abstractmethod
     def step_update(
-        self, ts_t: dm_env.TimeStep, a_t: "ACTION_TYPE", ts_tp1: dm_env.TimeStep, time: int
+        self,
+        ts_t: dm_env.TimeStep,
+        a_t: "ACTION_TYPE",
+        ts_tp1: dm_env.TimeStep,
+        time: int,
     ):
         """
         updates the model with the transition in input.

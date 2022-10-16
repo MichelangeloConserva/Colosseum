@@ -29,6 +29,7 @@ def bernstein(scale_a, log_scale_a, scale_b, log_scale_b, alpha_1, alpha_2):
     B = scale_b * math.log(log_scale_b)
     return alpha_1 * np.sqrt(A) + alpha_2 * B
 
+
 @gin.configurable
 class UCRL2Continuous(BaseAgent):
     """

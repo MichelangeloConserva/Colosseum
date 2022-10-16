@@ -2,14 +2,13 @@ from typing import Dict, Any, TYPE_CHECKING
 
 import dm_env
 import gin
+import numpy as np
 import sonnet as snt
 import tensorflow as tf
-import numpy as np
 from bsuite.baselines.tf.actor_critic_rnn import PolicyValueRNN, ActorCriticRNN
 from ray import tune
 
 from colosseum.utils.non_tabular.bsuite import NonTabularBsuiteAgentWrapper
-
 
 if TYPE_CHECKING:
     from colosseum.agent.agents.base import BaseAgent
@@ -24,9 +23,7 @@ class ActorCriticRNNEpisodic(NonTabularBsuiteAgentWrapper):
     """
 
     @staticmethod
-    def produce_gin_file_from_parameters(
-        parameters: Dict[str, Any], index: int = 0
-    ):
+    def produce_gin_file_from_parameters(parameters: Dict[str, Any], index: int = 0):
         string = ""
         for k, v in parameters.items():
             string += f"prms_{index}/ActorCriticRNNEpisodic.{k} = {v}\n"

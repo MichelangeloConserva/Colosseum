@@ -24,4 +24,3 @@ class RiverSwimContinuous(ContinuousMDP, RiverSwimMDP):
             The custom layout to draw a nx.Graph.
         """
         return {node: tuple(node) for node in self.G}
-

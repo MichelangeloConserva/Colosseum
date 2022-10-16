@@ -1,14 +1,13 @@
 from typing import Dict, Any, TYPE_CHECKING
 
 import gin
+import numpy as np
 import sonnet as snt
 import tensorflow as tf
-import numpy as np
 from bsuite.baselines.tf.actor_critic_rnn import PolicyValueRNN, ActorCriticRNN
 from ray import tune
 
 from colosseum.utils.non_tabular.bsuite import NonTabularBsuiteAgentWrapper
-
 
 if TYPE_CHECKING:
     from colosseum.agent.agents.base import BaseAgent
@@ -22,9 +21,7 @@ class ActorCriticRNNContinuous(NonTabularBsuiteAgentWrapper):
     """
 
     @staticmethod
-    def produce_gin_file_from_parameters(
-        parameters: Dict[str, Any], index: int = 0
-    ):
+    def produce_gin_file_from_parameters(parameters: Dict[str, Any], index: int = 0):
         string = ""
         for k, v in parameters.items():
             string += f"prms_{index}/ActorCriticRNNContinuous.{k} = {v}\n"
@@ -63,21 +60,14 @@ class ActorCriticRNNContinuous(NonTabularBsuiteAgentWrapper):
 
     @property
     def current_optimal_stochastic_policy(self) -> np.ndarray:
-        logits = (
-            tf.stop_gradient(
-                self._agent._network(
-                    tf.convert_to_tensor(
-                        self.emission_map.all_observations
-                    ),
-                    self._agent._network.initial_state(self._mdp_spec.n_states)
-                )[0][0]
-            )
-            .numpy()
-        )
+        logits = tf.stop_gradient(
+            self._agent._network(
+                tf.convert_to_tensor(self.emission_map.all_observations),
+                self._agent._network.initial_state(self._mdp_spec.n_states),
+            )[0][0]
+        ).numpy()
 
         return (logits >= logits.max(-1, keepdims=True)).astype(np.float32)
-
-
 
     def __init__(
         self,

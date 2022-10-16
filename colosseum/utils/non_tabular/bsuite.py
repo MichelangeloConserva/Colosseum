@@ -4,9 +4,9 @@ from typing import TYPE_CHECKING
 import dm_env
 from bsuite.baselines.base import Agent as BAgent
 
+from colosseum.agent.agents.base import BaseAgent
 from colosseum.emission_maps import EmissionMap
 from colosseum.utils.acme.specs import MDPSpec
-from colosseum.agent.agents.base import BaseAgent
 
 if TYPE_CHECKING:
     from colosseum.mdp import ACTION_TYPE

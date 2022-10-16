@@ -4,6 +4,7 @@ from glob import glob
 from typing import Dict, Type, Iterable, Callable, Collection
 
 import numpy as np
+
 from colosseum import config
 from colosseum.agent.agents.base import BaseAgent
 from colosseum.benchmark.utils import retrieve_agent_configs

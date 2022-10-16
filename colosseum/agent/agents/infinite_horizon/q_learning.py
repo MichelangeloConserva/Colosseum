@@ -4,13 +4,12 @@ import dm_env
 import gin
 import numpy as np
 from ray import tune
+from typing_extensions import TYPE_CHECKING
 
 from colosseum.agent.actors import QValuesActor
 from colosseum.agent.agents.base import BaseAgent
 from colosseum.agent.mdp_models.base import BaseMDPModel
 from colosseum.dynamic_programming.utils import get_policy_from_q_values
-from typing_extensions import TYPE_CHECKING
-
 from colosseum.emission_maps import EmissionMap
 
 if TYPE_CHECKING:
@@ -83,7 +82,11 @@ class _QValuesModel(BaseMDPModel):
         self.V = np.zeros((self._n_states,), np.float32) + self.H
 
     def step_update(
-        self, ts_t: dm_env.TimeStep, a_t: "ACTION_TYPE", ts_tp1: dm_env.TimeStep, time: int
+        self,
+        ts_t: dm_env.TimeStep,
+        a_t: "ACTION_TYPE",
+        ts_tp1: dm_env.TimeStep,
+        time: int,
     ):
         s_t = ts_t.observation
         s_tp1 = ts_tp1.observation

@@ -206,7 +206,9 @@ def instantiate_gin_files(
                         agent_hyperparameter, i
                     )
                     for i, agent_hyperparameter in enumerate(
-                        sample_n_agent_hyperparameters(n_samples_agents, agent_class, seed)
+                        sample_n_agent_hyperparameters(
+                            n_samples_agents, agent_class, seed
+                        )
                     )
                 )
             )

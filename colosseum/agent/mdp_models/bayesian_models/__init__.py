@@ -32,6 +32,7 @@ class TransitionsConjugateModel(IntEnum):
     """
     An enumeration of the available transition conjugate models.
     """
+
     M_DIR = 0
 
     def get_class(self):

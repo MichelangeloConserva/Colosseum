@@ -98,13 +98,15 @@ class MiniGridEmptyMDP(BaseMDP, abc.ABC):
                     "beta",
                     (
                         sample["reward_variance_multiplier"],
-                        sample["reward_variance_multiplier"] * (sample["size"] ** 2 - 1),
+                        sample["reward_variance_multiplier"]
+                        * (sample["size"] ** 2 - 1),
                     ),
                 )
                 sample["other_distribution"] = (
                     "beta",
                     (
-                        sample["reward_variance_multiplier"] * (sample["size"] ** 2 - 1),
+                        sample["reward_variance_multiplier"]
+                        * (sample["size"] ** 2 - 1),
                         sample["reward_variance_multiplier"],
                     ),
                 )
@@ -326,10 +328,12 @@ class MiniGridEmptyMDP(BaseMDP, abc.ABC):
         else:
             if make_reward_stochastic:
                 self._other_distribution = beta(
-                    reward_variance_multiplier, reward_variance_multiplier * (size ** 2 - 1)
+                    reward_variance_multiplier,
+                    reward_variance_multiplier * (size ** 2 - 1),
                 )
                 self._optimal_distribution = beta(
-                    reward_variance_multiplier * (size ** 2 - 1), reward_variance_multiplier
+                    reward_variance_multiplier * (size ** 2 - 1),
+                    reward_variance_multiplier,
                 )
             else:
                 self._optimal_distribution = deterministic(1.0)

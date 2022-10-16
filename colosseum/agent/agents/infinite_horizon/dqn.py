@@ -5,9 +5,9 @@ import numpy as np
 import sonnet as snt
 import tensorflow as tf
 from bsuite.baselines.tf.dqn import DQN
-from colosseum.dynamic_programming.utils import argmax_2d
 from ray import tune
 
+from colosseum.dynamic_programming.utils import argmax_2d
 from colosseum.utils.non_tabular.bsuite import NonTabularBsuiteAgentWrapper
 
 if TYPE_CHECKING:
@@ -22,9 +22,7 @@ class DQNContinuous(NonTabularBsuiteAgentWrapper):
     """
 
     @staticmethod
-    def produce_gin_file_from_parameters(
-        parameters: Dict[str, Any], index: int = 0
-    ):
+    def produce_gin_file_from_parameters(parameters: Dict[str, Any], index: int = 0):
         string = ""
         for k, v in parameters.items():
             string += f"prms_{index}/DQNContinuous.{k} = {v}\n"

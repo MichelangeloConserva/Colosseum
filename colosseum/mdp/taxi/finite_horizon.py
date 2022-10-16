@@ -11,4 +11,3 @@ class TaxiEpisodic(EpisodicMDP, TaxiMDP):
     @staticmethod
     def sample_parameters(n: int, seed: int = None) -> List[Dict[str, Any]]:
         return TaxiMDP.sample_mdp_parameters(n, True, seed)
-

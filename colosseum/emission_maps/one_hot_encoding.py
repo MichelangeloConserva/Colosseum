@@ -18,7 +18,9 @@ class OneHotEncoding(EmissionMap):
     def is_tabular(self) -> bool:
         return False
 
-    def node_to_observation(self, node: "NODE_TYPE", in_episode_time: int = None) -> np.ndarray:
+    def node_to_observation(
+        self, node: "NODE_TYPE", in_episode_time: int = None
+    ) -> np.ndarray:
         index = self._mdp.node_to_index[node]
         obs = np.zeros(self._mdp.n_states, np.float32)
         obs[index] = 1.0

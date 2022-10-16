@@ -26,9 +26,7 @@ class RandomAgent(BaseAgent, abc.ABC):
         return {}
 
     @staticmethod
-    def produce_gin_file_from_parameters(
-        parameters: Dict[str, Any], index: int = 0
-    ):
+    def produce_gin_file_from_parameters(parameters: Dict[str, Any], index: int = 0):
         return ""
 
     @property

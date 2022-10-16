@@ -11,4 +11,3 @@ class MiniGridRoomsContinuous(ContinuousMDP, MiniGridRoomsMDP):
     @staticmethod
     def sample_parameters(n: int, seed: int = None) -> List[Dict[str, Any]]:
         return MiniGridRoomsMDP.sample_mdp_parameters(n, False, seed)
-

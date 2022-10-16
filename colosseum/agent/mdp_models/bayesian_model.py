@@ -47,7 +47,6 @@ class BayesianMDPModel(BaseMDPModel):
 
         if reward_prior_model is None:
             reward_prior_model = RewardsConjugateModel.N_NIG
-            # rewards_prior_prms = [(r_max + r_min) / 2, 1, 1, 1]
             rewards_prior_prms = [self._reward_range[1], 1, 1, 1]
         if transitions_prior_model is None:
             transitions_prior_model = TransitionsConjugateModel.M_DIR
@@ -79,11 +78,16 @@ class BayesianMDPModel(BaseMDPModel):
         )
 
     def step_update(
-        self, ts_t: dm_env.TimeStep, a_t: "ACTION_TYPE", ts_tp1: dm_env.TimeStep, time: int
+        self,
+        ts_t: dm_env.TimeStep,
+        a_t: "ACTION_TYPE",
+        ts_tp1: dm_env.TimeStep,
+        time: int,
     ):
         self._rewards_model.update_single_transition(
             ts_t.observation, a_t, ts_tp1.reward
         )
-        self._transitions_model.update_single_transition(
-            ts_t.observation, a_t, ts_tp1.observation
-        )
+        if not ts_tp1.last():
+            self._transitions_model.update_single_transition(
+                ts_t.observation, a_t, ts_tp1.observation
+            )

@@ -290,7 +290,6 @@ def get_hardness_measures_cache_folder() -> str:
     return _HARDNESS_MEASURES_CACHE_FOLDER
 
 
-
 # AGENTS
 _REGISTERED_EXTERNAL_AGENT_CLASSES = list()
 

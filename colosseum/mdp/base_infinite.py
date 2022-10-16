@@ -16,5 +16,5 @@ class ContinuousMDP(BaseMDP, abc.ABC):
     def is_episodic() -> bool:
         return False
 
-    def get_grid_representation(self, node: "NODE_TYPE", h: int=None):
+    def get_grid_representation(self, node: "NODE_TYPE", h: int = None):
         return super(ContinuousMDP, self)._get_grid_representation(node)

@@ -19,8 +19,12 @@ class StateInfo(EmissionMap):
     def is_tabular(self) -> bool:
         return False
 
-    def node_to_observation(self, node: "NODE_TYPE", in_episode_time: int = None) -> np.ndarray:
+    def node_to_observation(
+        self, node: "NODE_TYPE", in_episode_time: int = None
+    ) -> np.ndarray:
         if self._mdp.is_episodic():
             in_episode_time = 0 if in_episode_time is None else in_episode_time
-            return np.array((in_episode_time, *dataclasses.astuple(node))).astype(np.float32)
+            return np.array((in_episode_time, *dataclasses.astuple(node))).astype(
+                np.float32
+            )
         return np.array(dataclasses.astuple(node)).astype(np.float32)

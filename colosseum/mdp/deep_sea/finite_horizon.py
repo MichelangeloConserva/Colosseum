@@ -34,5 +34,3 @@ class DeepSeaEpisodic(EpisodicMDP, DeepSeaMDP):
             )
 
         super(DeepSeaEpisodic, self).__init__(*args, H=H, **kwargs)
-
-

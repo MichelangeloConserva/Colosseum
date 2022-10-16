@@ -9,8 +9,8 @@ import sparse
 from tqdm import tqdm, trange
 
 from colosseum import config
-from colosseum.dynamic_programming import episodic_value_iteration
 from colosseum.dynamic_programming import discounted_value_iteration
+from colosseum.dynamic_programming import episodic_value_iteration
 from colosseum.utils import get_loop
 
 if TYPE_CHECKING:

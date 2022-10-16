@@ -134,13 +134,18 @@ class ColosseumDefaultBenchmark(IntEnum):
         """
         from colosseum.emission_maps import StateInfo
 
-        default_experiment_config = ColosseumDefaultBenchmark.get_default_experiment_config()
+        default_experiment_config = (
+            ColosseumDefaultBenchmark.get_default_experiment_config()
+        )
         default_experiment_config = dataclasses.asdict(default_experiment_config)
         default_experiment_config["emission_map"] = StateInfo
         return ExperimentConfig(**default_experiment_config)
 
     def get_benchmark(
-        self, postfix="", experiment_config: ExperimentConfig = None, non_tabular : bool = False
+        self,
+        postfix="",
+        experiment_config: ExperimentConfig = None,
+        non_tabular: bool = False,
     ) -> ColosseumBenchmark:
         """
         creates a `ColosseumBenchmark` corresponding to the default benchmark the object encodes.
@@ -159,18 +164,18 @@ class ColosseumDefaultBenchmark(IntEnum):
             The default benchmark the object encodes.
         """
 
-        exp_folder = (
-            BENCHMARKS_DIRECTORY
-            + f"benchmark_"
-            + self.name.lower()
-        )
+        exp_folder = BENCHMARKS_DIRECTORY + f"benchmark_" + self.name.lower()
         from colosseum.benchmark.utils import retrieve_benchmark
 
         if experiment_config is None and "QUICK" not in self.name:
             if non_tabular:
-                experiment_config = ColosseumDefaultBenchmark.get_default_non_tabular_experiment_config()
+                experiment_config = (
+                    ColosseumDefaultBenchmark.get_default_non_tabular_experiment_config()
+                )
             else:
-                experiment_config = ColosseumDefaultBenchmark.get_default_experiment_config()
+                experiment_config = (
+                    ColosseumDefaultBenchmark.get_default_experiment_config()
+                )
 
         benchmark = retrieve_benchmark(
             exp_folder,

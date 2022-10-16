@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Dict, Iterable, List, Tuple, Union, Set
 
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import toolz
 import tqdm
 from matplotlib import pyplot as plt
@@ -24,6 +25,8 @@ from colosseum.utils.formatter import clear_agent_mdp_class_name
 if TYPE_CHECKING:
     from colosseum.mdp import ContinuousMDP, EpisodicMDP, BaseMDP
     from colosseum.agent.agents.base import BaseAgent
+
+sns.set_theme()
 
 
 class MDPLoop:

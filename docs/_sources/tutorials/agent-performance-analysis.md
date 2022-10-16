@@ -156,7 +156,6 @@ glue("cumulative_reward", fig, display=False)
 ```
 ````
 
-
 **Cumulative expected reward**
 ```{code-cell}
 :tags: [remove-output]

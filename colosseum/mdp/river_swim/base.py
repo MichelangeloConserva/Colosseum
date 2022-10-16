@@ -50,6 +50,10 @@ class RiverSwimMDP(BaseMDP, abc.ABC):
     """
 
     @staticmethod
+    def get_action_class() -> RiverSwimAction:
+        return RiverSwimAction
+
+    @staticmethod
     def get_unique_symbols() -> List[str]:
         return [" ", "A", "S", "G"]
 

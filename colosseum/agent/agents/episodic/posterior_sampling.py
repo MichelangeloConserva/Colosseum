@@ -2,7 +2,6 @@ from typing import Any, Callable, Dict, Union
 
 import gin
 import numpy as np
-
 from ray import tune
 
 from colosseum.agent.actors import QValuesActor
@@ -30,9 +29,7 @@ class PSRLEpisodic(BaseAgent):
         return emission_map.is_tabular
 
     @staticmethod
-    def produce_gin_file_from_parameters(
-        parameters: Dict[str, Any], index: int = 0
-    ):
+    def produce_gin_file_from_parameters(parameters: Dict[str, Any], index: int = 0):
         return (
             "from colosseum.agent.mdp_models import bayesian_models\n"
             f"prms_{index}/PSRLEpisodic.reward_prior_model = %bayesian_models.RewardsConjugateModel.N_NIG\n"

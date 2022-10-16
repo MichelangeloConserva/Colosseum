@@ -52,7 +52,7 @@ class DeepSeaMDP(BaseMDP, abc.ABC):
     """
     The base class for the DeepSea family.
     """
-    
+
     @staticmethod
     def get_unique_symbols() -> List[str]:
         return ["A", " "]

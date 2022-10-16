@@ -24,8 +24,8 @@ from tqdm import tqdm
 from colosseum import config
 from colosseum.analysis.tables import get_latex_table_of_average_indicator
 from colosseum.analysis.utils import get_available_mdps_agents_prms_and_names
-from colosseum.analysis.utils import get_logs_data, add_time_exceed_sign_to_plot
 from colosseum.analysis.utils import get_formatted_name
+from colosseum.analysis.utils import get_logs_data, add_time_exceed_sign_to_plot
 from colosseum.experiment.agent_mdp_interaction import MDPLoop
 from colosseum.experiment.folder_structuring import get_experiment_config
 from colosseum.experiment.folder_structuring import get_mdp_agent_gin_configs
@@ -493,8 +493,8 @@ def group_by_mdp_individual_plot(
             if b + "_" + y in MDPLoop.get_baseline_indicators():
                 sns.lineplot(
                     x="steps",
-                    y= b + "_" + y,
-                    label= b.capitalize() + " agent",
+                    y=b + "_" + y,
+                    label=b.capitalize() + " agent",
                     data=df,
                     ax=ax,
                     errorbar=None,

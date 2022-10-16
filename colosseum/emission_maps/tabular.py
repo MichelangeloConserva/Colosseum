@@ -22,8 +22,12 @@ class Tabular(EmissionMap):
         self._mdp = mdp
         self._cached_obs = dict()
 
-    def node_to_observation(self, node: "NODE_TYPE", in_episode_time: int = None) -> np.ndarray:
+    def node_to_observation(
+        self, node: "NODE_TYPE", in_episode_time: int = None
+    ) -> np.ndarray:
         raise NotImplementedError()
 
-    def get_observation(self, state: "NODE_TYPE", in_episode_time: int = None) -> np.ndarray:
+    def get_observation(
+        self, state: "NODE_TYPE", in_episode_time: int = None
+    ) -> np.ndarray:
         raise NotImplementedError()

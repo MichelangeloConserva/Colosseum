@@ -21,6 +21,7 @@ class NodeInfoClass:
     """
     The data class containing some quantities related to the nodes.
     """
+
     transition_distributions: Dict[int, NextStateSampler]
     """A dictionary that maps actions to next state distributions."""
     actions_visitation_count: Dict[int, int]

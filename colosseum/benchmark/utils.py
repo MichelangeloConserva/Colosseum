@@ -106,7 +106,7 @@ def instantiate_benchmark_folder(benchmark: ColosseumBenchmark, benchmark_folder
 
 
 def retrieve_benchmark(
-    benchmark_folder: str, experiment_config: ExperimentConfig = None, postfix : str=""
+    benchmark_folder: str, experiment_config: ExperimentConfig = None, postfix: str = ""
 ) -> ColosseumBenchmark:
     """
     retrieves a benchmark from a folder.
@@ -170,10 +170,7 @@ def retrieve_experiment_config(benchmark_folder: str) -> ExperimentConfig:
 
 def retrieve_mdp_configs(
     benchmark_folder: str, return_string=True
-) -> Union[
-    Dict[Type["BaseMDP"], str],
-    Dict[Type["BaseMDP"], Dict[str, str]],
-]:
+) -> Union[Dict[Type["BaseMDP"], str], Dict[Type["BaseMDP"], Dict[str, str]],]:
     """
     retrieves the MDP gin configs of a benchmark.
 
@@ -200,10 +197,7 @@ def retrieve_mdp_configs(
 
 def retrieve_agent_configs(
     benchmark_folder: str, return_string=True
-) -> Union[
-    Dict[Type["BaseAgent"], str],
-    Dict[Type["BaseAgent"], Dict[str, str]],
-]:
+) -> Union[Dict[Type["BaseAgent"], str], Dict[Type["BaseAgent"], Dict[str, str]],]:
     """
     retrieves the agent gin configs of a benchmark.
 
@@ -251,7 +245,9 @@ def retrieve_gin_configs(
     gin_config_folder = ensure_folder(gin_config_folder)
 
     configs = glob(gin_config_folder + "*.gin")
-    assert len(configs) > 0, f"The folder {gin_config_folder} does not contain config files"
+    assert (
+        len(configs) > 0
+    ), f"The folder {gin_config_folder} does not contain config files"
 
     gin_configs = dict()
     for f in configs:

@@ -68,7 +68,7 @@ class SimpleGridMDP(BaseMDP, abc.ABC):
     """
 
     @staticmethod
-    def get_action_class():
+    def get_action_class() -> SimpleGridAction:
         return SimpleGridAction
 
     @staticmethod

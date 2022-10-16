@@ -1,9 +1,9 @@
 from typing import Dict, Any, TYPE_CHECKING
 
 import gin
+import numpy as np
 import sonnet as snt
 import tensorflow as tf
-import numpy as np
 from bsuite.baselines.tf.actor_critic import PolicyValueNet, ActorCritic
 from ray import tune
 

@@ -5,9 +5,9 @@ import numpy as np
 import sonnet as snt
 import tensorflow as tf
 from bsuite.baselines.tf.dqn import DQN
-from colosseum.dynamic_programming.utils import get_policy_from_q_values
 from ray import tune
 
+from colosseum.dynamic_programming.utils import get_policy_from_q_values
 from colosseum.utils.non_tabular.bsuite import NonTabularBsuiteAgentWrapper
 
 if TYPE_CHECKING:

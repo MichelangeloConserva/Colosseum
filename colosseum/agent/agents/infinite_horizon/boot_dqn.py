@@ -6,9 +6,9 @@ import numpy as np
 import sonnet as snt
 import tensorflow as tf
 from bsuite.baselines.tf.boot_dqn import BootstrappedDqn, make_ensemble
-from colosseum.dynamic_programming.utils import argmax_2d
 from ray import tune
 
+from colosseum.dynamic_programming.utils import argmax_2d
 from colosseum.utils.non_tabular.bsuite import NonTabularBsuiteAgentWrapper
 
 if TYPE_CHECKING:
@@ -24,9 +24,7 @@ class BootDQNContinuous(NonTabularBsuiteAgentWrapper):
     """
 
     @staticmethod
-    def produce_gin_file_from_parameters(
-        parameters: Dict[str, Any], index: int = 0
-    ):
+    def produce_gin_file_from_parameters(parameters: Dict[str, Any], index: int = 0):
         string = ""
         for k, v in parameters.items():
             string += f"prms_{index}/BootDQNContinuous.{k} = {v}\n"
@@ -44,7 +42,7 @@ class BootDQNContinuous(NonTabularBsuiteAgentWrapper):
             "batch_size": tune.choice([32, 64, 128]),
             "sgd_period": tune.choice([1, 4, 8]),
             "target_update_period": tune.choice([4, 16, 32]),
-            "mask_prob": tune.choice([0.8, 0.9, 1.]),
+            "mask_prob": tune.choice([0.8, 0.9, 1.0]),
             "noise_scale": tune.choice([0.0, 0.05, 0.1]),
             "n_ensemble": tune.choice([8, 16, 20]),
         }

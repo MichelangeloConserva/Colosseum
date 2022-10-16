@@ -115,23 +115,27 @@
 </span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>
 </span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
 </span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>    <span class="k">def</span> <span class="nf">step_update</span><span class="p">(</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span> <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span> <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">int</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="p">):</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">        updates the model with the transition in input.</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="sd">        Parameters</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="sd">        ----------</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="sd">        ts_t : dm_env.TimeStep</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="sd">            The TimeStep at time t.</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="sd">        a_t : &quot;ACTION_TYPE&quot;</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">            The action taken by the agent at time t.</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="sd">        ts_tp1 : dm_env.TimeStep</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a><span class="sd">            The TimeStep at time t + 1.</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a><span class="sd">        time : int</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="sd">            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a><span class="sd">            the continuous case this refers to the total number of previous interactions.</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>        <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>        <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>        <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>        <span class="n">time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="p">):</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="sd">        updates the model with the transition in input.</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="sd">        Parameters</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">        ----------</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="sd">        ts_t : dm_env.TimeStep</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a><span class="sd">            The TimeStep at time t.</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a><span class="sd">        a_t : &quot;ACTION_TYPE&quot;</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="sd">            The action taken by the agent at time t.</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a><span class="sd">        ts_tp1 : dm_env.TimeStep</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a><span class="sd">            The TimeStep at time t + 1.</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="sd">        time : int</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="sd">            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="sd">            the continuous case this refers to the total number of previous interactions.</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -171,23 +175,27 @@
 </span><span id="BaseMDPModel-32"><a href="#BaseMDPModel-32"><span class="linenos">32</span></a>
 </span><span id="BaseMDPModel-33"><a href="#BaseMDPModel-33"><span class="linenos">33</span></a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
 </span><span id="BaseMDPModel-34"><a href="#BaseMDPModel-34"><span class="linenos">34</span></a>    <span class="k">def</span> <span class="nf">step_update</span><span class="p">(</span>
-</span><span id="BaseMDPModel-35"><a href="#BaseMDPModel-35"><span class="linenos">35</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span> <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span> <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">int</span>
-</span><span id="BaseMDPModel-36"><a href="#BaseMDPModel-36"><span class="linenos">36</span></a>    <span class="p">):</span>
-</span><span id="BaseMDPModel-37"><a href="#BaseMDPModel-37"><span class="linenos">37</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BaseMDPModel-38"><a href="#BaseMDPModel-38"><span class="linenos">38</span></a><span class="sd">        updates the model with the transition in input.</span>
-</span><span id="BaseMDPModel-39"><a href="#BaseMDPModel-39"><span class="linenos">39</span></a>
-</span><span id="BaseMDPModel-40"><a href="#BaseMDPModel-40"><span class="linenos">40</span></a><span class="sd">        Parameters</span>
-</span><span id="BaseMDPModel-41"><a href="#BaseMDPModel-41"><span class="linenos">41</span></a><span class="sd">        ----------</span>
-</span><span id="BaseMDPModel-42"><a href="#BaseMDPModel-42"><span class="linenos">42</span></a><span class="sd">        ts_t : dm_env.TimeStep</span>
-</span><span id="BaseMDPModel-43"><a href="#BaseMDPModel-43"><span class="linenos">43</span></a><span class="sd">            The TimeStep at time t.</span>
-</span><span id="BaseMDPModel-44"><a href="#BaseMDPModel-44"><span class="linenos">44</span></a><span class="sd">        a_t : &quot;ACTION_TYPE&quot;</span>
-</span><span id="BaseMDPModel-45"><a href="#BaseMDPModel-45"><span class="linenos">45</span></a><span class="sd">            The action taken by the agent at time t.</span>
-</span><span id="BaseMDPModel-46"><a href="#BaseMDPModel-46"><span class="linenos">46</span></a><span class="sd">        ts_tp1 : dm_env.TimeStep</span>
-</span><span id="BaseMDPModel-47"><a href="#BaseMDPModel-47"><span class="linenos">47</span></a><span class="sd">            The TimeStep at time t + 1.</span>
-</span><span id="BaseMDPModel-48"><a href="#BaseMDPModel-48"><span class="linenos">48</span></a><span class="sd">        time : int</span>
-</span><span id="BaseMDPModel-49"><a href="#BaseMDPModel-49"><span class="linenos">49</span></a><span class="sd">            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in</span>
-</span><span id="BaseMDPModel-50"><a href="#BaseMDPModel-50"><span class="linenos">50</span></a><span class="sd">            the continuous case this refers to the total number of previous interactions.</span>
-</span><span id="BaseMDPModel-51"><a href="#BaseMDPModel-51"><span class="linenos">51</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="BaseMDPModel-35"><a href="#BaseMDPModel-35"><span class="linenos">35</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="BaseMDPModel-36"><a href="#BaseMDPModel-36"><span class="linenos">36</span></a>        <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+</span><span id="BaseMDPModel-37"><a href="#BaseMDPModel-37"><span class="linenos">37</span></a>        <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span>
+</span><span id="BaseMDPModel-38"><a href="#BaseMDPModel-38"><span class="linenos">38</span></a>        <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+</span><span id="BaseMDPModel-39"><a href="#BaseMDPModel-39"><span class="linenos">39</span></a>        <span class="n">time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="BaseMDPModel-40"><a href="#BaseMDPModel-40"><span class="linenos">40</span></a>    <span class="p">):</span>
+</span><span id="BaseMDPModel-41"><a href="#BaseMDPModel-41"><span class="linenos">41</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="BaseMDPModel-42"><a href="#BaseMDPModel-42"><span class="linenos">42</span></a><span class="sd">        updates the model with the transition in input.</span>
+</span><span id="BaseMDPModel-43"><a href="#BaseMDPModel-43"><span class="linenos">43</span></a>
+</span><span id="BaseMDPModel-44"><a href="#BaseMDPModel-44"><span class="linenos">44</span></a><span class="sd">        Parameters</span>
+</span><span id="BaseMDPModel-45"><a href="#BaseMDPModel-45"><span class="linenos">45</span></a><span class="sd">        ----------</span>
+</span><span id="BaseMDPModel-46"><a href="#BaseMDPModel-46"><span class="linenos">46</span></a><span class="sd">        ts_t : dm_env.TimeStep</span>
+</span><span id="BaseMDPModel-47"><a href="#BaseMDPModel-47"><span class="linenos">47</span></a><span class="sd">            The TimeStep at time t.</span>
+</span><span id="BaseMDPModel-48"><a href="#BaseMDPModel-48"><span class="linenos">48</span></a><span class="sd">        a_t : &quot;ACTION_TYPE&quot;</span>
+</span><span id="BaseMDPModel-49"><a href="#BaseMDPModel-49"><span class="linenos">49</span></a><span class="sd">            The action taken by the agent at time t.</span>
+</span><span id="BaseMDPModel-50"><a href="#BaseMDPModel-50"><span class="linenos">50</span></a><span class="sd">        ts_tp1 : dm_env.TimeStep</span>
+</span><span id="BaseMDPModel-51"><a href="#BaseMDPModel-51"><span class="linenos">51</span></a><span class="sd">            The TimeStep at time t + 1.</span>
+</span><span id="BaseMDPModel-52"><a href="#BaseMDPModel-52"><span class="linenos">52</span></a><span class="sd">        time : int</span>
+</span><span id="BaseMDPModel-53"><a href="#BaseMDPModel-53"><span class="linenos">53</span></a><span class="sd">            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in</span>
+</span><span id="BaseMDPModel-54"><a href="#BaseMDPModel-54"><span class="linenos">54</span></a><span class="sd">            the continuous case this refers to the total number of previous interactions.</span>
+</span><span id="BaseMDPModel-55"><a href="#BaseMDPModel-55"><span class="linenos">55</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -250,23 +258,27 @@ The full specification of the MDP.</li>
     <a class="headerlink" href="#BaseMDPModel.step_update"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="BaseMDPModel.step_update-33"><a href="#BaseMDPModel.step_update-33"><span class="linenos">33</span></a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
 </span><span id="BaseMDPModel.step_update-34"><a href="#BaseMDPModel.step_update-34"><span class="linenos">34</span></a>    <span class="k">def</span> <span class="nf">step_update</span><span class="p">(</span>
-</span><span id="BaseMDPModel.step_update-35"><a href="#BaseMDPModel.step_update-35"><span class="linenos">35</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span> <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span> <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">int</span>
-</span><span id="BaseMDPModel.step_update-36"><a href="#BaseMDPModel.step_update-36"><span class="linenos">36</span></a>    <span class="p">):</span>
-</span><span id="BaseMDPModel.step_update-37"><a href="#BaseMDPModel.step_update-37"><span class="linenos">37</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BaseMDPModel.step_update-38"><a href="#BaseMDPModel.step_update-38"><span class="linenos">38</span></a><span class="sd">        updates the model with the transition in input.</span>
-</span><span id="BaseMDPModel.step_update-39"><a href="#BaseMDPModel.step_update-39"><span class="linenos">39</span></a>
-</span><span id="BaseMDPModel.step_update-40"><a href="#BaseMDPModel.step_update-40"><span class="linenos">40</span></a><span class="sd">        Parameters</span>
-</span><span id="BaseMDPModel.step_update-41"><a href="#BaseMDPModel.step_update-41"><span class="linenos">41</span></a><span class="sd">        ----------</span>
-</span><span id="BaseMDPModel.step_update-42"><a href="#BaseMDPModel.step_update-42"><span class="linenos">42</span></a><span class="sd">        ts_t : dm_env.TimeStep</span>
-</span><span id="BaseMDPModel.step_update-43"><a href="#BaseMDPModel.step_update-43"><span class="linenos">43</span></a><span class="sd">            The TimeStep at time t.</span>
-</span><span id="BaseMDPModel.step_update-44"><a href="#BaseMDPModel.step_update-44"><span class="linenos">44</span></a><span class="sd">        a_t : &quot;ACTION_TYPE&quot;</span>
-</span><span id="BaseMDPModel.step_update-45"><a href="#BaseMDPModel.step_update-45"><span class="linenos">45</span></a><span class="sd">            The action taken by the agent at time t.</span>
-</span><span id="BaseMDPModel.step_update-46"><a href="#BaseMDPModel.step_update-46"><span class="linenos">46</span></a><span class="sd">        ts_tp1 : dm_env.TimeStep</span>
-</span><span id="BaseMDPModel.step_update-47"><a href="#BaseMDPModel.step_update-47"><span class="linenos">47</span></a><span class="sd">            The TimeStep at time t + 1.</span>
-</span><span id="BaseMDPModel.step_update-48"><a href="#BaseMDPModel.step_update-48"><span class="linenos">48</span></a><span class="sd">        time : int</span>
-</span><span id="BaseMDPModel.step_update-49"><a href="#BaseMDPModel.step_update-49"><span class="linenos">49</span></a><span class="sd">            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in</span>
-</span><span id="BaseMDPModel.step_update-50"><a href="#BaseMDPModel.step_update-50"><span class="linenos">50</span></a><span class="sd">            the continuous case this refers to the total number of previous interactions.</span>
-</span><span id="BaseMDPModel.step_update-51"><a href="#BaseMDPModel.step_update-51"><span class="linenos">51</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="BaseMDPModel.step_update-35"><a href="#BaseMDPModel.step_update-35"><span class="linenos">35</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="BaseMDPModel.step_update-36"><a href="#BaseMDPModel.step_update-36"><span class="linenos">36</span></a>        <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+</span><span id="BaseMDPModel.step_update-37"><a href="#BaseMDPModel.step_update-37"><span class="linenos">37</span></a>        <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span>
+</span><span id="BaseMDPModel.step_update-38"><a href="#BaseMDPModel.step_update-38"><span class="linenos">38</span></a>        <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+</span><span id="BaseMDPModel.step_update-39"><a href="#BaseMDPModel.step_update-39"><span class="linenos">39</span></a>        <span class="n">time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="BaseMDPModel.step_update-40"><a href="#BaseMDPModel.step_update-40"><span class="linenos">40</span></a>    <span class="p">):</span>
+</span><span id="BaseMDPModel.step_update-41"><a href="#BaseMDPModel.step_update-41"><span class="linenos">41</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="BaseMDPModel.step_update-42"><a href="#BaseMDPModel.step_update-42"><span class="linenos">42</span></a><span class="sd">        updates the model with the transition in input.</span>
+</span><span id="BaseMDPModel.step_update-43"><a href="#BaseMDPModel.step_update-43"><span class="linenos">43</span></a>
+</span><span id="BaseMDPModel.step_update-44"><a href="#BaseMDPModel.step_update-44"><span class="linenos">44</span></a><span class="sd">        Parameters</span>
+</span><span id="BaseMDPModel.step_update-45"><a href="#BaseMDPModel.step_update-45"><span class="linenos">45</span></a><span class="sd">        ----------</span>
+</span><span id="BaseMDPModel.step_update-46"><a href="#BaseMDPModel.step_update-46"><span class="linenos">46</span></a><span class="sd">        ts_t : dm_env.TimeStep</span>
+</span><span id="BaseMDPModel.step_update-47"><a href="#BaseMDPModel.step_update-47"><span class="linenos">47</span></a><span class="sd">            The TimeStep at time t.</span>
+</span><span id="BaseMDPModel.step_update-48"><a href="#BaseMDPModel.step_update-48"><span class="linenos">48</span></a><span class="sd">        a_t : &quot;ACTION_TYPE&quot;</span>
+</span><span id="BaseMDPModel.step_update-49"><a href="#BaseMDPModel.step_update-49"><span class="linenos">49</span></a><span class="sd">            The action taken by the agent at time t.</span>
+</span><span id="BaseMDPModel.step_update-50"><a href="#BaseMDPModel.step_update-50"><span class="linenos">50</span></a><span class="sd">        ts_tp1 : dm_env.TimeStep</span>
+</span><span id="BaseMDPModel.step_update-51"><a href="#BaseMDPModel.step_update-51"><span class="linenos">51</span></a><span class="sd">            The TimeStep at time t + 1.</span>
+</span><span id="BaseMDPModel.step_update-52"><a href="#BaseMDPModel.step_update-52"><span class="linenos">52</span></a><span class="sd">        time : int</span>
+</span><span id="BaseMDPModel.step_update-53"><a href="#BaseMDPModel.step_update-53"><span class="linenos">53</span></a><span class="sd">            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in</span>
+</span><span id="BaseMDPModel.step_update-54"><a href="#BaseMDPModel.step_update-54"><span class="linenos">54</span></a><span class="sd">            the continuous case this refers to the total number of previous interactions.</span>
+</span><span id="BaseMDPModel.step_update-55"><a href="#BaseMDPModel.step_update-55"><span class="linenos">55</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span></pre></div>
 
 

@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from colosseum.agent.actors import ACTOR_TYPES
     from colosseum.agent.mdp_models import MODEL_TYPES
 
+
 class BaseAgent(abc.ABC):
     """
     The base class for Colosseum agents.

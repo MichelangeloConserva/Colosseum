@@ -1,6 +1,7 @@
-import yaml
 from dataclasses import dataclass
 from typing import Type
+
+import yaml
 
 from colosseum.emission_maps import EmissionMap
 from colosseum.utils import ensure_folder

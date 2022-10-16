@@ -16,7 +16,6 @@ from colosseum.mdp.utils.mdp_creation import (
 from colosseum.mdp.utils.mdp_creation import get_episodic_graph
 from colosseum.mdp.utils.mdp_creation import get_episodic_transition_matrix_and_rewards
 
-
 if TYPE_CHECKING:
     from colosseum.mdp import NODE_TYPE
 
@@ -41,7 +40,6 @@ class EpisodicMDP(BaseMDP, abc.ABC):
         if self._H is None:
             self._set_time_horizon(self._input_H)
         return self._H
-
 
     @property
     def random_policy_cf(self) -> np.ndarray:
@@ -101,7 +99,6 @@ class EpisodicMDP(BaseMDP, abc.ABC):
         self._average_optimal_episodic_reward = None
         self._average_worst_episodic_reward = None
         self._average_random_episodic_reward = None
-
 
     def _set_time_horizon(self, H: int) -> int:
         """
@@ -210,7 +207,6 @@ class EpisodicMDP(BaseMDP, abc.ABC):
             )
         return self._random_value_cf
 
-
     @property
     def episodic_optimal_average_reward(self) -> float:
         """
@@ -225,7 +221,6 @@ class EpisodicMDP(BaseMDP, abc.ABC):
                 _eoar += p * self.get_optimal_policy_starting_value(sn)
             self._eoar = _eoar / self.H
         return self._eoar
-
 
     @property
     def episodic_worst_average_reward(self) -> float:
@@ -258,7 +253,9 @@ class EpisodicMDP(BaseMDP, abc.ABC):
         return self._roar
 
     @property
-    def continuous_form_episodic_transition_matrix_and_rewards(self) -> Tuple[np.ndarray, np.ndarray]:
+    def continuous_form_episodic_transition_matrix_and_rewards(
+        self,
+    ) -> Tuple[np.ndarray, np.ndarray]:
         """
         Returns
         -------

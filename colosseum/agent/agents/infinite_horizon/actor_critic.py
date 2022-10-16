@@ -1,9 +1,9 @@
 from typing import Dict, Any, TYPE_CHECKING
 
 import gin
+import numpy as np
 import sonnet as snt
 import tensorflow as tf
-import numpy as np
 from bsuite.baselines.tf.actor_critic import PolicyValueNet, ActorCritic
 from ray import tune
 
@@ -21,9 +21,7 @@ class ActorCriticContinuous(NonTabularBsuiteAgentWrapper):
     """
 
     @staticmethod
-    def produce_gin_file_from_parameters(
-        parameters: Dict[str, Any], index: int = 0
-    ):
+    def produce_gin_file_from_parameters(parameters: Dict[str, Any], index: int = 0):
         string = ""
         for k, v in parameters.items():
             string += f"prms_{index}/ActorCriticContinuous.{k} = {v}\n"
@@ -62,16 +60,11 @@ class ActorCriticContinuous(NonTabularBsuiteAgentWrapper):
 
     @property
     def current_optimal_stochastic_policy(self) -> np.ndarray:
-        logits = (
-            tf.stop_gradient(
-                self._agent._network(
-                    tf.convert_to_tensor(
-                        self.emission_map.all_observations
-                    )
-                )[0].logits
-            )
-            .numpy()
-        )
+        logits = tf.stop_gradient(
+            self._agent._network(
+                tf.convert_to_tensor(self.emission_map.all_observations)
+            )[0].logits
+        ).numpy()
 
         return (logits >= logits.max(-1, keepdims=True)).astype(np.float32)
 

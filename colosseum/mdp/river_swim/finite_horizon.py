@@ -24,4 +24,3 @@ class RiverSwimEpisodic(EpisodicMDP, RiverSwimMDP):
             The custom layout to draw a nx.Graph.
         """
         return {node: tuple(node) for node in self.get_episodic_graph(False)}
-

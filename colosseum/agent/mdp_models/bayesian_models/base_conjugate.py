@@ -46,9 +46,9 @@ class ConjugateModel(ABC):
             type(hyper_params[0])
         ):
             # same priors for each state action pair
-            self.hyper_params = np.tile(
-                hyper_params, (n_states, n_actions, 1)
-            ).astype(np.float32)
+            self.hyper_params = np.tile(hyper_params, (n_states, n_actions, 1)).astype(
+                np.float32
+            )
         elif type(hyper_params[0]) in [list, tuple, np.ndarray]:
             # each state action pair has a different prior
             self.hyper_params = np.array(hyper_params, np.float32)

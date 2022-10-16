@@ -15,5 +15,3 @@ class MiniGridEmptyContinuous(ContinuousMDP, MiniGridEmptyMDP):
     @staticmethod
     def sample_parameters(n: int, seed: int = None) -> List[Dict[str, Any]]:
         return MiniGridEmptyMDP.sample_mdp_parameters(n, False, seed)
-
-

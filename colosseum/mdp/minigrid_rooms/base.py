@@ -407,10 +407,12 @@ class MiniGridRoomsMDP(BaseMDP, abc.ABC):
             if make_reward_stochastic:
                 size = int(room_size * n_rooms ** 0.5)
                 self._other_distribution = beta(
-                    reward_variance_multiplier, reward_variance_multiplier * (size ** 2 - 1)
+                    reward_variance_multiplier,
+                    reward_variance_multiplier * (size ** 2 - 1),
                 )
                 self._optimal_distribution = beta(
-                    reward_variance_multiplier * (size ** 2 - 1), reward_variance_multiplier
+                    reward_variance_multiplier * (size ** 2 - 1),
+                    reward_variance_multiplier,
                 )
             else:
                 self._optimal_distribution = deterministic(1.0)

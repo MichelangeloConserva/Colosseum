@@ -3,7 +3,7 @@ import re
 import shutil
 from glob import glob
 from tempfile import gettempdir
-from typing import Dict, List, Optional, Set, Tuple, Type
+from typing import Dict, List, Set, Tuple, Type
 
 import numpy as np
 import pandas as pd

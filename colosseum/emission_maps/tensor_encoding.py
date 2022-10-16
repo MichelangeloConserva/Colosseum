@@ -5,7 +5,6 @@ import numpy as np
 from colosseum.emission_maps.base import EmissionMap
 from colosseum.emission_maps.base import _get_symbol_mapping
 
-
 if TYPE_CHECKING:
     from colosseum.mdp import BaseMDP, NODE_TYPE
     from colosseum.noises.base import Noise
@@ -31,7 +30,9 @@ class TensorEncoding(EmissionMap):
 
         super(TensorEncoding, self).__init__(mdp, noise_class, noise_kwargs)
 
-    def node_to_observation(self, node: "NODE_TYPE", in_episode_time: int = None) -> np.ndarray:
+    def node_to_observation(
+        self, node: "NODE_TYPE", in_episode_time: int = None
+    ) -> np.ndarray:
         if self._symbol_mapping is None:
             self._symbol_mapping = _get_symbol_mapping(self._mdp)
 

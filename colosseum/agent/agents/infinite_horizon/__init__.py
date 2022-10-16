@@ -1,3 +1,4 @@
+from colosseum.agent.agents.infinite_horizon.actor_critic import ActorCriticContinuous
 from colosseum.agent.agents.infinite_horizon.actor_critic_rnn import (
     ActorCriticRNNContinuous,
 )
@@ -10,4 +11,3 @@ from colosseum.agent.agents.infinite_horizon.q_learning import (
     QLearningContinuous,
 )
 from colosseum.agent.agents.infinite_horizon.ucrl2 import UCRL2Continuous
-from colosseum.agent.agents.infinite_horizon.actor_critic import ActorCriticContinuous

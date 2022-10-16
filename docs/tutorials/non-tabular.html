@@ -557,6 +557,12 @@ to each state a feature vector that is filled with zeros except an index that un
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Observation for the OneHotEncoding emission map.
+[[1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]]
+</pre></div>
+</div>
+</div>
 </div>
 <p><strong>Linear optimal value</strong>
 The <a class="reference external" href="../pdoc_files/colosseum/emission_maps/state_linear_optimal.html#StateLinearOptimal"><code class="docutils literal notranslate"><span class="pre">StateLinearOptimal</span></code></a>
@@ -568,7 +574,13 @@ function. In other words, there is a <span class="math notranslate nohighlight">
 <span class="n">ts</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Observation for the StateLinearOptimal emission map.&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">observation</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">observation</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Observation for the StateLinearOptimal emission map.
+[[ 0.25  0.09  0.1   0.31  0.06  0.21 -0.39  0.22 -0.04 -0.07]]
 </pre></div>
 </div>
 </div>
@@ -584,7 +596,13 @@ is the randomly acting policy.</p>
 <span class="n">ts</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Observation for the StateLinearRandom emission map.&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">observation</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">observation</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Observation for the StateLinearRandom emission map.
+[[ 0.25 -0.19 -0.23 -0.51 -0.09  0.14  0.49  0.04 -0.44  0.27]]
 </pre></div>
 </div>
 </div>
@@ -597,6 +615,15 @@ representation of the <code class="docutils literal notranslate"><span class="pr
 <span class="n">mdp</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Textual representation.&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">mdp</span><span class="o">.</span><span class="n">get_grid_representation</span><span class="p">(</span><span class="n">mdp</span><span class="o">.</span><span class="n">cur_node</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Textual representation.
+[[&#39;+&#39; &#39; &#39; &#39; &#39; &#39;-&#39;]
+ [&#39; &#39; &#39;A&#39; &#39; &#39; &#39; &#39;]
+ [&#39; &#39; &#39; &#39; &#39; &#39; &#39; &#39;]
+ [&#39;-&#39; &#39; &#39; &#39; &#39; &#39;+&#39;]]
 </pre></div>
 </div>
 </div>
@@ -616,6 +643,12 @@ a feature vector that contains uniquely identifying information about the state 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Observation for the StateInfo emission map.
+[[1. 2.]]
+</pre></div>
+</div>
+</div>
 </div>
 <p>The observation vector corresponds to the x and y coordinates of the position of the agent.</p>
 <p><strong>Image encoding</strong><br />
@@ -629,6 +662,15 @@ each state a feature vector that contains uniquely identifying information about
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Observation for the ImageEncoding emission map.&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">observation</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Observation for the ImageEncoding emission map.
+[[[2. 0. 0. 3.]
+  [0. 1. 0. 0.]
+  [0. 0. 0. 0.]
+  [3. 0. 0. 2.]]]
 </pre></div>
 </div>
 </div>
@@ -647,6 +689,30 @@ of the agent and a matrix that encodes the positions of white spaces.</p>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Observation for the TensorEncoding emission map.&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">observation</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Observation for the TensorEncoding emission map.
+[[[[0. 0. 1. 0.]
+   [1. 0. 0. 0.]
+   [1. 0. 0. 0.]
+   [0. 0. 0. 1.]]
+
+  [[1. 0. 0. 0.]
+   [0. 1. 0. 0.]
+   [1. 0. 0. 0.]
+   [1. 0. 0. 0.]]
+
+  [[1. 0. 0. 0.]
+   [1. 0. 0. 0.]
+   [1. 0. 0. 0.]
+   [1. 0. 0. 0.]]
+
+  [[0. 0. 0. 1.]
+   [1. 0. 0. 0.]
+   [1. 0. 0. 0.]
+   [0. 0. 1. 0.]]]]
 </pre></div>
 </div>
 </div>
@@ -694,6 +760,9 @@ We present an example below.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/non-tabular_17_0.png" src="../_images/non-tabular_17_0.png" />
 </div>
 </div>
 </section>

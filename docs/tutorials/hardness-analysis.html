@@ -590,26 +590,66 @@ or alternatively you can use the
 function, which takes the code name of the measure as input.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Instantiate an MDP</span>
-<span class="n">mdp</span> <span class="o">=</span> <span class="n">SimpleGridContinuous</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">p_rand</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">n_starting_states</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-
-<span class="c1"># Diameter</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Diameter: </span><span class="si">{</span><span class="n">mdp</span><span class="o">.</span><span class="n">diameter</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="c1"># Environmental value norm</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Environmental value norm: </span><span class="si">{</span><span class="n">mdp</span><span class="o">.</span><span class="n">value_norm</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="c1"># Sum of the reciprocals of the suboptimality gaps</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sum of the reciprocals of the suboptimality gaps: </span><span class="si">{</span><span class="n">mdp</span><span class="o">.</span><span class="n">sum_reciprocals_suboptimality_gaps</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Or alternatively</span>
-<span class="c1"># for measure_name in BaseMDP.get_available_hardness_measures():</span>
-<span class="c1">#  print(f&quot;{measure_name}: {mdp.get_measure_from_name(measure_name):.2f}&quot;)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdp</span> <span class="o">=</span> <span class="n">SimpleGridContinuous</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">p_rand</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">n_starting_states</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdp</span><span class="o">.</span><span class="n">diameter</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Diameter: 6.05
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdp</span><span class="o">.</span><span class="n">value_norm</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Environmental value norm: 0.50
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdp</span><span class="o">.</span><span class="n">sum_reciprocals_suboptimality_gaps</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sum of the reciprocals of the suboptimality gaps: 361.30
+</pre></div>
+</div>
+</div>
+</div>
+<p>Or alternatively,</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdp</span> <span class="o">=</span> <span class="n">SimpleGridContinuous</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">p_rand</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">n_starting_states</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">measure_name</span> <span class="ow">in</span> <span class="n">BaseMDP</span><span class="o">.</span><span class="n">get_available_hardness_measures</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">measure_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">mdp</span><span class="o">.</span><span class="n">get_measure_from_name</span><span class="p">(</span><span class="n">measure_name</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Diameter: 6.05
-Environmental value norm: 0.50
-Sum of the reciprocals of the suboptimality gaps: 361.30
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>diameter: 6.05
+value_norm: 0.50
+suboptimal_gaps: 361.30
 </pre></div>
 </div>
 </div>
@@ -644,7 +684,7 @@ If multiprocessing is enabled <code class="docutils literal notranslate"><span c
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/hardness-analysis_5_0.png" src="../_images/hardness-analysis_5_0.png" />
+<img alt="../_images/hardness-analysis_13_0.png" src="../_images/hardness-analysis_13_0.png" />
 </div>
 </div>
 </section>
@@ -669,7 +709,7 @@ exploration. Increasing <code class="docutils literal notranslate"><span class="
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/hardness-analysis_7_0.png" src="../_images/hardness-analysis_7_0.png" />
+<img alt="../_images/hardness-analysis_15_0.png" src="../_images/hardness-analysis_15_0.png" />
 </div>
 </div>
 </section>
@@ -692,7 +732,7 @@ exploration. Increasing <code class="docutils literal notranslate"><span class="
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/hardness-analysis_9_0.png" src="../_images/hardness-analysis_9_0.png" />
+<img alt="../_images/hardness-analysis_17_0.png" src="../_images/hardness-analysis_17_0.png" />
 </div>
 </div>
 </section>
@@ -715,7 +755,7 @@ exploration. Increasing <code class="docutils literal notranslate"><span class="
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/hardness-analysis_11_0.png" src="../_images/hardness-analysis_11_0.png" />
+<img alt="../_images/hardness-analysis_19_0.png" src="../_images/hardness-analysis_19_0.png" />
 </div>
 </div>
 </section>
@@ -751,7 +791,7 @@ exploration. Increasing <code class="docutils literal notranslate"><span class="
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/hardness-analysis_13_0.png" src="../_images/hardness-analysis_13_0.png" />
+<img alt="../_images/hardness-analysis_21_0.png" src="../_images/hardness-analysis_21_0.png" />
 </div>
 </div>
 <div class="cell tag_remove-input tag_remove-output docutils container">

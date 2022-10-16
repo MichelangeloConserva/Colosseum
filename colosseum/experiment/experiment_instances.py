@@ -2,22 +2,21 @@ import os
 import pickle
 import shutil
 from multiprocessing import Pool
-from glob import glob
-from typing import List, Union, TYPE_CHECKING, Dict
+from typing import List, Union, TYPE_CHECKING
 
 import numpy as np
 import ray
-from tqdm import trange, tqdm
 from ray.util.multiprocessing import Pool as RayPool
+from tqdm import tqdm
 
 from colosseum import config
 from colosseum.benchmark.utils import retrieve_experiment_config
 from colosseum.experiment.agent_mdp_interaction import MDPLoop
 from colosseum.experiment.experiment_instance import ExperimentInstance
-from colosseum.experiment.folder_structuring import get_mdp_agent_gin_configs
 from colosseum.experiment.folder_structuring import _get_experiment_mdp_agent_couples
-from colosseum.experiment.utils import check_experiment_folder
+from colosseum.experiment.folder_structuring import get_mdp_agent_gin_configs
 from colosseum.experiment.utils import apply_gin_config
+from colosseum.experiment.utils import check_experiment_folder
 from colosseum.utils import ensure_folder, make_mdp_spec
 from colosseum.utils.acme import CSVLogger
 
