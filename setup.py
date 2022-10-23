@@ -36,10 +36,7 @@ setuptools.setup(
         "PyYAML>=6.0",
         "pygraphviz",
         "wrapt-timeout-decorator",
-        "bsuite",
-        "dm-sonnet",
-        "tensorflow",
-        "tensorflow-probability"
+        "bsuite[baseline]",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
