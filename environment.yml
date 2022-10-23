@@ -1,0 +1,31 @@
+name: colosseum
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pygraphviz
+  - pip
+  - pip:
+    - adjustText
+    - dm-env
+    - gin-config
+    - gym
+    - matplotlib
+    - networkx
+    - numpy
+    - pandas
+    - pydtmc
+    - pygame
+    - pyyaml
+    - ray[tune]==1.9.1
+    - scipy>=1.7.3
+    - seaborn>=0.10
+    - sparse
+    - toolz
+    - tqdm
+    - PyYAML>=6.0
+    - graphviz
+    - pygraphviz
+    - wrapt-timeout-decorator
+    - bsuite[baselines]
+    - tqdm

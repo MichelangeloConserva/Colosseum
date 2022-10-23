@@ -38,12 +38,7 @@ setuptools.setup(
         "graphviz",
         "pygraphviz",
         "wrapt-timeout-decorator",
-        "bsuite[baseline]",
-        "dm-sonnet",
-        "dm-tree",
-        "tensorflow",
-        "tensorflow-probability",
-        "trfl",
+        "bsuite[baselines]",
         "tqdm",
     ],
     classifiers=[
