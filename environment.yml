@@ -29,3 +29,4 @@ dependencies:
     - wrapt-timeout-decorator
     - bsuite[baselines]
     - tqdm
+    - jupytext>=0.16
