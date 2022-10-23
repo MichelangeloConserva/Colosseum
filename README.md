@@ -1,7 +1,7 @@
 
 
 <p align="center">
-   <img src="imgs/colosseum_banner.svg"  style="width:100%" title="hover text">
+   <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/colosseum_banner.svg"  style="width:100%" title="hover text">
 </p>
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -26,46 +26,46 @@ If you are new to the package, extensive explanations and tutorials are availabl
 ### Hardness analysis
 
 <p>
-  <img src="imgs/ha.svg"  style="width:25%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/ha.svg"  style="width:25%" title="hover text">
 </p>
 
 ### Agent MDP interaction
 
 <p>
-  <img src="imgs/regret.svg"  style="width:50%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/regret.svg"  style="width:50%" title="hover text">
 </p>
 
 ### MDP visual representations
 
 <p>
-  <img src="imgs/deep_sea.svg"  style="width:20%" title="hover text">
-  <img src="imgs/frozen_lake.svg"  style="width:20%" title="hover text">
-  <img src="imgs/mge.svg"  style="width:20%" title="hover text">
-  <img src="imgs/mgr.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/deep_sea.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/frozen_lake.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/mge.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/mgr.svg"  style="width:20%" title="hover text">
 </p>
 
 ### Markov chain visual representations
 
 <p>
-  <img src="imgs/deep_sea_mc.svg"  style="width:20%" title="hover text">
-  <img src="imgs/frozen_lake_mc.svg"  style="width:20%" title="hover text">
-  <img src="imgs/mge_mc.svg"  style="width:20%" title="hover text">
-  <img src="imgs/mgr_mc.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/deep_sea_mc.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/frozen_lake_mc.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/mge_mc.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/mgr_mc.svg"  style="width:20%" title="hover text">
 </p>
 
 ### Visitation counts
 
 <p >
-  <img src="imgs/deep_sea_vc.svg"  style="width:20%" title="hover text">
-  <img src="imgs/frozen_lake_vc.svg"  style="width:20%" title="hover text">
-  <img src="imgs/deep_sea_vc2.svg"  style="width:20%" title="hover text">
-  <img src="imgs/frozen_lake_vc2.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/deep_sea_vc.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/frozen_lake_vc.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/deep_sea_vc2.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/frozen_lake_vc2.svg"  style="width:20%" title="hover text">
 </p>
 
 <p >
-  <img src="imgs/mge_vc.svg"  style="width:20%" title="hover text">
-  <img src="imgs/mgr_vc.svg"  style="width:20%" title="hover text">
-  <img src="imgs/mge_vc2.svg"  style="width:20%" title="hover text">
-  <img src="imgs/mgr_vc2.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/mge_vc.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/mgr_vc.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/mge_vc2.svg"  style="width:20%" title="hover text">
+  <img src="https://raw.githubusercontent.com/MichelangeloConserva/Colosseum/main/imgs/mgr_vc2.svg"  style="width:20%" title="hover text">
 </p>
 
