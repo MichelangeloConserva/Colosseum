@@ -1,0 +1,923 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>The Colosseum Benchmark &#8212; The hitchhiker&#39;s guide to Colosseum</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/myfile.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"bR": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/colosseum_icon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Analyse Benchmarking Results" href="benchmark-analysis.html" />
+    <link rel="prev" title="Visualize Markov Decision Processes" href="mdp-visual-representations.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-0RT6KZEQPZ"></script>
+<script>
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){ dataLayer.push(arguments); }
+                    gtag('js', new Date());
+                    gtag('config', 'G-0RT6KZEQPZ');
+                </script>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/colosseum_banner.svg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">The hitchhiker's guide to Colosseum</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    What is Colosseum?
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="manifesto.html">
+   Motivation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api-reference.html">
+   API Documentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="contributions.html">
+   Contributions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="quickstart.html">
+   Quickstart
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="colosseum-configurations.html">
+   Configure Colosseum
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="agent-performance-analysis.html">
+   Inspect Agents Performances
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-functionalities.html">
+   Inspect Markov Decision Processes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-visual-representations.html">
+   Visualize Markov Decision Processes
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   The Colosseum Benchmark
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-analysis.html">
+   Analyse Benchmarking Results
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-custom.html">
+   Create Custom Benchmarks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-running.html">
+   Benchmarking Agents
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hyperopt.html">
+   Hyperparameters Optimization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-scaling.html">
+   Scale Benchmarking to a Cluster
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hardness-analysis.html">
+   Empirical hardness analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="non-tabular.html">
+   Non-Tabular Benchmarking
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/MichelangeloConserva/Colosseum/main?urlpath=tree/docs/book_files/mds/benchmark-introduction.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum/issues/new?title=Issue%20on%20page%20%2Fmds/benchmark-introduction.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/mds/benchmark-introduction.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="../_sources/mds/benchmark-introduction.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>The Colosseum Benchmark</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="the-colosseum-benchmark">
+<h1>The Colosseum Benchmark<a class="headerlink" href="#the-colosseum-benchmark" title="Permalink to this headline">#</a></h1>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+Necessary imports<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seedir</span>
+
+<span class="kn">from</span> <span class="nn">colosseum.benchmark</span> <span class="kn">import</span> <span class="n">ColosseumDefaultBenchmark</span>
+<span class="kn">from</span> <span class="nn">colosseum.benchmark.utils</span> <span class="kn">import</span> <span class="n">instantiate_benchmark_folder</span>
+</pre></div>
+</div>
+</div>
+</details></aside>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+<p>The default <span class="math notranslate nohighlight">\(\texttt{Colosseum}\)</span> benchmark targets the four most widely studies setting of reinforcement learning: episodic ergodic, episodic communicating, continuous ergodic, and continuous communicating.
+Note that the continuous setting is also known as infinite horizon.
+The environments selection is the result of the theoretical analysis and empirical validation presented in the <a href="https://www.investopedia.com/thmb/8eqLLlAayH0avgNDllcSC_MyN-A=/2121x1414/filters:fill(auto,1)/toy-foam-letter-in-word-tba--abbreviation-of-to-be-announced---on-green-grass-background-1160797545-6c35b6e874564114ab52f0ab5f48cda2.jpg">paper</a>.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="admonition-mdp-families-apis admonition">
+<p class="admonition-title">MDP families APIs</p>
+<p><a href="../pdoc_files/colosseum/mdp/deep_sea/base.html"><code class="docutils literal notranslate"><span class="pre">DeepSea</span></code></a>,
+<a href="../pdoc_files/colosseum/mdp/frozen_lake/base.html"><code class="docutils literal notranslate"><span class="pre">FrozenLake</span></code></a>,
+<a href="../pdoc_files/colosseum/mdp/minigrid_empty/base.html"><code class="docutils literal notranslate"><span class="pre">MiniGridEmpty</span></code></a>,
+<a href="../pdoc_files/colosseum/mdp/minigrid_rooms/base.html"><code class="docutils literal notranslate"><span class="pre">MiniGridRooms</span></code></a>,
+<a href="../pdoc_files/colosseum/mdp/river_swim/base.html"><code class="docutils literal notranslate"><span class="pre">RiverSwim</span></code></a>,
+<a href="../pdoc_files/colosseum/mdp/simple_grid/base.html"><code class="docutils literal notranslate"><span class="pre">SimpleGrid</span></code></a>, and
+<a href="../pdoc_files/colosseum/mdp/taxi/base.html"><code class="docutils literal notranslate"><span class="pre">Taxi</span></code></a>.</p>
+</div>
+</aside>
+<h3> The default benchmark environments </h3>
+<p>The tables below report the environments in the benchmark along with their parameters.
+We briefly describe the parameters that are common to all environment below, and we refer to the API of the environment classes for the meaning of class-specific parameters.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">size</span></code> parameter controls the number of states,
+the <code class="docutils literal notranslate"><span class="pre">make_reward_stochastic</span></code> parameter checks whether the rewards are stochastic,
+the <code class="docutils literal notranslate"><span class="pre">p_lazy</span></code> parameter is the probability that an MDP stays in the same state instead of executing the action selected by an agent, and
+the <code class="docutils literal notranslate"><span class="pre">p_rand</span></code> parameter is the probability that an MDP executes a random action instead of the action selected by an agent.</p>
+<h4> Episodic ergodic </h4>
+<div class="full-width docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="5d7766d9-2c6c-48a5-86aa-be8eb18c7892" name="cfa9f8c3-2161-442d-975a-6eb3ffbfc49e" type="radio">
+</input><label class="sd-tab-label" for="5d7766d9-2c6c-48a5-86aa-be8eb18c7892">
+DeepSea</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>DeepSea(size=10, p_rand=0.4, make_reward_stochastic=False)</p></li>
+<li><p>DeepSea(size=13, p_rand=0.3, make_reward_stochastic=True)</p></li>
+</ol>
+</div>
+<input id="eeb3765b-2ba8-4348-8da8-953e025fa596" name="cfa9f8c3-2161-442d-975a-6eb3ffbfc49e" type="radio">
+</input><label class="sd-tab-label" for="eeb3765b-2ba8-4348-8da8-953e025fa596">
+FrozenLake</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>FrozenLake(size=4, make_reward_stochastic=True, p_lazy=0.03, p_frozen=0.98, p_rand=0.001)</p></li>
+</ol>
+</div>
+<input id="9e9a63b1-0a14-4aa1-9aed-544f8df2f287" name="cfa9f8c3-2161-442d-975a-6eb3ffbfc49e" type="radio">
+</input><label class="sd-tab-label" for="9e9a63b1-0a14-4aa1-9aed-544f8df2f287">
+MiniGridEmpty</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>MiniGridEmpty(size=10, make_reward_stochastic=False, p_lazy=None, p_rand=0.05, n_starting_states=3)</p></li>
+<li><p>MiniGridEmpty(size=10, make_reward_stochastic=True, p_lazy=None, p_rand=0.3, n_starting_states=3)</p></li>
+<li><p>MiniGridEmpty(size=10, make_reward_stochastic=False, p_lazy=0.05, p_rand=0.2, n_starting_states=3)</p></li>
+<li><p>MiniGridEmpty(size=8, make_reward_stochastic=False, p_lazy=None, p_rand=0.3, n_starting_states=3)</p></li>
+<li><p>MiniGridEmpty(size=8, make_reward_stochastic=True, p_lazy=0.02, p_rand=0.4, n_starting_states=3)</p></li>
+<li><p>MiniGridEmpty(size=6, make_reward_stochastic=True, p_lazy=0.1, p_rand=0.05, n_starting_states=3)</p></li>
+<li><p>MiniGridEmpty(size=4, make_reward_stochastic=False, p_lazy=0.1, p_rand=0.4, n_starting_states=3)</p></li>
+</ol>
+</div>
+<input id="9d31b9d5-0ccc-4569-a798-79e1ca8010c1" name="cfa9f8c3-2161-442d-975a-6eb3ffbfc49e" type="radio">
+</input><label class="sd-tab-label" for="9d31b9d5-0ccc-4569-a798-79e1ca8010c1">
+MiniGridRooms</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>MiniGridRooms(make_reward_stochastic=True, room_size=3, n_rooms=4, p_rand=0.001, p_lazy=None)</p></li>
+<li><p>MiniGridRooms(make_reward_stochastic=True, room_size=3, n_rooms=9, p_rand=0.1, p_lazy=0.01)</p></li>
+<li><p>MiniGridRooms(make_reward_stochastic=True, room_size=4, n_rooms=4, p_rand=0.1, p_lazy=0.01)</p></li>
+</ol>
+</div>
+<input id="6f0d2b04-bdbc-4ad7-be3e-5f1905d53208" name="cfa9f8c3-2161-442d-975a-6eb3ffbfc49e" type="radio">
+</input><label class="sd-tab-label" for="6f0d2b04-bdbc-4ad7-be3e-5f1905d53208">
+RiverSwim</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>RiverSwim(make_reward_stochastic=True, size=5, p_lazy=0.1, p_rand=0.01, sub_optimal_distribution=(“beta”,(2.4, 24.0)), optimal_distribution=(“beta”,(0.01, 0.11)), other_distribution=(“beta”,(2.4, 249.0)))</p></li>
+<li><p>RiverSwim(make_reward_stochastic=True, size=30, p_lazy=0.01, p_rand=0.01, sub_optimal_distribution=(“beta”,(14.9, 149.0)), optimal_distribution=(“beta”,(0.01, 0.11)), other_distribution=(“beta”,(14.9, 1499.0)))</p></li>
+</ol>
+</div>
+<input id="62202585-6bfd-498a-9a9f-adb8e358809e" name="cfa9f8c3-2161-442d-975a-6eb3ffbfc49e" type="radio">
+</input><label class="sd-tab-label" for="62202585-6bfd-498a-9a9f-adb8e358809e">
+SimpleGrid</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>SimpleGrid(reward_type=3, size=10, make_reward_stochastic=True, p_lazy=0.2, p_rand=0.01)</p></li>
+<li><p>SimpleGrid(reward_type=3, size=16, make_reward_stochastic=True, p_lazy=0.2, p_rand=0.2)</p></li>
+<li><p>SimpleGrid(reward_type=3, size=16, make_reward_stochastic=False, p_lazy=0.01, p_rand=0.2)</p></li>
+</ol>
+</div>
+<input id="4ff15c7d-61b5-477b-89f1-8292d3e80d1c" name="cfa9f8c3-2161-442d-975a-6eb3ffbfc49e" type="radio">
+</input><label class="sd-tab-label" for="4ff15c7d-61b5-477b-89f1-8292d3e80d1c">
+Taxi</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>Taxi(make_reward_stochastic=True, p_lazy=0.001, size=4, length=1, width=1, space=1, n_locations=3, p_rand=0.01, default_r=(“beta”,(0.8, 20.0)), successfully_delivery_r=(“beta”,(1.0, 0.1)), failure_delivery_r=(“beta”,(0.8, 50.0)))</p></li>
+<li><p>Taxi(make_reward_stochastic=True, p_lazy=0.01, size=4, length=1, width=1, space=1, n_locations=3, p_rand=0.2, default_r=(“beta”,(0.8, 6.0)), successfully_delivery_r=(“beta”,(1.0, 0.1)), failure_delivery_r=(“beta”,(0.8, 40.0)))</p></li>
+</ol>
+</div>
+</div>
+</div>
+<h4> Episodic communicating </h4>
+<div class="full-width docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="1d02ea78-b085-4cb9-a5e5-07b4c356eb04" name="4dcf7762-6c8e-407f-ad33-d3f2896d8ef4" type="radio">
+</input><label class="sd-tab-label" for="1d02ea78-b085-4cb9-a5e5-07b4c356eb04">
+DeepSea</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>DeepSea(size=5, p_rand=None, make_reward_stochastic=True)</p></li>
+<li><p>DeepSea(size=25, p_rand=None, make_reward_stochastic=True)</p></li>
+</ol>
+</div>
+<input id="65f44033-e1ad-4d07-a2a0-b92cfd8359c8" name="4dcf7762-6c8e-407f-ad33-d3f2896d8ef4" type="radio">
+</input><label class="sd-tab-label" for="65f44033-e1ad-4d07-a2a0-b92cfd8359c8">
+FrozenLake</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>FrozenLake(size=3, make_reward_stochastic=True, p_lazy=None, p_frozen=0.9, p_rand=None)</p></li>
+</ol>
+</div>
+<input id="08e9380c-d318-4969-87bb-462755f65c31" name="4dcf7762-6c8e-407f-ad33-d3f2896d8ef4" type="radio">
+</input><label class="sd-tab-label" for="08e9380c-d318-4969-87bb-462755f65c31">
+MiniGridEmpty</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>MiniGridEmpty(size=6, make_reward_stochastic=True, p_lazy=None, p_rand=None, n_starting_states=3)</p></li>
+<li><p>MiniGridEmpty(size=6, make_reward_stochastic=True, p_lazy=0.35, p_rand=None, n_starting_states=5)</p></li>
+<li><p>MiniGridEmpty(size=6, make_reward_stochastic=True, p_lazy=0.25, p_rand=0.1, n_starting_states=3)</p></li>
+<li><p>MiniGridEmpty(size=10, make_reward_stochastic=False, p_lazy=0.1, p_rand=None, n_starting_states=5)</p></li>
+<li><p>MiniGridEmpty(size=10, make_reward_stochastic=False, p_lazy=0.15, p_rand=0.1, n_starting_states=3)</p></li>
+</ol>
+</div>
+<input id="428fe167-0746-4651-bb26-6da66e1bd42e" name="4dcf7762-6c8e-407f-ad33-d3f2896d8ef4" type="radio">
+</input><label class="sd-tab-label" for="428fe167-0746-4651-bb26-6da66e1bd42e">
+MiniGridRooms</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>MiniGridRooms(make_reward_stochastic=True, room_size=4, n_rooms=4, p_rand=None, p_lazy=None)</p></li>
+<li><p>MiniGridRooms(make_reward_stochastic=False, room_size=3, n_rooms=9, p_rand=None, p_lazy=0.05)</p></li>
+<li><p>MiniGridRooms(make_reward_stochastic=False, room_size=3, n_rooms=9, p_rand=None, p_lazy=0.1)</p></li>
+<li><p>MiniGridRooms(make_reward_stochastic=False, room_size=3, n_rooms=4, p_rand=None, p_lazy=0.15)</p></li>
+</ol>
+</div>
+<input id="16d7e332-2fb2-4288-969c-20de51444920" name="4dcf7762-6c8e-407f-ad33-d3f2896d8ef4" type="radio">
+</input><label class="sd-tab-label" for="16d7e332-2fb2-4288-969c-20de51444920">
+RiverSwim</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>RiverSwim(make_reward_stochastic=True, size=25, p_lazy=0.05, p_rand=None, sub_optimal_distribution=(“beta”,(12.4, 124.0)), optimal_distribution=(“beta”,(0.01, 0.11)), other_distribution=(“beta”,(12.4, 1249.0)))</p></li>
+<li><p>RiverSwim(make_reward_stochastic=False, size=40, p_lazy=None, p_rand=None, sub_optimal_distribution=None, optimal_distribution=None, other_distribution=None)</p></li>
+</ol>
+</div>
+<input id="dee498bf-9559-4243-9b03-fb8c8bc6a88d" name="4dcf7762-6c8e-407f-ad33-d3f2896d8ef4" type="radio">
+</input><label class="sd-tab-label" for="dee498bf-9559-4243-9b03-fb8c8bc6a88d">
+SimpleGrid</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>SimpleGrid(size=10, make_reward_stochastic=True, p_lazy=0.5)</p></li>
+<li><p>SimpleGrid(size=13, make_reward_stochastic=True, p_lazy=0.4)</p></li>
+<li><p>SimpleGrid(size=13, make_reward_stochastic=False, p_lazy=None)</p></li>
+<li><p>SimpleGrid(size=20, make_reward_stochastic=True, p_lazy=0.4)</p></li>
+</ol>
+</div>
+<input id="5825b66d-9733-43cf-84c3-99b28d7f7f86" name="4dcf7762-6c8e-407f-ad33-d3f2896d8ef4" type="radio">
+</input><label class="sd-tab-label" for="5825b66d-9733-43cf-84c3-99b28d7f7f86">
+Taxi</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>Taxi(make_reward_stochastic=True, p_lazy=0.01, size=4, length=1, width=1, space=1, n_locations=3, p_rand=None, default_r=(“beta”,(0.7, 30.0)), successfully_delivery_r=(“beta”,(0.4, 0.1)), failure_delivery_r=(“beta”,(0.8, 50.0)))</p></li>
+<li><p>Taxi(make_reward_stochastic=True, p_lazy=0.2, size=5, length=1, width=1, space=1, n_locations=3, p_rand=None, default_r=(“beta”,(0.7, 30.0)), successfully_delivery_r=(“beta”, (0.4, 0.1)), failure_delivery_r=(“beta”,(0.8, 50.0)))</p></li>
+</ol>
+</div>
+</div>
+</div>
+<h4> Continuous ergodic </h4>
+<div class="full-width docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="d44209fd-e20c-4f6e-ab02-5813b8a11428" name="3e4c97b7-e2e8-4f4b-92c9-ae7752fd2ead" type="radio">
+</input><label class="sd-tab-label" for="d44209fd-e20c-4f6e-ab02-5813b8a11428">
+DeepSea</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>DeepSea(size=20, p_rand=0.1, make_reward_stochastic=False)</p></li>
+</ol>
+</div>
+<input id="c33c6f6b-a7c1-402f-b40e-69a7c4d32e62" name="3e4c97b7-e2e8-4f4b-92c9-ae7752fd2ead" type="radio">
+</input><label class="sd-tab-label" for="c33c6f6b-a7c1-402f-b40e-69a7c4d32e62">
+FrozenLake</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>FrozenLake(size=5, make_reward_stochastic=True, p_lazy=0.01, p_frozen=0.95, p_rand=0.05)</p></li>
+</ol>
+</div>
+<input id="da71a0de-0aa8-413e-b305-fca9c57de8ec" name="3e4c97b7-e2e8-4f4b-92c9-ae7752fd2ead" type="radio">
+</input><label class="sd-tab-label" for="da71a0de-0aa8-413e-b305-fca9c57de8ec">
+MiniGridEmpty</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>MiniGridEmpty(size=12, make_reward_stochastic=True, p_lazy=0.05, p_rand=0.495, n_starting_states=3)</p></li>
+<li><p>MiniGridEmpty(size=12, make_reward_stochastic=True, p_lazy=0.1, p_rand=0.395, n_starting_states=3)</p></li>
+<li><p>MiniGridEmpty(size=10, make_reward_stochastic=False, p_lazy=0.02, p_rand=0.7, n_starting_states=3)</p></li>
+<li><p>MiniGridEmpty(size=14, make_reward_stochastic=True, p_lazy=0.02, p_rand=0.6, n_starting_states=3)</p></li>
+<li><p>MiniGridEmpty(size=10, make_reward_stochastic=True, p_lazy=0.1, p_rand=0.21, n_starting_states=3, optimal_distribution=(“beta”,(1.0, 0.11)), other_distribution=(“beta”,(1.0, 4.0)))</p></li>
+<li><p>MiniGridEmpty(size=14, make_reward_stochastic=True, p_lazy=0.02, p_rand=0.4, n_starting_states=3, optimal_distribution=(“beta”,(0.5, 0.11)), other_distribution=(“beta”,(1.5, 4.0)))</p></li>
+<li><p>MiniGridEmpty(size=14, make_reward_stochastic=True, p_lazy=0.05, p_rand=0.31, n_starting_states=3, optimal_distribution=(“beta”,(1.0, 0.11)), other_distribution=(“beta”,(1.0, 4.0)))</p></li>
+<li><p>MiniGridEmpty(size=14, make_reward_stochastic=True, p_lazy=0.1, p_rand=0.6, n_starting_states=3, optimal_distribution=(“beta”,(0.3, 0.11)), other_distribution=(“beta”,(2.0, 4.0)))</p></li>
+</ol>
+</div>
+<input id="ce73b762-c993-4ba9-90ca-c3c79cd94a1d" name="3e4c97b7-e2e8-4f4b-92c9-ae7752fd2ead" type="radio">
+</input><label class="sd-tab-label" for="ce73b762-c993-4ba9-90ca-c3c79cd94a1d">
+MiniGridRooms</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>MiniGridRooms(make_reward_stochastic=True, room_size=3, n_rooms=16, p_rand=0.1, p_lazy=0.4)</p></li>
+<li><p>MiniGridRooms(make_reward_stochastic=False, room_size=5, n_rooms=9, p_rand=0.3, p_lazy=0.4)</p></li>
+</ol>
+</div>
+<input id="16e0006a-dda7-49ca-bef7-4c21cb7d9243" name="3e4c97b7-e2e8-4f4b-92c9-ae7752fd2ead" type="radio">
+</input><label class="sd-tab-label" for="16e0006a-dda7-49ca-bef7-4c21cb7d9243">
+RiverSwim</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>RiverSwim(make_reward_stochastic=False, size=30, p_lazy=0.1, p_rand=0.2)</p></li>
+<li><p>RiverSwim(make_reward_stochastic=True, size=50, p_lazy=0.1, p_rand=0.1)</p></li>
+<li><p>RiverSwim(make_reward_stochastic=True, size=80, p_lazy=0.001, p_rand=0.2)</p></li>
+<li><p>RiverSwim(make_reward_stochastic=False, size=80, p_lazy=0.1, p_rand=0.01)</p></li>
+</ol>
+</div>
+<input id="592e911c-82df-4094-b54d-e8a2971ce9ed" name="3e4c97b7-e2e8-4f4b-92c9-ae7752fd2ead" type="radio">
+</input><label class="sd-tab-label" for="592e911c-82df-4094-b54d-e8a2971ce9ed">
+SimpleGrid</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>SimpleGrid(size=15, make_reward_stochastic=True, p_lazy=0.4, p_rand=0.4)</p></li>
+<li><p>SimpleGrid(size=10, make_reward_stochastic=False, p_lazy=0.2, sub_optimal_distribution=None, optimal_distribution=None, other_distribution=None, p_rand=0.01)</p></li>
+<li><p>SimpleGrid(size=20, make_reward_stochastic=False, p_lazy=0.1, sub_optimal_distribution=None, optimal_distribution=None, other_distribution=None, p_rand=0.1)</p></li>
+</ol>
+</div>
+<input id="6cb1b7e5-9af6-4a1d-881e-91a1d0ac7313" name="3e4c97b7-e2e8-4f4b-92c9-ae7752fd2ead" type="radio">
+</input><label class="sd-tab-label" for="6cb1b7e5-9af6-4a1d-881e-91a1d0ac7313">
+Taxi</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>Taxi(make_reward_stochastic=True, p_lazy=0.01, size=4, length=1, width=1, space=1, n_locations=3, p_rand=0.1, default_r=(“beta”,(0.8, 20.0)), successfully_delivery_r=(“beta”,(1.0, 0.1)), failure_delivery_r=(“beta”,(0.8, 50.0)))</p></li>
+</ol>
+</div>
+</div>
+</div>
+<h4> Continuous communicating </h4>
+<div class="full-width docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="148e522c-89a5-4284-b220-6f81cfe34ede" name="1f065b6c-f6fd-41c6-bcdc-ae27a8e49f61" type="radio">
+</input><label class="sd-tab-label" for="148e522c-89a5-4284-b220-6f81cfe34ede">
+DeepSea</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>DeepSea(size=40, p_rand=None, make_reward_stochastic=True)</p></li>
+<li><p>DeepSea(size=40, p_rand=None, make_reward_stochastic=False)</p></li>
+<li><p>DeepSea(size=35, p_rand=None, make_reward_stochastic=True)</p></li>
+</ol>
+</div>
+<input id="aef0db2f-62ee-4622-9560-273c4d339b16" name="1f065b6c-f6fd-41c6-bcdc-ae27a8e49f61" type="radio">
+</input><label class="sd-tab-label" for="aef0db2f-62ee-4622-9560-273c4d339b16">
+FrozenLake</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>FrozenLake(size=4, make_reward_stochastic=True, p_lazy=0.01, p_frozen=0.95, p_rand=None)</p></li>
+<li><p>FrozenLake(size=5, make_reward_stochastic=True, p_lazy=0.35, p_frozen=0.9, p_rand=None)</p></li>
+</ol>
+</div>
+<input id="b1da08a7-01b5-4f78-9a88-d155d9413e6a" name="1f065b6c-f6fd-41c6-bcdc-ae27a8e49f61" type="radio">
+</input><label class="sd-tab-label" for="b1da08a7-01b5-4f78-9a88-d155d9413e6a">
+MiniGridEmpty</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>MiniGridEmpty(size=12, make_reward_stochastic=True, p_lazy=0.25, p_rand=None, n_starting_states=3, optimal_distribution=(“beta”,(1.0, 0.11)), other_distribution=(“beta”,(1.0, 4.0)))</p></li>
+<li><p>MiniGridEmpty(size=12, make_reward_stochastic=False, p_lazy=0.3, p_rand=None, n_starting_states=3, optimal_distribution=None, other_distribution=None)</p></li>
+<li><p>MiniGridEmpty(size=8, make_reward_stochastic=False, p_lazy=0.3, p_rand=None, n_starting_states=3, optimal_distribution=None, other_distribution=None)</p></li>
+<li><p>MiniGridEmpty(size=8, make_reward_stochastic=True, p_lazy=0.7, p_rand=None, n_starting_states=3, optimal_distribution=(“beta”,(1.0, 0.11)), other_distribution=(“beta”,(1.0, 4.0)))</p></li>
+<li><p>MiniGridEmpty(size=12, make_reward_stochastic=True, p_lazy=0.7, p_rand=None, n_starting_states=3, optimal_distribution=(“beta”,(1.0, 0.11)), other_distribution=(“beta”,(1.0, 4.0)))</p></li>
+</ol>
+</div>
+<input id="8558333f-001c-42e0-b85f-99d172eb8aee" name="1f065b6c-f6fd-41c6-bcdc-ae27a8e49f61" type="radio">
+</input><label class="sd-tab-label" for="8558333f-001c-42e0-b85f-99d172eb8aee">
+MiniGridRooms</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>MiniGridRooms(make_reward_stochastic=True, room_size=5, n_rooms=9, p_rand=None, p_lazy=0.3)</p></li>
+<li><p>MiniGridRooms(make_reward_stochastic=True, room_size=3, n_rooms=9, p_rand=None, p_lazy=0.5)</p></li>
+<li><p>MiniGridRooms(make_reward_stochastic=True, room_size=5, n_rooms=9, p_rand=None, p_lazy=0.5)</p></li>
+</ol>
+</div>
+<input id="93ff045d-2dcb-4a6b-8445-2686ca1ad454" name="1f065b6c-f6fd-41c6-bcdc-ae27a8e49f61" type="radio">
+</input><label class="sd-tab-label" for="93ff045d-2dcb-4a6b-8445-2686ca1ad454">
+RiverSwim</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>RiverSwim(make_reward_stochastic=True, size=25, p_lazy=0.1, p_rand=None)</p></li>
+<li><p>RiverSwim(make_reward_stochastic=True, size=90, p_lazy=0.03, p_rand=None)</p></li>
+</ol>
+</div>
+<input id="2eeb0583-675a-4e36-b710-817a249b4f53" name="1f065b6c-f6fd-41c6-bcdc-ae27a8e49f61" type="radio">
+</input><label class="sd-tab-label" for="2eeb0583-675a-4e36-b710-817a249b4f53">
+SimpleGrid</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>SimpleGrid(size=15, make_reward_stochastic=True, p_lazy=0.2, p_rand=None, sub_optimal_distribution=(“beta”,(0.3, 49.0)), optimal_distribution=(“beta”,(2.0, 0.11)), other_distribution=(“beta”,(0.3, 4.0)))</p></li>
+<li><p>SimpleGrid(size=16, make_reward_stochastic=False, p_lazy=0.065, p_rand=None, sub_optimal_distribution=None, optimal_distribution=None, other_distribution=None)</p></li>
+<li><p>SimpleGrid(size=25, make_reward_stochastic=True, p_lazy=0.1, p_rand=None, sub_optimal_distribution=(“beta”,(0.3, 49.0)), optimal_distribution=(“beta”,(2.0, 0.11)), other_distribution=(“beta”,(0.3, 4.0)))</p></li>
+<li><p>SimpleGrid(size=25, make_reward_stochastic=False, p_lazy=0.3, p_rand=None, sub_optimal_distribution=None, optimal_distribution=None, other_distribution=None)</p></li>
+</ol>
+</div>
+<input id="87bd65a6-d204-427a-bbab-9839c73fe425" name="1f065b6c-f6fd-41c6-bcdc-ae27a8e49f61" type="radio">
+</input><label class="sd-tab-label" for="87bd65a6-d204-427a-bbab-9839c73fe425">
+Taxi</label><div class="sd-tab-content docutils">
+<ol class="simple">
+<li><p>Taxi(make_reward_stochastic=True, p_lazy=0.01, size=4, length=1, width=1, space=1, n_locations=3, p_rand=None, default_r=(“beta”,(0.7, 30.0)), successfully_delivery_r=(“beta”,(0.4, 0.1)), failure_delivery_r=(“beta”,(0.8, 50.0)))</p></li>
+</ol>
+</div>
+</div>
+</div>
+<h3> Instantiate the default benchmark </h3>
+<p>A benchmark in <span class="math notranslate nohighlight">\(\texttt{Colosseum}\)</span> can be instantiated using the <a class="reference external" href="../pdoc_files/colosseum/benchmark/benchmark.html#ColosseumBenchmark"><code class="docutils literal notranslate"><span class="pre">ColosseumBenchmark</span></code></a>
+class.
+A <code class="docutils literal notranslate"><span class="pre">ColosseumBenchmark</span></code> object contains the parameters of the MDP and an <a class="reference external" href="../pdoc_files/colosseum/experiment/config.html#ExperimentConfig"><code class="docutils literal notranslate"><span class="pre">ExperimentConfig</span></code></a>, which regulates the agent/MDP interactions.
+The default benchmark can be accesses through the <a class="reference external" href="../pdoc_files/colosseum/benchmark/benchmark.html#ColosseumDefaultBenchmark"><code class="docutils literal notranslate"><span class="pre">ColosseumDefaultBenchmark</span></code></a>
+enumeration, which also allow to retrieve the benchmark as shown below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Locally instantiate the episodic ergodic benchmark with folder name &quot;benchmark_er&quot;</span>
+<span class="n">instantiate_benchmark_folder</span><span class="p">(</span>
+    <span class="n">ColosseumDefaultBenchmark</span><span class="o">.</span><span class="n">EPISODIC_ERGODIC</span><span class="o">.</span><span class="n">get_benchmark</span><span class="p">(),</span> <span class="s2">&quot;benchmark_er&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Locally instantiate the episodic communicating benchmark with folder name &quot;benchmark_ec&quot;</span>
+<span class="n">instantiate_benchmark_folder</span><span class="p">(</span>
+    <span class="n">ColosseumDefaultBenchmark</span><span class="o">.</span><span class="n">EPISODIC_COMMUNICATING</span><span class="o">.</span><span class="n">get_benchmark</span><span class="p">(),</span> <span class="s2">&quot;benchmark_ec&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Locally instantiate the continuous ergodic benchmark with folder name &quot;benchmark_ce&quot;</span>
+<span class="n">instantiate_benchmark_folder</span><span class="p">(</span>
+    <span class="n">ColosseumDefaultBenchmark</span><span class="o">.</span><span class="n">CONTINUOUS_ERGODIC</span><span class="o">.</span><span class="n">get_benchmark</span><span class="p">(),</span> <span class="s2">&quot;benchmark_ce&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Locally instantiate the continuous communicating benchmark with folder name &quot;benchmark_cc&quot;</span>
+<span class="n">instantiate_benchmark_folder</span><span class="p">(</span>
+    <span class="n">ColosseumDefaultBenchmark</span><span class="o">.</span><span class="n">CONTINUOUS_COMMUNICATING</span><span class="o">.</span><span class="n">get_benchmark</span><span class="p">(),</span> <span class="s2">&quot;benchmark_cc&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Print the folder structure of the benchmark</span>
+<span class="k">for</span> <span class="n">bdir</span> <span class="ow">in</span> <span class="n">glob</span><span class="p">(</span><span class="s2">&quot;benchmark_*&quot;</span><span class="p">):</span>
+    <span class="n">seedir</span><span class="o">.</span><span class="n">seedir</span><span class="p">(</span><span class="n">bdir</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;emoji&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="c1"># Print the benchmark configurations</span>
+<span class="n">print_benchmark_configurations</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>📁 benchmark_er/
+├─📁 mdp_configs/
+│ ├─📄 MiniGridRoomsEpisodic.gin
+│ ├─📄 DeepSeaEpisodic.gin
+│ ├─📄 SimpleGridEpisodic.gin
+│ ├─📄 MiniGridEmptyEpisodic.gin
+│ ├─📄 TaxiEpisodic.gin
+│ ├─📄 RiverSwimEpisodic.gin
+│ └─📄 FrozenLakeEpisodic.gin
+└─📄 experiment_config.yml
+📁 benchmark_ec/
+├─📁 mdp_configs/
+│ ├─📄 MiniGridRoomsEpisodic.gin
+│ ├─📄 DeepSeaEpisodic.gin
+│ ├─📄 SimpleGridEpisodic.gin
+│ ├─📄 MiniGridEmptyEpisodic.gin
+│ ├─📄 TaxiEpisodic.gin
+│ ├─📄 RiverSwimEpisodic.gin
+│ └─📄 FrozenLakeEpisodic.gin
+└─📄 experiment_config.yml
+📁 benchmark_ce/
+├─📁 mdp_configs/
+│ ├─📄 MiniGridEmptyContinuous.gin
+│ ├─📄 TaxiContinuous.gin
+│ ├─📄 DeepSeaContinuous.gin
+│ ├─📄 MiniGridRoomsContinuous.gin
+│ ├─📄 RiverSwimContinuous.gin
+│ ├─📄 SimpleGridContinuous.gin
+│ └─📄 FrozenLakeContinuous.gin
+└─📄 experiment_config.yml
+📁 benchmark_cc/
+├─📁 mdp_configs/
+│ ├─📄 MiniGridEmptyContinuous.gin
+│ ├─📄 TaxiContinuous.gin
+│ ├─📄 DeepSeaContinuous.gin
+│ ├─📄 MiniGridRoomsContinuous.gin
+│ ├─📄 RiverSwimContinuous.gin
+│ ├─📄 SimpleGridContinuous.gin
+│ └─📄 FrozenLakeContinuous.gin
+└─📄 experiment_config.yml
+----------------------------------------------------------------------
+Default experiment configuration in the &#39;experiment_config.yml&#39; files.
+	n_seeds: 20
+	n_steps: 500000
+	max_interaction_time_s: 600
+	log_performance_indicators_every: 100
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">mdp_configs</span></code> folders for the different setting contain the Gin files with the configurations of the MDPs that were previously presented.
+The <code class="docutils literal notranslate"><span class="pre">experiment_config.yml</span></code> file contains the default <code class="docutils literal notranslate"><span class="pre">ExperimentConfig</span></code>.</p>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./mds"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="mdp-visual-representations.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Visualize Markov Decision Processes</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="benchmark-analysis.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Analyse Benchmarking Results</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Michelangelo Conserva<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

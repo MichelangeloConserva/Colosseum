@@ -1,0 +1,929 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Quickstart &#8212; The hitchhiker&#39;s guide to Colosseum</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/myfile.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"bR": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/colosseum_icon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Configure Colosseum" href="colosseum-configurations.html" />
+    <link rel="prev" title="Contributions" href="contributions.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-0RT6KZEQPZ"></script>
+<script>
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){ dataLayer.push(arguments); }
+                    gtag('js', new Date());
+                    gtag('config', 'G-0RT6KZEQPZ');
+                </script>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/colosseum_banner.svg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">The hitchhiker's guide to Colosseum</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    What is Colosseum?
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="manifesto.html">
+   Motivation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api-reference.html">
+   API Documentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="contributions.html">
+   Contributions
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Quickstart
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="colosseum-configurations.html">
+   Configure Colosseum
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="agent-performance-analysis.html">
+   Inspect Agents Performances
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-functionalities.html">
+   Inspect Markov Decision Processes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-visual-representations.html">
+   Visualize Markov Decision Processes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-introduction.html">
+   The Colosseum Benchmark
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-analysis.html">
+   Analyse Benchmarking Results
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-custom.html">
+   Create Custom Benchmarks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-running.html">
+   Benchmarking Agents
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hyperopt.html">
+   Hyperparameters Optimization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-scaling.html">
+   Scale Benchmarking to a Cluster
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hardness-analysis.html">
+   Empirical hardness analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="non-tabular.html">
+   Non-Tabular Benchmarking
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/MichelangeloConserva/Colosseum/main?urlpath=tree/docs/book_files/mds/quickstart.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum/issues/new?title=Issue%20on%20page%20%2Fmds/quickstart.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/mds/quickstart.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="../_sources/mds/quickstart.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Quickstart</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">#</a></h1>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+Necessary imports<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">gin</span>
+<span class="kn">import</span> <span class="nn">dm_env</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">tune</span>
+
+<span class="kn">from</span> <span class="nn">colosseum.agent.agents.episodic</span> <span class="kn">import</span> <span class="n">QLearningEpisodic</span>
+<span class="kn">from</span> <span class="nn">colosseum.analysis.plots</span> <span class="kn">import</span> <span class="n">agent_performances_per_mdp_plot</span>
+<span class="kn">from</span> <span class="nn">colosseum.benchmark</span> <span class="kn">import</span> <span class="n">ColosseumDefaultBenchmark</span>
+<span class="kn">from</span> <span class="nn">colosseum</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">colosseum.agent.actors</span> <span class="kn">import</span> <span class="n">BaseActor</span>
+<span class="kn">from</span> <span class="nn">colosseum.agent.agents.base</span> <span class="kn">import</span> <span class="n">BaseAgent</span>
+<span class="kn">from</span> <span class="nn">colosseum.agent.mdp_models.base</span> <span class="kn">import</span> <span class="n">BaseMDPModel</span>
+<span class="kn">from</span> <span class="nn">colosseum.benchmark.run</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">instantiate_and_get_exp_instances_from_agents_and_benchmarks_for_hyperopt</span><span class="p">,</span>
+    <span class="n">instantiate_and_get_exp_instances_from_agents_and_benchmarks</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">colosseum.dynamic_programming.utils</span> <span class="kn">import</span> <span class="n">get_policy_from_q_values</span>
+<span class="kn">from</span> <span class="nn">colosseum.emission_maps</span> <span class="kn">import</span> <span class="n">EmissionMap</span>
+<span class="kn">from</span> <span class="nn">colosseum.experiment.experiment_instances</span> <span class="kn">import</span> <span class="n">run_experiment_instances</span>
+<span class="kn">from</span> <span class="nn">colosseum.hyperopt</span> <span class="kn">import</span> <span class="n">SMALL_HYPEROPT_CONF</span>
+<span class="kn">from</span> <span class="nn">colosseum.hyperopt.selection</span> <span class="kn">import</span> <span class="n">retrieve_best_agent_config_from_hp_folder</span>
+<span class="kn">from</span> <span class="nn">colosseum.hyperopt.utils</span> <span class="kn">import</span> <span class="n">sample_agent_configs_and_benchmarks_for_hyperopt</span>
+<span class="kn">from</span> <span class="nn">colosseum.utils.acme.specs</span> <span class="kn">import</span> <span class="n">MDPSpec</span>
+
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span>
+
+<span class="n">config</span><span class="o">.</span><span class="n">set_experiments_folder</span><span class="p">(</span><span class="s2">&quot;tutorial&quot;</span><span class="p">,</span> <span class="s2">&quot;agent_run&quot;</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">set_hyperopt_folder</span><span class="p">(</span><span class="s2">&quot;tutorial&quot;</span><span class="p">,</span> <span class="s2">&quot;agent_run&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details></aside>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+<p>The core functionality of <span class="math notranslate nohighlight">\(\texttt{Colosseum}\)</span> is to provide a principled benchmarking procedure.
+The goal of this tutorial is to implement a simple q-learning agent and benchmark it.</p>
+<p><strong>The agent’s components</strong></p>
+<p>Although new agents can be implemented from the abstract <a class="reference external" href="../pdoc_files/colosseum/agent/agents/base.html#BaseAgent"><code class="docutils literal notranslate"><span class="pre">BaseAgent</span></code></a> class by implementing its abstract methods,
+it is possible to follow a module approach that allows to re-use components for different agents.</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+<a class="reference external" href="../pdoc_files/colosseum/agent/mdp_models/base.html#BaseMDPModel"><code class="docutils literal notranslate"><span class="pre">BaseMDPModel</span></code></a></div>
+<p class="sd-card-text">stores and updates the agent’s estimates, e.g. estimated transition probabilities or q-value estimates</p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+<a class="reference external" href="../pdoc_files/colosseum/agent/actors/base.html#BaseActor"><code class="docutils literal notranslate"><span class="pre">BaseActor</span></code></a></div>
+<p class="sd-card-text">maintains the policy for interacting with the environment.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>We’ll implement an MDP model for the q-values <code class="docutils literal notranslate"><span class="pre">QModel</span></code> and an Actor that implements the <span class="math notranslate nohighlight">\(\epsilon\)</span>-greedy policy <code class="docutils literal notranslate"><span class="pre">QValuesActor</span></code>.
+The implementation of the agent <code class="docutils literal notranslate"><span class="pre">QLearningAgent</span></code> will combine these components.</p>
+<h3> QModel </h3><div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">QModel</span><span class="p">(</span><span class="n">BaseMDPModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; An MDP model for q-value estimates. &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">mdp_specs</span><span class="p">:</span> <span class="s2">&quot;MDPSpec&quot;</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        seed : int</span>
+<span class="sd">           the seed controlling the random parts of the model.</span>
+<span class="sd">        mdp_specs : MDPSpec</span>
+<span class="sd">            the specification of the MDP properties, e.g. number of states.</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            the coefficient for the q-learning update rule.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">QModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">mdp_specs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        
+        <span class="c1"># Random initialization of the q value estimates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_states</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_actions</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        
+        <span class="c1"># State values initialised to the maximum reward</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_H</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_states</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">+</span> <span class="n">mdp_specs</span><span class="o">.</span><span class="n">rewards_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">step_update</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span> <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span> <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        updates the q value estimate using the q-learning update rule.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ts_t : dm_env.TimeStep</span>
+<span class="sd">          the object containing the information at time step t.</span>
+<span class="sd">        a_t : int</span>
+<span class="sd">          the action the agent has taken at time step t.</span>
+<span class="sd">        ts_tp1 : dm_env.TimeStep</span>
+<span class="sd">          the object containing the information at time step t + 1.</span>
+<span class="sd">        h : int</span>
+<span class="sd">          the in-episode time step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+        <span class="n">s_t</span> <span class="o">=</span> <span class="n">ts_t</span><span class="o">.</span><span class="n">observation</span>
+        <span class="n">s_tp1</span> <span class="o">=</span> <span class="n">ts_tp1</span><span class="o">.</span><span class="n">observation</span>
+
+        <span class="c1"># The q-learning update for all q value estimates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">[</span><span class="n">h</span><span class="p">,</span> <span class="n">s_t</span><span class="p">,</span> <span class="n">a_t</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">[</span><span class="n">h</span><span class="p">,</span> <span class="n">s_t</span><span class="p">,</span> <span class="n">a_t</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="n">ts_tp1</span><span class="o">.</span><span class="n">reward</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">[</span><span class="n">h</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">s_tp1</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">[</span><span class="n">h</span><span class="p">,</span> <span class="n">s_t</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">[</span><span class="n">h</span><span class="p">,</span> <span class="n">s_t</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<h3> QValuesActor </h3><div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">QValuesActor</span><span class="p">(</span><span class="n">BaseActor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The epsilon greedy actor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">mdp_specs</span><span class="p">:</span> <span class="n">MDPSpec</span><span class="p">,</span>
+        <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        seed : int</span>
+<span class="sd">            The random seed.</span>
+<span class="sd">        mdp_specs : MDPSpec</span>
+<span class="sd">            The full specification of the MDP.</span>
+<span class="sd">        epsilon : float</span>
+<span class="sd">            The probability of selecting an action at random. By default, the probability is set to 0.05.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">QValuesActor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">mdp_specs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_spec</span><span class="o">.</span><span class="n">observations</span><span class="o">.</span><span class="n">num_values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_spec</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">num_values</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_q_values</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">set_q_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Q</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        updates the q-values estimates of the component with the one given in input.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Q : np.ndarray</span>
+<span class="sd">            The q-values estimates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_q_values</span> <span class="o">=</span> <span class="n">Q</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_episodic</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span>
+
+    <span class="k">def</span> <span class="nf">select_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_q_values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;The q values have not been initialized.&quot;</span>
+
+        <span class="c1"># Epsilon exploration</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng_fast</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_epsilon</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng_fast</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_actions</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Retrieve the q-values</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_q_values</span><span class="p">[(</span><span class="n">time</span><span class="p">,</span> <span class="n">ts</span><span class="o">.</span><span class="n">observation</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episodic</span> <span class="k">else</span> <span class="n">ts</span><span class="o">.</span><span class="n">observation</span><span class="p">]</span>
+
+        <span class="c1"># Greedy selection</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span> <span class="o">==</span> <span class="n">q</span><span class="o">.</span><span class="n">max</span><span class="p">())[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<h3> QLearningAgent </h3><div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@gin</span><span class="o">.</span><span class="n">configurable</span>
+<span class="k">class</span> <span class="nc">QLearningAgent</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Agent class for the q-learning algorithm.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_episodic</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="c1"># Base parameters</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">mdp_specs</span><span class="p">:</span> <span class="s2">&quot;MDPSpec&quot;</span><span class="p">,</span>
+        <span class="n">optimization_horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="c1"># MDP model hyperparameters</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="c1"># Actor hyperparameters</span>
+        <span class="n">epsilon</span> <span class="p">:</span> <span class="nb">float</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        seed : int</span>
+<span class="sd">            The random seed.</span>
+<span class="sd">        mdp_specs : MDPSpec</span>
+<span class="sd">            The specification of the MDP properties, e.g. number of states.</span>
+<span class="sd">        optimization_horizon : int</span>
+<span class="sd">            The total number of interactions with the MDP.</span>
+<span class="sd">        alpha : float</span>
+<span class="sd">            The coefficient for the q-learning update rule.</span>
+<span class="sd">        epsilon : float</span>
+<span class="sd">            The probability of selecting an action at random. By default, the probability is set to 0.05.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="mi">1</span>
+        
+        <span class="c1"># The MDP model</span>
+        <span class="n">mdp_model</span> <span class="o">=</span> <span class="n">QModel</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">mdp_specs</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        
+        <span class="c1"># The Actor model</span>
+        <span class="n">actor</span> <span class="o">=</span> <span class="n">QValuesActor</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">mdp_specs</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">QLearningAgent</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">seed</span><span class="p">,</span> <span class="n">mdp_specs</span><span class="p">,</span> <span class="n">mdp_model</span><span class="p">,</span> <span class="n">actor</span><span class="p">,</span> <span class="n">optimization_horizon</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">current_optimal_stochastic_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The optimal policy the agent would use if no more training was allowed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Q_average</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="o">.</span><span class="n">Q</span>
+        <span class="k">return</span> <span class="n">get_policy_from_q_values</span><span class="p">(</span><span class="n">Q_average</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">before_start_interacting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Initialize the q-values in the actor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_actor</span><span class="o">.</span><span class="n">set_q_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="o">.</span><span class="n">Q</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">episode_end_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The Q-learning algorithm does not update anything at the end of the episode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">step_update</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+            <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span>
+            <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+            <span class="n">time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="p">):</span>
+        <span class="c1"># This automatically updates the MDP model</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">QLearningAgent</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">step_update</span><span class="p">(</span><span class="n">ts_t</span><span class="p">,</span> <span class="n">a_t</span><span class="p">,</span> <span class="n">ts_tp1</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+        
+        <span class="c1"># Update the q-estimates at every time step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_actor</span><span class="o">.</span><span class="n">set_q_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="o">.</span><span class="n">Q</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_hyperparameters_search_spaces</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">tune</span><span class="o">.</span><span class="n">sample</span><span class="o">.</span><span class="n">Domain</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            The sampling spaces associated with the hyperparameters of the algorithm.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;epsilon&quot;</span><span class="p">:</span> <span class="n">tune</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span>
+            <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="n">tune</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">produce_gin_file_from_parameters</span><span class="p">(</span>
+        <span class="n">hyperparameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">          The hyperparameter values in gin file format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;prms_</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">/QLearningAgent.</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">string</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_agent_instance_from_parameters</span><span class="p">(</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">optimization_horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">mdp_specs</span><span class="p">:</span> <span class="n">MDPSpec</span><span class="p">,</span>
+        <span class="n">hyperparameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BaseAgent&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            The agent instance corresponding to the hyperparameters and the MDP specification.</span>
+<span class="sd">            actions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">QLearningAgent</span><span class="p">(</span>
+            <span class="n">mdp_specs</span><span class="o">=</span><span class="n">mdp_specs</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+            <span class="n">optimization_horizon</span><span class="o">=</span><span class="n">optimization_horizon</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="n">hyperparameters</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">],</span>
+            <span class="n">epsilon</span><span class="o">=</span><span class="n">hyperparameters</span><span class="p">[</span><span class="s2">&quot;epsilon&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_emission_map_accepted</span><span class="p">(</span><span class="n">emission_map</span><span class="p">:</span> <span class="s2">&quot;EmissionMap&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">          True if the emission map in input is the tabular one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">emission_map</span><span class="o">.</span><span class="n">is_tabular</span>
+</pre></div>
+</div>
+</div>
+</div>
+<h3> Benchmarking procedure </h3>
+<p>We can now proceed to perform the benchmarking procedure, which is done in two steps: the hyperparameters optimization and the benchmarking.</p>
+<h4> Hyperparameters Optimization </h4>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+</aside>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Register the new agent class</span>
+<span class="n">config</span><span class="o">.</span><span class="n">register_agent_class</span><span class="p">(</span><span class="n">QLearningAgent</span><span class="p">)</span>
+
+<span class="c1"># Obtain the best hyperparameters</span>
+<span class="n">hyperopt_agents_and_benchmarks</span> <span class="o">=</span> <span class="n">sample_agent_configs_and_benchmarks_for_hyperopt</span><span class="p">([</span><span class="n">QLearningAgent</span><span class="p">],</span> <span class="n">SMALL_HYPEROPT_CONF</span><span class="p">)</span>
+<span class="n">hp_exp_instances</span> <span class="o">=</span> <span class="n">instantiate_and_get_exp_instances_from_agents_and_benchmarks_for_hyperopt</span><span class="p">(</span>
+    <span class="n">hyperopt_agents_and_benchmarks</span>
+<span class="p">)</span>
+<span class="n">run_experiment_instances</span><span class="p">(</span><span class="n">hp_exp_instances</span><span class="p">)</span>
+<span class="n">agents_hps</span> <span class="o">=</span> <span class="n">retrieve_best_agent_config_from_hp_folder</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">agents_hps</span><span class="p">[</span><span class="n">QLearningAgent</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>prms_0/QLearningAgent.epsilon = 0.0381
+prms_0/QLearningAgent.alpha = 0.3803
+</pre></div>
+</div>
+</div>
+</div>
+<h4> Benchmarking </h4>
+<p>We’ll benchmark the agent using the
+<a class="reference external" href="../pdoc_files/colosseum/benchmark/benchmark.html#ColosseumDefaultBenchmark.EPISODIC_QUICK_TEST"><code class="docutils literal notranslate"><span class="pre">EPISODIC_QUICK_TEST</span></code></a> benchmark,
+which is the default quick benchmark for the episodic setting, against the <a href="../pdoc_files/colosseum/agent/agents/episodic/q_learning.html#QLearningEpisodic"><code class="docutils literal notranslate"><span class="pre">QLearningEpisodic</span></code></a> implemented in the package.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add the QLearningEpisodic agent</span>
+<span class="c1"># When the hyperparameters of a Colosseum agent class are not specified then they are retrieved</span>
+<span class="c1"># from the package cache</span>
+<span class="n">agents_hps</span><span class="p">[</span><span class="n">QLearningEpisodic</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># Retrieve the EPISODIC_QUICK_TEST benchmark</span>
+<span class="n">benchmark</span> <span class="o">=</span> <span class="n">ColosseumDefaultBenchmark</span><span class="o">.</span><span class="n">EPISODIC_QUICK_TEST</span><span class="o">.</span><span class="n">get_benchmark</span><span class="p">()</span>
+<span class="n">agents_and_benchmarks</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="n">agents_hps</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="c1"># Instantiate the benchmark</span>
+<span class="n">benchmark</span> <span class="o">=</span> <span class="n">ColosseumDefaultBenchmark</span><span class="o">.</span><span class="n">EPISODIC_QUICK_TEST</span><span class="o">.</span><span class="n">get_benchmark</span><span class="p">()</span>
+
+<span class="c1"># Benchmarking the agents</span>
+<span class="n">experiment_instances</span> <span class="o">=</span> <span class="n">instantiate_and_get_exp_instances_from_agents_and_benchmarks</span><span class="p">(</span><span class="n">agents_and_benchmarks</span><span class="p">)</span>
+<span class="n">run_experiment_instances</span><span class="p">(</span><span class="n">experiment_instances</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The results of the benchmarking procedure are stored locally and can be visualized.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">agent_performances_per_mdp_plot</span><span class="p">(</span>
+    <span class="n">benchmark</span><span class="o">.</span><span class="n">get_experiments_benchmark_log_folder</span><span class="p">(),</span>
+    <span class="s2">&quot;cumulative_regret&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/quickstart_13_0.png" src="../_images/quickstart_13_0.png" />
+</div>
+</div>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./mds"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="contributions.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Contributions</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="colosseum-configurations.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Configure Colosseum</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Michelangelo Conserva<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

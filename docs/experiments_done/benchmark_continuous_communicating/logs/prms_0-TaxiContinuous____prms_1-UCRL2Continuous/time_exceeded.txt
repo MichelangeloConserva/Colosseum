@@ -1,5 +1,0 @@
-last training step at (52222) for experiments_done/benchmark_continuous_communicating/logs/prms_0-TaxiContinuous____prms_1-UCRL2Continuous/seed3_logs.csv
-last training step at (46932) for experiments_done/benchmark_continuous_communicating/logs/prms_0-TaxiContinuous____prms_1-UCRL2Continuous/seed2_logs.csv
-last training step at (163246) for experiments_done/benchmark_continuous_communicating/logs/prms_0-TaxiContinuous____prms_1-UCRL2Continuous/seed4_logs.csv
-last training step at (96746) for experiments_done/benchmark_continuous_communicating/logs/prms_0-TaxiContinuous____prms_1-UCRL2Continuous/seed1_logs.csv
-last training step at (196777) for experiments_done/benchmark_continuous_communicating/logs/prms_0-TaxiContinuous____prms_1-UCRL2Continuous/seed0_logs.csv

@@ -1,5 +1,0 @@
-last training step at (203401) for experiments_done/benchmark_continuous_communicating/logs/prms_1-DeepSeaContinuous____prms_1-UCRL2Continuous/seed1_logs.csv
-last training step at (212390) for experiments_done/benchmark_continuous_communicating/logs/prms_1-DeepSeaContinuous____prms_1-UCRL2Continuous/seed0_logs.csv
-last training step at (240002) for experiments_done/benchmark_continuous_communicating/logs/prms_1-DeepSeaContinuous____prms_1-UCRL2Continuous/seed3_logs.csv
-last training step at (133070) for experiments_done/benchmark_continuous_communicating/logs/prms_1-DeepSeaContinuous____prms_1-UCRL2Continuous/seed2_logs.csv
-last training step at (145597) for experiments_done/benchmark_continuous_communicating/logs/prms_1-DeepSeaContinuous____prms_1-UCRL2Continuous/seed4_logs.csv

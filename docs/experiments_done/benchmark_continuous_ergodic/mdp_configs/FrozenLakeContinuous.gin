@@ -1,6 +1,0 @@
-prms_0/FrozenLakeContinuous.size=5
-prms_0/FrozenLakeContinuous.make_reward_stochastic=True
-prms_0/FrozenLakeContinuous.randomize_actions=False
-prms_0/FrozenLakeContinuous.p_lazy=0.01
-prms_0/FrozenLakeContinuous.p_frozen=0.95
-prms_0/FrozenLakeContinuous.p_rand=0.05

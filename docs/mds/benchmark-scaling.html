@@ -1,0 +1,647 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Scale Benchmarking to a Cluster &#8212; The hitchhiker&#39;s guide to Colosseum</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/myfile.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"bR": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/colosseum_icon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Empirical hardness analysis" href="hardness-analysis.html" />
+    <link rel="prev" title="Hyperparameters Optimization" href="hyperopt.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-0RT6KZEQPZ"></script>
+<script>
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){ dataLayer.push(arguments); }
+                    gtag('js', new Date());
+                    gtag('config', 'G-0RT6KZEQPZ');
+                </script>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/colosseum_banner.svg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">The hitchhiker's guide to Colosseum</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    What is Colosseum?
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="manifesto.html">
+   Motivation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api-reference.html">
+   API Documentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="contributions.html">
+   Contributions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="quickstart.html">
+   Quickstart
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="colosseum-configurations.html">
+   Configure Colosseum
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="agent-performance-analysis.html">
+   Inspect Agents Performances
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-functionalities.html">
+   Inspect Markov Decision Processes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-visual-representations.html">
+   Visualize Markov Decision Processes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-introduction.html">
+   The Colosseum Benchmark
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-analysis.html">
+   Analyse Benchmarking Results
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-custom.html">
+   Create Custom Benchmarks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-running.html">
+   Benchmarking Agents
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hyperopt.html">
+   Hyperparameters Optimization
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Scale Benchmarking to a Cluster
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hardness-analysis.html">
+   Empirical hardness analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="non-tabular.html">
+   Non-Tabular Benchmarking
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/MichelangeloConserva/Colosseum/main?urlpath=tree/docs/book_files/mds/benchmark-scaling.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum/issues/new?title=Issue%20on%20page%20%2Fmds/benchmark-scaling.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/mds/benchmark-scaling.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="../_sources/mds/benchmark-scaling.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Scale Benchmarking to a Cluster</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="scale-benchmarking-to-a-cluster">
+<h1>Scale Benchmarking to a Cluster<a class="headerlink" href="#scale-benchmarking-to-a-cluster" title="Permalink to this headline">#</a></h1>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+Necessary imports<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">colosseum</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">colosseum.agent.agents.episodic</span> <span class="kn">import</span> <span class="n">QLearningEpisodic</span>
+<span class="kn">from</span> <span class="nn">colosseum.agent.agents.infinite_horizon</span> <span class="kn">import</span> <span class="n">QLearningContinuous</span>
+<span class="kn">from</span> <span class="nn">colosseum.benchmark</span> <span class="kn">import</span> <span class="n">ColosseumDefaultBenchmark</span>
+<span class="kn">from</span> <span class="nn">colosseum.benchmark.run</span> <span class="kn">import</span> <span class="n">instantiate_and_get_exp_instances_from_agents_and_benchmarks_for_hyperopt</span>
+<span class="kn">from</span> <span class="nn">colosseum.benchmark.run</span> <span class="kn">import</span> <span class="n">instantiate_and_get_exp_instances_from_agents_and_benchmarks</span>
+<span class="kn">from</span> <span class="nn">colosseum.experiment.experiment_instances</span> <span class="kn">import</span> <span class="n">save_instances_to_folder</span>
+<span class="kn">from</span> <span class="nn">colosseum.hyperopt</span> <span class="kn">import</span> <span class="n">SMALL_HYPEROPT_CONF</span>
+<span class="kn">from</span> <span class="nn">colosseum.hyperopt.selection</span> <span class="kn">import</span> <span class="n">retrieve_best_agent_config_from_hp_folder</span>
+<span class="kn">from</span> <span class="nn">colosseum.hyperopt.utils</span> <span class="kn">import</span> <span class="n">sample_agent_configs_and_benchmarks_for_hyperopt</span>
+
+<span class="c1"># Set an experiment name that briefly describes the aim of the experiments</span>
+<span class="n">experiments_folder</span> <span class="o">=</span> <span class="s2">&quot;experiments&quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;tabular&quot;</span>
+<span class="n">experiment_name</span> <span class="o">=</span> <span class="s2">&quot;tutorial&quot;</span>
+
+<span class="n">exp_instances_hpo_folder</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_hyperopt_folder</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;experiment_instances&quot;</span>
+
+<span class="n">config</span><span class="o">.</span><span class="n">set_experiments_folder</span><span class="p">(</span><span class="n">experiments_folder</span><span class="p">,</span> <span class="n">experiment_name</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">set_hyperopt_folder</span><span class="p">(</span><span class="n">experiments_folder</span><span class="p">,</span> <span class="n">experiment_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details></aside>
+<div class="cell tag_remove-output tag_remove-input docutils container">
+</div>
+<p>Scaling up <span class="math notranslate nohighlight">\(\texttt{Colosseum}\)</span> benchmarking to run on a cluster is particularly straightforward.
+Each agent/MDP interaction configuration can be stored as a <a class="reference external" href="../pdoc_files/colosseum/experiment/experiment_instance.html#ExperimentInstance"><code class="docutils literal notranslate"><span class="pre">ExperimentInstance</span></code></a> object, which can be easily pickled, uploaded to the cluster server, and run.
+To properly execute the instances, it is also necessary to upload the benchmark folders containing the gin configurations to the cluster as shown below.</p>
+<p><strong>Cluster jobs</strong><br />
+The main task of the cluster jobs is to run the experiment instances using the following functions.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="../pdoc_files/colosseum/experiment/experiment_instances.html#run_experiment_instance"><code class="docutils literal notranslate"><span class="pre">run_experiment_instance</span></code></a> takes as input a <code class="docutils literal notranslate"><span class="pre">ExperimentInstance</span></code> object or a string containing a path to a file of a pickled <code class="docutils literal notranslate"><span class="pre">ExperimentInstance</span></code>object, and runs the corresponding agent/MDP interaction.</p></li>
+<li><p><a class="reference external" href="../pdoc_files/colosseum/experiment/experiment_instances.html#run_experiment_instances"><code class="docutils literal notranslate"><span class="pre">run_experiment_instances</span></code></a> takes as input a list of <code class="docutils literal notranslate"><span class="pre">ExperimentInstance</span></code> or a list of strings containing paths to the pickled <code class="docutils literal notranslate"><span class="pre">ExperimentInstance</span></code> objects. This function allows to group and to run multiples experiment instances using a single core or multiple cores depending on whether the multiprocessing is enabled or not.</p></li>
+</ul>
+<h4> Step 1: Hyperparameters optimization </h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Assume we want to benchmark the following agent classes</span>
+<span class="n">agent_cls</span> <span class="o">=</span> <span class="p">[</span><span class="n">QLearningContinuous</span><span class="p">,</span> <span class="n">QLearningEpisodic</span><span class="p">]</span>
+
+<span class="c1"># Obtain the MDP configuration files and instantiate them locally</span>
+<span class="n">hyperopt_benchmarks</span> <span class="o">=</span> <span class="n">sample_agent_configs_and_benchmarks_for_hyperopt</span><span class="p">(</span><span class="n">agent_cls</span><span class="p">,</span> <span class="n">SMALL_HYPEROPT_CONF</span><span class="p">)</span>
+
+<span class="c1"># Create the corresponding ExperimentInstance objects</span>
+<span class="n">hp_exp_instances</span> <span class="o">=</span> <span class="n">instantiate_and_get_exp_instances_from_agents_and_benchmarks_for_hyperopt</span><span class="p">(</span>
+    <span class="n">hyperopt_benchmarks</span>
+<span class="p">)</span>
+
+<span class="c1"># Pickle the experiment instances</span>
+<span class="n">exp_instance_paths</span> <span class="o">=</span> <span class="n">save_instances_to_folder</span><span class="p">(</span><span class="n">hp_exp_instances</span><span class="p">,</span> <span class="n">exp_instances_hpo_folder</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We have now instantiated locally all the files we need to run the hyperparameters optimization procedure: the agents gin configurations, the MDPs gin configurations, and the pickled ExperimentInstances.
+Note that, to simplify the entire procedure, it is important that the logging files are downloaded in the folders that were previously created when instantiating the agents and MDPs gin configuration files.</p>
+<p>A suggestion of how to upload/download the necessary directories to the cluster server is reported below,
+where <code class="docutils literal notranslate"><span class="pre">upload_folder</span></code> recursively copies a folder to the same path in the cluster and
+<code class="docutils literal notranslate"><span class="pre">download_folder</span></code> recursively downloads a folder from the cluster to the same path in your local machine.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Upload</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">hyperopt_benchmarks</span><span class="p">:</span>
+    <span class="n">upload_folder</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">get_hyperopt_benchmark_log_folder</span><span class="p">())</span>
+<span class="n">upload_folder</span><span class="p">(</span><span class="n">exp_instances_hpo_folder</span><span class="p">)</span>
+
+<span class="c1"># Let the cluster jobs run</span>
+
+<span class="c1"># Download the results</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">hyperopt_benchmarks</span><span class="p">:</span>
+    <span class="n">download_folder</span><span class="p">(</span><span class="n">cluster_ssh_path</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">get_hyperopt_benchmark_log_folder</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>After the logging files have been downloaded and are available locally, we can proceed to the hyperparameters selection, which, by default, minimises the average normalized cumulative regret.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Obtain the best hyperparameters given the performances stored in the loggings</span>
+<span class="n">agents_configs</span> <span class="o">=</span> <span class="n">retrieve_best_agent_config_from_hp_folder</span><span class="p">(</span><span class="n">agent_cls</span><span class="p">)</span>
+</pre></div>
+</div>
+<h4> Step 2: Agents benchmarking </h4>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can substitute the default benchmark with custom benchmarks here (see <a class="reference internal" href="benchmark-custom.html"><span class="doc std std-doc">Create Custom Bechmark tutorial</span></a>).</p>
+</div>
+</aside>
+<p>The first step of the <span class="math notranslate nohighlight">\(\texttt{Colosseum}\)</span> benchmarking procedure is completed, we now proceed to benchmark the best agent configurations on the default benchmark.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Store the episodic and continuous agents configs separately.</span>
+<span class="n">agents_configs_episodic</span> <span class="o">=</span> <span class="p">{</span><span class="n">cl</span> <span class="p">:</span> <span class="n">agents_configs</span><span class="p">[</span><span class="n">cl</span><span class="p">]</span> <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="n">agents_configs</span> <span class="k">if</span> <span class="n">cl</span><span class="o">.</span><span class="n">is_episodic</span><span class="p">()}</span>
+<span class="n">agents_configs_continuous</span> <span class="o">=</span> <span class="p">{</span><span class="n">cl</span> <span class="p">:</span> <span class="n">agents_configs</span><span class="p">[</span><span class="n">cl</span><span class="p">]</span> <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="n">agents_configs</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">cl</span><span class="o">.</span><span class="n">is_episodic</span><span class="p">()}</span>
+
+<span class="c1"># Instantiate the benchmark for the different settings</span>
+<span class="n">b_cc</span> <span class="o">=</span> <span class="n">ColosseumDefaultBenchmark</span><span class="o">.</span><span class="n">CONTINUOUS_COMMUNICATING</span><span class="o">.</span><span class="n">get_benchmark</span><span class="p">()</span>
+<span class="n">b_ce</span> <span class="o">=</span> <span class="n">ColosseumDefaultBenchmark</span><span class="o">.</span><span class="n">CONTINUOUS_ERGODIC</span><span class="o">.</span><span class="n">get_benchmark</span><span class="p">()</span>
+<span class="n">b_ec</span> <span class="o">=</span> <span class="n">ColosseumDefaultBenchmark</span><span class="o">.</span><span class="n">EPISODIC_COMMUNICATING</span><span class="o">.</span><span class="n">get_benchmark</span><span class="p">()</span>
+<span class="n">b_ee</span> <span class="o">=</span> <span class="n">ColosseumDefaultBenchmark</span><span class="o">.</span><span class="n">EPISODIC_ERGODIC</span><span class="o">.</span><span class="n">get_benchmark</span><span class="p">()</span>
+
+<span class="c1"># Prepare the input for the ExperimentInstance creator function</span>
+<span class="n">agents_and_benchmarks</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="n">agents_configs_continuous</span><span class="p">,</span> <span class="n">b_cc</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">agents_configs_continuous</span><span class="p">,</span> <span class="n">b_ce</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">agents_configs_episodic</span><span class="p">,</span> <span class="n">b_ec</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">agents_configs_episodic</span><span class="p">,</span> <span class="n">b_ee</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># Instantiate the experiment instances (note the different function compared to the hyperoptimzation procedure)</span>
+<span class="n">experiment_instances</span> <span class="o">=</span> <span class="n">instantiate_and_get_exp_instances_from_agents_and_benchmarks</span><span class="p">(</span><span class="n">agents_and_benchmarks</span><span class="p">)</span>
+<span class="n">experiment_instances_paths</span> <span class="o">=</span> <span class="n">save_instances_to_folder</span><span class="p">(</span>
+    <span class="n">experiment_instances</span><span class="p">,</span> <span class="n">exp_instances_bench_folder</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Uploading and running the instances to the cluster should be done in the same way as we did for the hyperparameters optimization procedure.
+Note the different function used to obtain the folder of the benchmark.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">agents_and_benchmarks</span><span class="p">:</span>
+    <span class="n">upload_folder</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">get_experiments_benchmark_log_folder</span><span class="p">())</span>
+<span class="n">upload_folder</span><span class="p">(</span><span class="n">exp_instances_bench_folder</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>After downloading the results of the benchmarking procedure, you can proceed to analyse the results as explained in the
+<a class="reference internal" href="benchmark-analysis.html"><span class="doc std std-doc">Analyse Benchmarking Results tutorial</span></a>.</p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./mds"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="hyperopt.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Hyperparameters Optimization</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="hardness-analysis.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Empirical hardness analysis</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Michelangelo Conserva<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

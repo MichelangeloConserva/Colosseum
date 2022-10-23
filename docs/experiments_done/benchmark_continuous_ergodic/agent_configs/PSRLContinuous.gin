@@ -1,7 +1,0 @@
-from colosseum.agent.mdp_models import bayesian_models
-prms_0/PSRLContinuous.reward_prior_model = %bayesian_models.RewardsConjugateModel.N_NIG
-prms_0/PSRLContinuous.rewards_prior_prms = [0.23589883401606418, 1, 1, 1]
-prms_0/PSRLContinuous.psi_weight = 0.016737988780906453
-prms_0/PSRLContinuous.omega_weight = 0.1104641036501887
-prms_0/PSRLContinuous.kappa_weight = 2.694052439968039
-prms_0/PSRLContinuous.eta_weight = 1.3826913305347895e-07

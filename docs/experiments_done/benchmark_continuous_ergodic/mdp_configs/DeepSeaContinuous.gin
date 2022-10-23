@@ -1,4 +1,0 @@
-prms_0/DeepSeaContinuous.size=20
-prms_0/DeepSeaContinuous.p_rand=0.1
-prms_0/DeepSeaContinuous.make_reward_stochastic=False
-prms_0/DeepSeaContinuous.randomize_actions=False

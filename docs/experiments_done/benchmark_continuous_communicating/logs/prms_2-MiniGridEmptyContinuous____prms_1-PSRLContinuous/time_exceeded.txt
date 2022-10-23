@@ -1,4 +1,0 @@
-last training step at (186) for experiments_done/benchmark_continuous_communicating/logs/prms_2-MiniGridEmptyContinuous____prms_1-PSRLContinuous/seed3_logs.csv
-last training step at (139) for experiments_done/benchmark_continuous_communicating/logs/prms_2-MiniGridEmptyContinuous____prms_1-PSRLContinuous/seed2_logs.csv
-last training step at (214) for experiments_done/benchmark_continuous_communicating/logs/prms_2-MiniGridEmptyContinuous____prms_1-PSRLContinuous/seed1_logs.csv
-last training step at (129) for experiments_done/benchmark_continuous_communicating/logs/prms_2-MiniGridEmptyContinuous____prms_1-PSRLContinuous/seed4_logs.csv

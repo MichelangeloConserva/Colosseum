@@ -1,4 +1,0 @@
-last training step at (14) for experiments_done/benchmark_continuous_ergodic/logs/prms_2-SimpleGridContinuous____prms_1-PSRLContinuous/seed2_logs.csv
-last training step at (13) for experiments_done/benchmark_continuous_ergodic/logs/prms_2-SimpleGridContinuous____prms_1-PSRLContinuous/seed1_logs.csv
-last training step at (11) for experiments_done/benchmark_continuous_ergodic/logs/prms_2-SimpleGridContinuous____prms_1-PSRLContinuous/seed4_logs.csv
-last training step at (14) for experiments_done/benchmark_continuous_ergodic/logs/prms_2-SimpleGridContinuous____prms_1-PSRLContinuous/seed0_logs.csv

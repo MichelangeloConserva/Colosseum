@@ -1,0 +1,2742 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Inspect Markov Decision Processes &#8212; The hitchhiker&#39;s guide to Colosseum</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/myfile.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"bR": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/colosseum_icon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Visualize Markov Decision Processes" href="mdp-visual-representations.html" />
+    <link rel="prev" title="Inspect Agents Performances" href="agent-performance-analysis.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-0RT6KZEQPZ"></script>
+<script>
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){ dataLayer.push(arguments); }
+                    gtag('js', new Date());
+                    gtag('config', 'G-0RT6KZEQPZ');
+                </script>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/colosseum_banner.svg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">The hitchhiker's guide to Colosseum</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    What is Colosseum?
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="manifesto.html">
+   Motivation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api-reference.html">
+   API Documentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="contributions.html">
+   Contributions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="quickstart.html">
+   Quickstart
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="colosseum-configurations.html">
+   Configure Colosseum
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="agent-performance-analysis.html">
+   Inspect Agents Performances
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Inspect Markov Decision Processes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-visual-representations.html">
+   Visualize Markov Decision Processes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-introduction.html">
+   The Colosseum Benchmark
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-analysis.html">
+   Analyse Benchmarking Results
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-custom.html">
+   Create Custom Benchmarks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-running.html">
+   Benchmarking Agents
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hyperopt.html">
+   Hyperparameters Optimization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-scaling.html">
+   Scale Benchmarking to a Cluster
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hardness-analysis.html">
+   Empirical hardness analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="non-tabular.html">
+   Non-Tabular Benchmarking
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/MichelangeloConserva/Colosseum/main?urlpath=tree/docs/book_files/mds/mdp-functionalities.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum/issues/new?title=Issue%20on%20page%20%2Fmds/mdp-functionalities.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/mds/mdp-functionalities.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="../_sources/mds/mdp-functionalities.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Inspect Markov Decision Processes</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="inspect-markov-decision-processes">
+<h1>Inspect Markov Decision Processes<a class="headerlink" href="#inspect-markov-decision-processes" title="Permalink to this headline">#</a></h1>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+Necessary imports<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">myst_nb</span> <span class="kn">import</span> <span class="n">glue</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">beta</span>
+
+<span class="kn">from</span> <span class="nn">colosseum.mdp.custom_mdp</span> <span class="kn">import</span> <span class="n">CustomEpisodic</span>
+<span class="kn">from</span> <span class="nn">colosseum.mdp.river_swim</span> <span class="kn">import</span> <span class="n">RiverSwimEpisodic</span>
+<span class="kn">from</span> <span class="nn">colosseum.mdp.simple_grid</span> <span class="kn">import</span> <span class="n">SimpleGridContinuous</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details></aside>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+<p>The <a class="reference external" href="../pdoc_files/colosseum/mdp/base.html#BaseMDP"><code class="docutils literal notranslate"><span class="pre">BaseMDP</span></code></a> class efficiently computes important properties of the MDP.
+This tutorial introduces some of them.
+For the sake of the tutorial, we focus on the continuous setting.
+Note however that a continuous MDP form such that the state space includes the in-episode time is available for every episodic MDP.
+The API documentation of the <a class="reference external" href="../pdoc_files/colosseum/mdp/base_finite.html#EpisodicMDP"><code class="docutils literal notranslate"><span class="pre">EpisodicMDP</span></code></a> class reports and describes the episodic-setting specific properties and functions.</p>
+<p><strong>Custom MDP</strong><br />
+Before diving into the tutorial, we introduce the <a class="reference external" href="../pdoc_files/colosseum/mdp/custom_mdp.html#CustomMDP"><code class="docutils literal notranslate"><span class="pre">CustomMDP</span></code></a> class, which can be used to instantiate an MDP from a transition kernel, a matrix of deterministic rewards (or a dictionary of random variables for stochastic rewards), and a starting state distribution.
+Note that all the properties available for the <code class="docutils literal notranslate"><span class="pre">BaseMDP</span></code> class are also available for <code class="docutils literal notranslate"><span class="pre">CustomMDP</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_states</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">n_actions</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="c1">### Transition kernel</span>
+<span class="n">T</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span>
+      <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="c1"># next state distribtion for selecting action 0 in state 0, i.e. T(0, 0)</span>
+      <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="c1"># next state distribtion for selecting action 1 in state 0, i.e. T(0, 1)</span>
+  <span class="p">],</span>
+  <span class="p">[</span>
+      <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="c1"># next state distribution for selecting action 0 in state 1, i.e. T(1, 0)</span>
+      <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="c1"># next state distribution for selecting action 1 in state 1, i.e. T(1, 1)</span>
+  <span class="p">],</span>
+  <span class="p">[</span>
+      <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="c1"># next state distribution for selecting action 0 in state 2, i.e. T(2, 0)</span>
+      <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="c1"># next state distribution for selecting action 1 in state 2, i.e. T(2, 1)</span>
+  <span class="p">],</span>
+  <span class="p">[</span>
+      <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="c1"># next state distribution for selecting action 0 in state 3, i.e. T(3, 0)</span>
+      <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span> <span class="c1"># next state distribution for selecting action 1 in state 3, i.e. T(3, 1)</span>
+  <span class="p">],</span>
+<span class="p">]</span>
+
+<span class="c1">### Reward distributions</span>
+
+<span class="c1"># defined as a dictionary of scipy distributions</span>
+<span class="n">R</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span> <span class="n">beta</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+  <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_states</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_actions</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="c1"># or as a matrix deterministic rewards</span>
+<span class="c1"># R = np.random.randn(n_states, n_actions)</span>
+
+<span class="c1"># Starting state distribution that assigns equal probability to state 0 and state 1</span>
+<span class="n">T_0</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+
+<span class="c1"># Instantiate the CustomEpisodic object</span>
+<span class="n">mdp_custom</span> <span class="o">=</span> <span class="n">CustomEpisodic</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">T_0</span><span class="o">=</span><span class="n">T_0</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>A SimpleGrid MDP is taken as a running example for the tutorial.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdp</span> <span class="o">=</span> <span class="n">SimpleGridContinuous</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">p_rand</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">n_starting_states</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In addition to the optimal policy, the random uniform policy, and the worst policy, which are pre-computed by the package, we’ll compute the MDP properties for a custom policy.</p>
+<p>A continuous policy is an array of dimensionality number of states by number of actions such that each row defines a probability distribution over actions, whereas an episodic policy is an array of dimensionality episode length by number of states by number of action such that each in-episode time and state are associated with a probability distribution over actions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pi</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">_rng</span><span class="o">.</span><span class="n">dirichlet</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">mdp</span><span class="o">.</span><span class="n">n_actions</span><span class="p">,</span> <span class="n">mdp</span><span class="o">.</span><span class="n">n_states</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Continuous policy shape: &quot;</span><span class="p">,</span> <span class="n">pi</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pi</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Continuous policy shape:  (16, 5)
+[[0.5  0.   0.11 0.34 0.05]
+ [0.28 0.02 0.09 0.01 0.6 ]
+ [0.06 0.09 0.58 0.27 0.01]
+ [0.04 0.19 0.17 0.05 0.54]
+ [0.22 0.18 0.21 0.31 0.09]
+ [0.1  0.05 0.04 0.56 0.26]
+ [0.36 0.14 0.16 0.03 0.31]
+ [0.17 0.53 0.21 0.09 0.01]
+ [0.01 0.23 0.12 0.16 0.47]
+ [0.74 0.04 0.17 0.05 0.  ]
+ [0.29 0.08 0.1  0.18 0.36]
+ [0.19 0.4  0.06 0.31 0.04]
+ [0.35 0.13 0.03 0.34 0.15]
+ [0.19 0.16 0.48 0.02 0.15]
+ [0.19 0.16 0.22 0.11 0.31]
+ [0.47 0.03 0.17 0.03 0.3 ]]
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>MDP communication class</strong><br />
+The <a class="reference external" href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.communication_class"><code class="docutils literal notranslate"><span class="pre">communication_class</span></code></a> property returns an <a class="reference external" href="../pdoc_files/colosseum/mdp/utils/communication_class.html#MDPCommunicationClass"><code class="docutils literal notranslate"><span class="pre">MDPCommunicationClass</span></code></a> object, which is a Python enumeration for the possible MDP communication classes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdp</span><span class="o">.</span><span class="n">communication_class</span><span class="o">.</span><span class="n">name</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;ERGODIC&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Starting states distribution</strong><br />
+The <a class="reference external" href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.starting_state_distribution"><code class="docutils literal notranslate"><span class="pre">starting_state_distribution</span></code></a> property returns a Numpy array containing the probability of the states being sampled as starting states.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ssd</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">starting_state_distribution</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting state distribution&quot;</span><span class="p">,</span> <span class="n">ssd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Starting state distribution [0.33 0.33 0.   0.   0.   0.   0.   0.33 0.   0.   0.   0.   0.   0.
+ 0.   0.  ]
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Expected rewards matrix</strong><br />
+The
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.R"><code class="docutils literal notranslate"><span class="pre">R</span></code></a>
+property returns a number of states by number of actions Numpy array such that to each state <span class="math notranslate nohighlight">\(s\)</span> and action <span class="math notranslate nohighlight">\(a\)</span> is associated with the expected reward following selecting <span class="math notranslate nohighlight">\(a\)</span> from <span class="math notranslate nohighlight">\(s\)</span>.
+We can visualise the matrix as a Pandas DataFrame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">R</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">mdp</span><span class="o">.</span><span class="n">n_states</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;State&quot;</span><span class="p">),</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">mdp</span><span class="o">.</span><span class="n">get_action_class</span><span class="p">()),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Action&quot;</span><span class="p">),</span>
+<span class="p">)</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s1">&#39;style=&quot;font-size: 10px&quot;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style type="text/css">
+</style>
+<table id="T_fc4f3" style="font-size: 10px">
+  <thead>
+    <tr>
+      <th class="index_name level0" >Action</th>
+      <th id="T_fc4f3_level0_col0" class="col_heading level0 col0" >UP</th>
+      <th id="T_fc4f3_level0_col1" class="col_heading level0 col1" >RIGHT</th>
+      <th id="T_fc4f3_level0_col2" class="col_heading level0 col2" >DOWN</th>
+      <th id="T_fc4f3_level0_col3" class="col_heading level0 col3" >LEFT</th>
+      <th id="T_fc4f3_level0_col4" class="col_heading level0 col4" >NO_OP</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >State</th>
+      <th class="blank col0" >&nbsp;</th>
+      <th class="blank col1" >&nbsp;</th>
+      <th class="blank col2" >&nbsp;</th>
+      <th class="blank col3" >&nbsp;</th>
+      <th class="blank col4" >&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_fc4f3_level0_row0" class="row_heading level0 row0" >0</th>
+      <td id="T_fc4f3_row0_col0" class="data row0 col0" >0.500000</td>
+      <td id="T_fc4f3_row0_col1" class="data row0 col1" >0.500000</td>
+      <td id="T_fc4f3_row0_col2" class="data row0 col2" >0.500000</td>
+      <td id="T_fc4f3_row0_col3" class="data row0 col3" >0.500000</td>
+      <td id="T_fc4f3_row0_col4" class="data row0 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row1" class="row_heading level0 row1" >1</th>
+      <td id="T_fc4f3_row1_col0" class="data row1 col0" >0.500000</td>
+      <td id="T_fc4f3_row1_col1" class="data row1 col1" >0.500000</td>
+      <td id="T_fc4f3_row1_col2" class="data row1 col2" >0.500000</td>
+      <td id="T_fc4f3_row1_col3" class="data row1 col3" >0.500000</td>
+      <td id="T_fc4f3_row1_col4" class="data row1 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row2" class="row_heading level0 row2" >2</th>
+      <td id="T_fc4f3_row2_col0" class="data row2 col0" >0.500000</td>
+      <td id="T_fc4f3_row2_col1" class="data row2 col1" >0.500000</td>
+      <td id="T_fc4f3_row2_col2" class="data row2 col2" >0.500000</td>
+      <td id="T_fc4f3_row2_col3" class="data row2 col3" >0.500000</td>
+      <td id="T_fc4f3_row2_col4" class="data row2 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row3" class="row_heading level0 row3" >3</th>
+      <td id="T_fc4f3_row3_col0" class="data row3 col0" >0.500000</td>
+      <td id="T_fc4f3_row3_col1" class="data row3 col1" >0.500000</td>
+      <td id="T_fc4f3_row3_col2" class="data row3 col2" >0.500000</td>
+      <td id="T_fc4f3_row3_col3" class="data row3 col3" >0.500000</td>
+      <td id="T_fc4f3_row3_col4" class="data row3 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row4" class="row_heading level0 row4" >4</th>
+      <td id="T_fc4f3_row4_col0" class="data row4 col0" >0.500000</td>
+      <td id="T_fc4f3_row4_col1" class="data row4 col1" >0.500000</td>
+      <td id="T_fc4f3_row4_col2" class="data row4 col2" >0.500000</td>
+      <td id="T_fc4f3_row4_col3" class="data row4 col3" >0.500000</td>
+      <td id="T_fc4f3_row4_col4" class="data row4 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row5" class="row_heading level0 row5" >5</th>
+      <td id="T_fc4f3_row5_col0" class="data row5 col0" >0.500000</td>
+      <td id="T_fc4f3_row5_col1" class="data row5 col1" >0.500000</td>
+      <td id="T_fc4f3_row5_col2" class="data row5 col2" >0.500000</td>
+      <td id="T_fc4f3_row5_col3" class="data row5 col3" >0.500000</td>
+      <td id="T_fc4f3_row5_col4" class="data row5 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row6" class="row_heading level0 row6" >6</th>
+      <td id="T_fc4f3_row6_col0" class="data row6 col0" >0.500000</td>
+      <td id="T_fc4f3_row6_col1" class="data row6 col1" >0.500000</td>
+      <td id="T_fc4f3_row6_col2" class="data row6 col2" >0.500000</td>
+      <td id="T_fc4f3_row6_col3" class="data row6 col3" >0.500000</td>
+      <td id="T_fc4f3_row6_col4" class="data row6 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row7" class="row_heading level0 row7" >7</th>
+      <td id="T_fc4f3_row7_col0" class="data row7 col0" >0.500000</td>
+      <td id="T_fc4f3_row7_col1" class="data row7 col1" >0.500000</td>
+      <td id="T_fc4f3_row7_col2" class="data row7 col2" >0.500000</td>
+      <td id="T_fc4f3_row7_col3" class="data row7 col3" >0.500000</td>
+      <td id="T_fc4f3_row7_col4" class="data row7 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row8" class="row_heading level0 row8" >8</th>
+      <td id="T_fc4f3_row8_col0" class="data row8 col0" >0.000000</td>
+      <td id="T_fc4f3_row8_col1" class="data row8 col1" >0.500000</td>
+      <td id="T_fc4f3_row8_col2" class="data row8 col2" >0.000000</td>
+      <td id="T_fc4f3_row8_col3" class="data row8 col3" >0.500000</td>
+      <td id="T_fc4f3_row8_col4" class="data row8 col4" >0.000000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row9" class="row_heading level0 row9" >9</th>
+      <td id="T_fc4f3_row9_col0" class="data row9 col0" >0.500000</td>
+      <td id="T_fc4f3_row9_col1" class="data row9 col1" >0.500000</td>
+      <td id="T_fc4f3_row9_col2" class="data row9 col2" >0.500000</td>
+      <td id="T_fc4f3_row9_col3" class="data row9 col3" >0.500000</td>
+      <td id="T_fc4f3_row9_col4" class="data row9 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row10" class="row_heading level0 row10" >10</th>
+      <td id="T_fc4f3_row10_col0" class="data row10 col0" >1.000000</td>
+      <td id="T_fc4f3_row10_col1" class="data row10 col1" >0.500000</td>
+      <td id="T_fc4f3_row10_col2" class="data row10 col2" >1.000000</td>
+      <td id="T_fc4f3_row10_col3" class="data row10 col3" >1.000000</td>
+      <td id="T_fc4f3_row10_col4" class="data row10 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row11" class="row_heading level0 row11" >11</th>
+      <td id="T_fc4f3_row11_col0" class="data row11 col0" >0.500000</td>
+      <td id="T_fc4f3_row11_col1" class="data row11 col1" >0.500000</td>
+      <td id="T_fc4f3_row11_col2" class="data row11 col2" >0.500000</td>
+      <td id="T_fc4f3_row11_col3" class="data row11 col3" >0.500000</td>
+      <td id="T_fc4f3_row11_col4" class="data row11 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row12" class="row_heading level0 row12" >12</th>
+      <td id="T_fc4f3_row12_col0" class="data row12 col0" >0.500000</td>
+      <td id="T_fc4f3_row12_col1" class="data row12 col1" >0.000000</td>
+      <td id="T_fc4f3_row12_col2" class="data row12 col2" >0.500000</td>
+      <td id="T_fc4f3_row12_col3" class="data row12 col3" >0.000000</td>
+      <td id="T_fc4f3_row12_col4" class="data row12 col4" >0.000000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row13" class="row_heading level0 row13" >13</th>
+      <td id="T_fc4f3_row13_col0" class="data row13 col0" >0.500000</td>
+      <td id="T_fc4f3_row13_col1" class="data row13 col1" >0.500000</td>
+      <td id="T_fc4f3_row13_col2" class="data row13 col2" >0.500000</td>
+      <td id="T_fc4f3_row13_col3" class="data row13 col3" >0.500000</td>
+      <td id="T_fc4f3_row13_col4" class="data row13 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row14" class="row_heading level0 row14" >14</th>
+      <td id="T_fc4f3_row14_col0" class="data row14 col0" >0.500000</td>
+      <td id="T_fc4f3_row14_col1" class="data row14 col1" >0.500000</td>
+      <td id="T_fc4f3_row14_col2" class="data row14 col2" >0.500000</td>
+      <td id="T_fc4f3_row14_col3" class="data row14 col3" >0.500000</td>
+      <td id="T_fc4f3_row14_col4" class="data row14 col4" >0.500000</td>
+    </tr>
+    <tr>
+      <th id="T_fc4f3_level0_row15" class="row_heading level0 row15" >15</th>
+      <td id="T_fc4f3_row15_col0" class="data row15 col0" >0.500000</td>
+      <td id="T_fc4f3_row15_col1" class="data row15 col1" >1.000000</td>
+      <td id="T_fc4f3_row15_col2" class="data row15 col2" >0.500000</td>
+      <td id="T_fc4f3_row15_col3" class="data row15 col3" >1.000000</td>
+      <td id="T_fc4f3_row15_col4" class="data row15 col4" >1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p><strong>Transition kernel</strong><br />
+The
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.T"><code class="docutils literal notranslate"><span class="pre">T</span></code></a>
+property returns a number of states by number of actions by number of states Numpy array such that to each state <span class="math notranslate nohighlight">\(s\)</span> and action <span class="math notranslate nohighlight">\(a\)</span> is associated the probability distribution of the next state when selecting <span class="math notranslate nohighlight">\(a\)</span> from <span class="math notranslate nohighlight">\(s\)</span>.
+We can visualise the kernel using a Pandas DataFrame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="nb">range</span><span class="p">(</span><span class="n">mdp</span><span class="o">.</span><span class="n">n_states</span><span class="p">),</span>
+        <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">mdp</span><span class="o">.</span><span class="n">get_action_class</span><span class="p">()),</span>
+        <span class="nb">range</span><span class="p">(</span><span class="n">mdp</span><span class="o">.</span><span class="n">n_states</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;State from&quot;</span><span class="p">,</span> <span class="s2">&quot;Action&quot;</span><span class="p">,</span> <span class="s2">&quot;State to&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">mdp</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;State to&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s1">&#39;style=&quot;font-size: 10px&quot;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style type="text/css">
+</style>
+<table id="T_07ce1" style="font-size: 10px">
+  <thead>
+    <tr>
+      <th class="blank" >&nbsp;</th>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_07ce1_level0_col0" class="col_heading level0 col0" colspan="16">0</th>
+    </tr>
+    <tr>
+      <th class="blank" >&nbsp;</th>
+      <th class="index_name level1" >State to</th>
+      <th id="T_07ce1_level1_col0" class="col_heading level1 col0" >0</th>
+      <th id="T_07ce1_level1_col1" class="col_heading level1 col1" >1</th>
+      <th id="T_07ce1_level1_col2" class="col_heading level1 col2" >2</th>
+      <th id="T_07ce1_level1_col3" class="col_heading level1 col3" >3</th>
+      <th id="T_07ce1_level1_col4" class="col_heading level1 col4" >4</th>
+      <th id="T_07ce1_level1_col5" class="col_heading level1 col5" >5</th>
+      <th id="T_07ce1_level1_col6" class="col_heading level1 col6" >6</th>
+      <th id="T_07ce1_level1_col7" class="col_heading level1 col7" >7</th>
+      <th id="T_07ce1_level1_col8" class="col_heading level1 col8" >8</th>
+      <th id="T_07ce1_level1_col9" class="col_heading level1 col9" >9</th>
+      <th id="T_07ce1_level1_col10" class="col_heading level1 col10" >10</th>
+      <th id="T_07ce1_level1_col11" class="col_heading level1 col11" >11</th>
+      <th id="T_07ce1_level1_col12" class="col_heading level1 col12" >12</th>
+      <th id="T_07ce1_level1_col13" class="col_heading level1 col13" >13</th>
+      <th id="T_07ce1_level1_col14" class="col_heading level1 col14" >14</th>
+      <th id="T_07ce1_level1_col15" class="col_heading level1 col15" >15</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >State from</th>
+      <th class="index_name level1" >Action</th>
+      <th class="blank col0" >&nbsp;</th>
+      <th class="blank col1" >&nbsp;</th>
+      <th class="blank col2" >&nbsp;</th>
+      <th class="blank col3" >&nbsp;</th>
+      <th class="blank col4" >&nbsp;</th>
+      <th class="blank col5" >&nbsp;</th>
+      <th class="blank col6" >&nbsp;</th>
+      <th class="blank col7" >&nbsp;</th>
+      <th class="blank col8" >&nbsp;</th>
+      <th class="blank col9" >&nbsp;</th>
+      <th class="blank col10" >&nbsp;</th>
+      <th class="blank col11" >&nbsp;</th>
+      <th class="blank col12" >&nbsp;</th>
+      <th class="blank col13" >&nbsp;</th>
+      <th class="blank col14" >&nbsp;</th>
+      <th class="blank col15" >&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_07ce1_level0_row0" class="row_heading level0 row0" rowspan="5">0</th>
+      <th id="T_07ce1_level1_row0" class="row_heading level1 row0" >DOWN</th>
+      <td id="T_07ce1_row0_col0" class="data row0 col0" >0.00</td>
+      <td id="T_07ce1_row0_col1" class="data row0 col1" >0.00</td>
+      <td id="T_07ce1_row0_col2" class="data row0 col2" >0.00</td>
+      <td id="T_07ce1_row0_col3" class="data row0 col3" >0.00</td>
+      <td id="T_07ce1_row0_col4" class="data row0 col4" >0.99</td>
+      <td id="T_07ce1_row0_col5" class="data row0 col5" >0.00</td>
+      <td id="T_07ce1_row0_col6" class="data row0 col6" >0.00</td>
+      <td id="T_07ce1_row0_col7" class="data row0 col7" >0.00</td>
+      <td id="T_07ce1_row0_col8" class="data row0 col8" >0.00</td>
+      <td id="T_07ce1_row0_col9" class="data row0 col9" >0.00</td>
+      <td id="T_07ce1_row0_col10" class="data row0 col10" >0.00</td>
+      <td id="T_07ce1_row0_col11" class="data row0 col11" >0.00</td>
+      <td id="T_07ce1_row0_col12" class="data row0 col12" >0.00</td>
+      <td id="T_07ce1_row0_col13" class="data row0 col13" >0.00</td>
+      <td id="T_07ce1_row0_col14" class="data row0 col14" >0.00</td>
+      <td id="T_07ce1_row0_col15" class="data row0 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row1" class="row_heading level1 row1" >LEFT</th>
+      <td id="T_07ce1_row1_col0" class="data row1 col0" >0.99</td>
+      <td id="T_07ce1_row1_col1" class="data row1 col1" >0.00</td>
+      <td id="T_07ce1_row1_col2" class="data row1 col2" >0.00</td>
+      <td id="T_07ce1_row1_col3" class="data row1 col3" >0.00</td>
+      <td id="T_07ce1_row1_col4" class="data row1 col4" >0.00</td>
+      <td id="T_07ce1_row1_col5" class="data row1 col5" >0.00</td>
+      <td id="T_07ce1_row1_col6" class="data row1 col6" >0.00</td>
+      <td id="T_07ce1_row1_col7" class="data row1 col7" >0.00</td>
+      <td id="T_07ce1_row1_col8" class="data row1 col8" >0.00</td>
+      <td id="T_07ce1_row1_col9" class="data row1 col9" >0.00</td>
+      <td id="T_07ce1_row1_col10" class="data row1 col10" >0.00</td>
+      <td id="T_07ce1_row1_col11" class="data row1 col11" >0.00</td>
+      <td id="T_07ce1_row1_col12" class="data row1 col12" >0.00</td>
+      <td id="T_07ce1_row1_col13" class="data row1 col13" >0.00</td>
+      <td id="T_07ce1_row1_col14" class="data row1 col14" >0.00</td>
+      <td id="T_07ce1_row1_col15" class="data row1 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row2" class="row_heading level1 row2" >NO_OP</th>
+      <td id="T_07ce1_row2_col0" class="data row2 col0" >0.00</td>
+      <td id="T_07ce1_row2_col1" class="data row2 col1" >0.99</td>
+      <td id="T_07ce1_row2_col2" class="data row2 col2" >0.00</td>
+      <td id="T_07ce1_row2_col3" class="data row2 col3" >0.00</td>
+      <td id="T_07ce1_row2_col4" class="data row2 col4" >0.00</td>
+      <td id="T_07ce1_row2_col5" class="data row2 col5" >0.00</td>
+      <td id="T_07ce1_row2_col6" class="data row2 col6" >0.00</td>
+      <td id="T_07ce1_row2_col7" class="data row2 col7" >0.00</td>
+      <td id="T_07ce1_row2_col8" class="data row2 col8" >0.00</td>
+      <td id="T_07ce1_row2_col9" class="data row2 col9" >0.00</td>
+      <td id="T_07ce1_row2_col10" class="data row2 col10" >0.00</td>
+      <td id="T_07ce1_row2_col11" class="data row2 col11" >0.00</td>
+      <td id="T_07ce1_row2_col12" class="data row2 col12" >0.00</td>
+      <td id="T_07ce1_row2_col13" class="data row2 col13" >0.00</td>
+      <td id="T_07ce1_row2_col14" class="data row2 col14" >0.00</td>
+      <td id="T_07ce1_row2_col15" class="data row2 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row3" class="row_heading level1 row3" >RIGHT</th>
+      <td id="T_07ce1_row3_col0" class="data row3 col0" >0.00</td>
+      <td id="T_07ce1_row3_col1" class="data row3 col1" >0.00</td>
+      <td id="T_07ce1_row3_col2" class="data row3 col2" >0.99</td>
+      <td id="T_07ce1_row3_col3" class="data row3 col3" >0.00</td>
+      <td id="T_07ce1_row3_col4" class="data row3 col4" >0.00</td>
+      <td id="T_07ce1_row3_col5" class="data row3 col5" >0.00</td>
+      <td id="T_07ce1_row3_col6" class="data row3 col6" >0.00</td>
+      <td id="T_07ce1_row3_col7" class="data row3 col7" >0.00</td>
+      <td id="T_07ce1_row3_col8" class="data row3 col8" >0.00</td>
+      <td id="T_07ce1_row3_col9" class="data row3 col9" >0.00</td>
+      <td id="T_07ce1_row3_col10" class="data row3 col10" >0.00</td>
+      <td id="T_07ce1_row3_col11" class="data row3 col11" >0.00</td>
+      <td id="T_07ce1_row3_col12" class="data row3 col12" >0.00</td>
+      <td id="T_07ce1_row3_col13" class="data row3 col13" >0.00</td>
+      <td id="T_07ce1_row3_col14" class="data row3 col14" >0.00</td>
+      <td id="T_07ce1_row3_col15" class="data row3 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row4" class="row_heading level1 row4" >UP</th>
+      <td id="T_07ce1_row4_col0" class="data row4 col0" >0.00</td>
+      <td id="T_07ce1_row4_col1" class="data row4 col1" >0.00</td>
+      <td id="T_07ce1_row4_col2" class="data row4 col2" >0.00</td>
+      <td id="T_07ce1_row4_col3" class="data row4 col3" >0.99</td>
+      <td id="T_07ce1_row4_col4" class="data row4 col4" >0.00</td>
+      <td id="T_07ce1_row4_col5" class="data row4 col5" >0.00</td>
+      <td id="T_07ce1_row4_col6" class="data row4 col6" >0.00</td>
+      <td id="T_07ce1_row4_col7" class="data row4 col7" >0.00</td>
+      <td id="T_07ce1_row4_col8" class="data row4 col8" >0.00</td>
+      <td id="T_07ce1_row4_col9" class="data row4 col9" >0.00</td>
+      <td id="T_07ce1_row4_col10" class="data row4 col10" >0.00</td>
+      <td id="T_07ce1_row4_col11" class="data row4 col11" >0.00</td>
+      <td id="T_07ce1_row4_col12" class="data row4 col12" >0.00</td>
+      <td id="T_07ce1_row4_col13" class="data row4 col13" >0.00</td>
+      <td id="T_07ce1_row4_col14" class="data row4 col14" >0.00</td>
+      <td id="T_07ce1_row4_col15" class="data row4 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row5" class="row_heading level0 row5" rowspan="5">1</th>
+      <th id="T_07ce1_level1_row5" class="row_heading level1 row5" >DOWN</th>
+      <td id="T_07ce1_row5_col0" class="data row5 col0" >0.99</td>
+      <td id="T_07ce1_row5_col1" class="data row5 col1" >0.00</td>
+      <td id="T_07ce1_row5_col2" class="data row5 col2" >0.00</td>
+      <td id="T_07ce1_row5_col3" class="data row5 col3" >0.00</td>
+      <td id="T_07ce1_row5_col4" class="data row5 col4" >0.00</td>
+      <td id="T_07ce1_row5_col5" class="data row5 col5" >0.00</td>
+      <td id="T_07ce1_row5_col6" class="data row5 col6" >0.00</td>
+      <td id="T_07ce1_row5_col7" class="data row5 col7" >0.00</td>
+      <td id="T_07ce1_row5_col8" class="data row5 col8" >0.00</td>
+      <td id="T_07ce1_row5_col9" class="data row5 col9" >0.00</td>
+      <td id="T_07ce1_row5_col10" class="data row5 col10" >0.00</td>
+      <td id="T_07ce1_row5_col11" class="data row5 col11" >0.00</td>
+      <td id="T_07ce1_row5_col12" class="data row5 col12" >0.00</td>
+      <td id="T_07ce1_row5_col13" class="data row5 col13" >0.00</td>
+      <td id="T_07ce1_row5_col14" class="data row5 col14" >0.00</td>
+      <td id="T_07ce1_row5_col15" class="data row5 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row6" class="row_heading level1 row6" >LEFT</th>
+      <td id="T_07ce1_row6_col0" class="data row6 col0" >0.00</td>
+      <td id="T_07ce1_row6_col1" class="data row6 col1" >0.99</td>
+      <td id="T_07ce1_row6_col2" class="data row6 col2" >0.00</td>
+      <td id="T_07ce1_row6_col3" class="data row6 col3" >0.00</td>
+      <td id="T_07ce1_row6_col4" class="data row6 col4" >0.00</td>
+      <td id="T_07ce1_row6_col5" class="data row6 col5" >0.00</td>
+      <td id="T_07ce1_row6_col6" class="data row6 col6" >0.00</td>
+      <td id="T_07ce1_row6_col7" class="data row6 col7" >0.00</td>
+      <td id="T_07ce1_row6_col8" class="data row6 col8" >0.00</td>
+      <td id="T_07ce1_row6_col9" class="data row6 col9" >0.00</td>
+      <td id="T_07ce1_row6_col10" class="data row6 col10" >0.00</td>
+      <td id="T_07ce1_row6_col11" class="data row6 col11" >0.00</td>
+      <td id="T_07ce1_row6_col12" class="data row6 col12" >0.00</td>
+      <td id="T_07ce1_row6_col13" class="data row6 col13" >0.00</td>
+      <td id="T_07ce1_row6_col14" class="data row6 col14" >0.00</td>
+      <td id="T_07ce1_row6_col15" class="data row6 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row7" class="row_heading level1 row7" >NO_OP</th>
+      <td id="T_07ce1_row7_col0" class="data row7 col0" >0.00</td>
+      <td id="T_07ce1_row7_col1" class="data row7 col1" >0.00</td>
+      <td id="T_07ce1_row7_col2" class="data row7 col2" >0.00</td>
+      <td id="T_07ce1_row7_col3" class="data row7 col3" >0.00</td>
+      <td id="T_07ce1_row7_col4" class="data row7 col4" >0.00</td>
+      <td id="T_07ce1_row7_col5" class="data row7 col5" >0.99</td>
+      <td id="T_07ce1_row7_col6" class="data row7 col6" >0.00</td>
+      <td id="T_07ce1_row7_col7" class="data row7 col7" >0.00</td>
+      <td id="T_07ce1_row7_col8" class="data row7 col8" >0.00</td>
+      <td id="T_07ce1_row7_col9" class="data row7 col9" >0.00</td>
+      <td id="T_07ce1_row7_col10" class="data row7 col10" >0.00</td>
+      <td id="T_07ce1_row7_col11" class="data row7 col11" >0.00</td>
+      <td id="T_07ce1_row7_col12" class="data row7 col12" >0.00</td>
+      <td id="T_07ce1_row7_col13" class="data row7 col13" >0.00</td>
+      <td id="T_07ce1_row7_col14" class="data row7 col14" >0.00</td>
+      <td id="T_07ce1_row7_col15" class="data row7 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row8" class="row_heading level1 row8" >RIGHT</th>
+      <td id="T_07ce1_row8_col0" class="data row8 col0" >0.00</td>
+      <td id="T_07ce1_row8_col1" class="data row8 col1" >0.00</td>
+      <td id="T_07ce1_row8_col2" class="data row8 col2" >0.00</td>
+      <td id="T_07ce1_row8_col3" class="data row8 col3" >0.00</td>
+      <td id="T_07ce1_row8_col4" class="data row8 col4" >0.00</td>
+      <td id="T_07ce1_row8_col5" class="data row8 col5" >0.00</td>
+      <td id="T_07ce1_row8_col6" class="data row8 col6" >0.99</td>
+      <td id="T_07ce1_row8_col7" class="data row8 col7" >0.00</td>
+      <td id="T_07ce1_row8_col8" class="data row8 col8" >0.00</td>
+      <td id="T_07ce1_row8_col9" class="data row8 col9" >0.00</td>
+      <td id="T_07ce1_row8_col10" class="data row8 col10" >0.00</td>
+      <td id="T_07ce1_row8_col11" class="data row8 col11" >0.00</td>
+      <td id="T_07ce1_row8_col12" class="data row8 col12" >0.00</td>
+      <td id="T_07ce1_row8_col13" class="data row8 col13" >0.00</td>
+      <td id="T_07ce1_row8_col14" class="data row8 col14" >0.00</td>
+      <td id="T_07ce1_row8_col15" class="data row8 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row9" class="row_heading level1 row9" >UP</th>
+      <td id="T_07ce1_row9_col0" class="data row9 col0" >0.00</td>
+      <td id="T_07ce1_row9_col1" class="data row9 col1" >0.00</td>
+      <td id="T_07ce1_row9_col2" class="data row9 col2" >0.00</td>
+      <td id="T_07ce1_row9_col3" class="data row9 col3" >0.00</td>
+      <td id="T_07ce1_row9_col4" class="data row9 col4" >0.00</td>
+      <td id="T_07ce1_row9_col5" class="data row9 col5" >0.00</td>
+      <td id="T_07ce1_row9_col6" class="data row9 col6" >0.00</td>
+      <td id="T_07ce1_row9_col7" class="data row9 col7" >0.99</td>
+      <td id="T_07ce1_row9_col8" class="data row9 col8" >0.00</td>
+      <td id="T_07ce1_row9_col9" class="data row9 col9" >0.00</td>
+      <td id="T_07ce1_row9_col10" class="data row9 col10" >0.00</td>
+      <td id="T_07ce1_row9_col11" class="data row9 col11" >0.00</td>
+      <td id="T_07ce1_row9_col12" class="data row9 col12" >0.00</td>
+      <td id="T_07ce1_row9_col13" class="data row9 col13" >0.00</td>
+      <td id="T_07ce1_row9_col14" class="data row9 col14" >0.00</td>
+      <td id="T_07ce1_row9_col15" class="data row9 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row10" class="row_heading level0 row10" rowspan="5">2</th>
+      <th id="T_07ce1_level1_row10" class="row_heading level1 row10" >DOWN</th>
+      <td id="T_07ce1_row10_col0" class="data row10 col0" >0.00</td>
+      <td id="T_07ce1_row10_col1" class="data row10 col1" >0.00</td>
+      <td id="T_07ce1_row10_col2" class="data row10 col2" >0.00</td>
+      <td id="T_07ce1_row10_col3" class="data row10 col3" >0.00</td>
+      <td id="T_07ce1_row10_col4" class="data row10 col4" >0.00</td>
+      <td id="T_07ce1_row10_col5" class="data row10 col5" >0.00</td>
+      <td id="T_07ce1_row10_col6" class="data row10 col6" >0.00</td>
+      <td id="T_07ce1_row10_col7" class="data row10 col7" >0.00</td>
+      <td id="T_07ce1_row10_col8" class="data row10 col8" >0.00</td>
+      <td id="T_07ce1_row10_col9" class="data row10 col9" >0.00</td>
+      <td id="T_07ce1_row10_col10" class="data row10 col10" >0.99</td>
+      <td id="T_07ce1_row10_col11" class="data row10 col11" >0.00</td>
+      <td id="T_07ce1_row10_col12" class="data row10 col12" >0.00</td>
+      <td id="T_07ce1_row10_col13" class="data row10 col13" >0.00</td>
+      <td id="T_07ce1_row10_col14" class="data row10 col14" >0.00</td>
+      <td id="T_07ce1_row10_col15" class="data row10 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row11" class="row_heading level1 row11" >LEFT</th>
+      <td id="T_07ce1_row11_col0" class="data row11 col0" >0.99</td>
+      <td id="T_07ce1_row11_col1" class="data row11 col1" >0.00</td>
+      <td id="T_07ce1_row11_col2" class="data row11 col2" >0.00</td>
+      <td id="T_07ce1_row11_col3" class="data row11 col3" >0.00</td>
+      <td id="T_07ce1_row11_col4" class="data row11 col4" >0.00</td>
+      <td id="T_07ce1_row11_col5" class="data row11 col5" >0.00</td>
+      <td id="T_07ce1_row11_col6" class="data row11 col6" >0.00</td>
+      <td id="T_07ce1_row11_col7" class="data row11 col7" >0.00</td>
+      <td id="T_07ce1_row11_col8" class="data row11 col8" >0.00</td>
+      <td id="T_07ce1_row11_col9" class="data row11 col9" >0.00</td>
+      <td id="T_07ce1_row11_col10" class="data row11 col10" >0.00</td>
+      <td id="T_07ce1_row11_col11" class="data row11 col11" >0.00</td>
+      <td id="T_07ce1_row11_col12" class="data row11 col12" >0.00</td>
+      <td id="T_07ce1_row11_col13" class="data row11 col13" >0.00</td>
+      <td id="T_07ce1_row11_col14" class="data row11 col14" >0.00</td>
+      <td id="T_07ce1_row11_col15" class="data row11 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row12" class="row_heading level1 row12" >NO_OP</th>
+      <td id="T_07ce1_row12_col0" class="data row12 col0" >0.00</td>
+      <td id="T_07ce1_row12_col1" class="data row12 col1" >0.00</td>
+      <td id="T_07ce1_row12_col2" class="data row12 col2" >0.00</td>
+      <td id="T_07ce1_row12_col3" class="data row12 col3" >0.00</td>
+      <td id="T_07ce1_row12_col4" class="data row12 col4" >0.00</td>
+      <td id="T_07ce1_row12_col5" class="data row12 col5" >0.00</td>
+      <td id="T_07ce1_row12_col6" class="data row12 col6" >0.99</td>
+      <td id="T_07ce1_row12_col7" class="data row12 col7" >0.00</td>
+      <td id="T_07ce1_row12_col8" class="data row12 col8" >0.00</td>
+      <td id="T_07ce1_row12_col9" class="data row12 col9" >0.00</td>
+      <td id="T_07ce1_row12_col10" class="data row12 col10" >0.00</td>
+      <td id="T_07ce1_row12_col11" class="data row12 col11" >0.00</td>
+      <td id="T_07ce1_row12_col12" class="data row12 col12" >0.00</td>
+      <td id="T_07ce1_row12_col13" class="data row12 col13" >0.00</td>
+      <td id="T_07ce1_row12_col14" class="data row12 col14" >0.00</td>
+      <td id="T_07ce1_row12_col15" class="data row12 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row13" class="row_heading level1 row13" >RIGHT</th>
+      <td id="T_07ce1_row13_col0" class="data row13 col0" >0.00</td>
+      <td id="T_07ce1_row13_col1" class="data row13 col1" >0.00</td>
+      <td id="T_07ce1_row13_col2" class="data row13 col2" >0.99</td>
+      <td id="T_07ce1_row13_col3" class="data row13 col3" >0.00</td>
+      <td id="T_07ce1_row13_col4" class="data row13 col4" >0.00</td>
+      <td id="T_07ce1_row13_col5" class="data row13 col5" >0.00</td>
+      <td id="T_07ce1_row13_col6" class="data row13 col6" >0.00</td>
+      <td id="T_07ce1_row13_col7" class="data row13 col7" >0.00</td>
+      <td id="T_07ce1_row13_col8" class="data row13 col8" >0.00</td>
+      <td id="T_07ce1_row13_col9" class="data row13 col9" >0.00</td>
+      <td id="T_07ce1_row13_col10" class="data row13 col10" >0.00</td>
+      <td id="T_07ce1_row13_col11" class="data row13 col11" >0.00</td>
+      <td id="T_07ce1_row13_col12" class="data row13 col12" >0.00</td>
+      <td id="T_07ce1_row13_col13" class="data row13 col13" >0.00</td>
+      <td id="T_07ce1_row13_col14" class="data row13 col14" >0.00</td>
+      <td id="T_07ce1_row13_col15" class="data row13 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row14" class="row_heading level1 row14" >UP</th>
+      <td id="T_07ce1_row14_col0" class="data row14 col0" >0.00</td>
+      <td id="T_07ce1_row14_col1" class="data row14 col1" >0.00</td>
+      <td id="T_07ce1_row14_col2" class="data row14 col2" >0.99</td>
+      <td id="T_07ce1_row14_col3" class="data row14 col3" >0.00</td>
+      <td id="T_07ce1_row14_col4" class="data row14 col4" >0.00</td>
+      <td id="T_07ce1_row14_col5" class="data row14 col5" >0.00</td>
+      <td id="T_07ce1_row14_col6" class="data row14 col6" >0.00</td>
+      <td id="T_07ce1_row14_col7" class="data row14 col7" >0.00</td>
+      <td id="T_07ce1_row14_col8" class="data row14 col8" >0.00</td>
+      <td id="T_07ce1_row14_col9" class="data row14 col9" >0.00</td>
+      <td id="T_07ce1_row14_col10" class="data row14 col10" >0.00</td>
+      <td id="T_07ce1_row14_col11" class="data row14 col11" >0.00</td>
+      <td id="T_07ce1_row14_col12" class="data row14 col12" >0.00</td>
+      <td id="T_07ce1_row14_col13" class="data row14 col13" >0.00</td>
+      <td id="T_07ce1_row14_col14" class="data row14 col14" >0.00</td>
+      <td id="T_07ce1_row14_col15" class="data row14 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row15" class="row_heading level0 row15" rowspan="5">3</th>
+      <th id="T_07ce1_level1_row15" class="row_heading level1 row15" >DOWN</th>
+      <td id="T_07ce1_row15_col0" class="data row15 col0" >0.00</td>
+      <td id="T_07ce1_row15_col1" class="data row15 col1" >0.00</td>
+      <td id="T_07ce1_row15_col2" class="data row15 col2" >0.00</td>
+      <td id="T_07ce1_row15_col3" class="data row15 col3" >0.99</td>
+      <td id="T_07ce1_row15_col4" class="data row15 col4" >0.00</td>
+      <td id="T_07ce1_row15_col5" class="data row15 col5" >0.00</td>
+      <td id="T_07ce1_row15_col6" class="data row15 col6" >0.00</td>
+      <td id="T_07ce1_row15_col7" class="data row15 col7" >0.00</td>
+      <td id="T_07ce1_row15_col8" class="data row15 col8" >0.00</td>
+      <td id="T_07ce1_row15_col9" class="data row15 col9" >0.00</td>
+      <td id="T_07ce1_row15_col10" class="data row15 col10" >0.00</td>
+      <td id="T_07ce1_row15_col11" class="data row15 col11" >0.00</td>
+      <td id="T_07ce1_row15_col12" class="data row15 col12" >0.00</td>
+      <td id="T_07ce1_row15_col13" class="data row15 col13" >0.00</td>
+      <td id="T_07ce1_row15_col14" class="data row15 col14" >0.00</td>
+      <td id="T_07ce1_row15_col15" class="data row15 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row16" class="row_heading level1 row16" >LEFT</th>
+      <td id="T_07ce1_row16_col0" class="data row16 col0" >0.99</td>
+      <td id="T_07ce1_row16_col1" class="data row16 col1" >0.00</td>
+      <td id="T_07ce1_row16_col2" class="data row16 col2" >0.00</td>
+      <td id="T_07ce1_row16_col3" class="data row16 col3" >0.00</td>
+      <td id="T_07ce1_row16_col4" class="data row16 col4" >0.00</td>
+      <td id="T_07ce1_row16_col5" class="data row16 col5" >0.00</td>
+      <td id="T_07ce1_row16_col6" class="data row16 col6" >0.00</td>
+      <td id="T_07ce1_row16_col7" class="data row16 col7" >0.00</td>
+      <td id="T_07ce1_row16_col8" class="data row16 col8" >0.00</td>
+      <td id="T_07ce1_row16_col9" class="data row16 col9" >0.00</td>
+      <td id="T_07ce1_row16_col10" class="data row16 col10" >0.00</td>
+      <td id="T_07ce1_row16_col11" class="data row16 col11" >0.00</td>
+      <td id="T_07ce1_row16_col12" class="data row16 col12" >0.00</td>
+      <td id="T_07ce1_row16_col13" class="data row16 col13" >0.00</td>
+      <td id="T_07ce1_row16_col14" class="data row16 col14" >0.00</td>
+      <td id="T_07ce1_row16_col15" class="data row16 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row17" class="row_heading level1 row17" >NO_OP</th>
+      <td id="T_07ce1_row17_col0" class="data row17 col0" >0.00</td>
+      <td id="T_07ce1_row17_col1" class="data row17 col1" >0.00</td>
+      <td id="T_07ce1_row17_col2" class="data row17 col2" >0.00</td>
+      <td id="T_07ce1_row17_col3" class="data row17 col3" >0.00</td>
+      <td id="T_07ce1_row17_col4" class="data row17 col4" >0.00</td>
+      <td id="T_07ce1_row17_col5" class="data row17 col5" >0.00</td>
+      <td id="T_07ce1_row17_col6" class="data row17 col6" >0.00</td>
+      <td id="T_07ce1_row17_col7" class="data row17 col7" >0.00</td>
+      <td id="T_07ce1_row17_col8" class="data row17 col8" >0.00</td>
+      <td id="T_07ce1_row17_col9" class="data row17 col9" >0.00</td>
+      <td id="T_07ce1_row17_col10" class="data row17 col10" >0.00</td>
+      <td id="T_07ce1_row17_col11" class="data row17 col11" >0.99</td>
+      <td id="T_07ce1_row17_col12" class="data row17 col12" >0.00</td>
+      <td id="T_07ce1_row17_col13" class="data row17 col13" >0.00</td>
+      <td id="T_07ce1_row17_col14" class="data row17 col14" >0.00</td>
+      <td id="T_07ce1_row17_col15" class="data row17 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row18" class="row_heading level1 row18" >RIGHT</th>
+      <td id="T_07ce1_row18_col0" class="data row18 col0" >0.00</td>
+      <td id="T_07ce1_row18_col1" class="data row18 col1" >0.00</td>
+      <td id="T_07ce1_row18_col2" class="data row18 col2" >0.00</td>
+      <td id="T_07ce1_row18_col3" class="data row18 col3" >0.99</td>
+      <td id="T_07ce1_row18_col4" class="data row18 col4" >0.00</td>
+      <td id="T_07ce1_row18_col5" class="data row18 col5" >0.00</td>
+      <td id="T_07ce1_row18_col6" class="data row18 col6" >0.00</td>
+      <td id="T_07ce1_row18_col7" class="data row18 col7" >0.00</td>
+      <td id="T_07ce1_row18_col8" class="data row18 col8" >0.00</td>
+      <td id="T_07ce1_row18_col9" class="data row18 col9" >0.00</td>
+      <td id="T_07ce1_row18_col10" class="data row18 col10" >0.00</td>
+      <td id="T_07ce1_row18_col11" class="data row18 col11" >0.00</td>
+      <td id="T_07ce1_row18_col12" class="data row18 col12" >0.00</td>
+      <td id="T_07ce1_row18_col13" class="data row18 col13" >0.00</td>
+      <td id="T_07ce1_row18_col14" class="data row18 col14" >0.00</td>
+      <td id="T_07ce1_row18_col15" class="data row18 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row19" class="row_heading level1 row19" >UP</th>
+      <td id="T_07ce1_row19_col0" class="data row19 col0" >0.00</td>
+      <td id="T_07ce1_row19_col1" class="data row19 col1" >0.00</td>
+      <td id="T_07ce1_row19_col2" class="data row19 col2" >0.00</td>
+      <td id="T_07ce1_row19_col3" class="data row19 col3" >0.00</td>
+      <td id="T_07ce1_row19_col4" class="data row19 col4" >0.00</td>
+      <td id="T_07ce1_row19_col5" class="data row19 col5" >0.00</td>
+      <td id="T_07ce1_row19_col6" class="data row19 col6" >0.00</td>
+      <td id="T_07ce1_row19_col7" class="data row19 col7" >0.00</td>
+      <td id="T_07ce1_row19_col8" class="data row19 col8" >0.00</td>
+      <td id="T_07ce1_row19_col9" class="data row19 col9" >0.00</td>
+      <td id="T_07ce1_row19_col10" class="data row19 col10" >0.99</td>
+      <td id="T_07ce1_row19_col11" class="data row19 col11" >0.00</td>
+      <td id="T_07ce1_row19_col12" class="data row19 col12" >0.00</td>
+      <td id="T_07ce1_row19_col13" class="data row19 col13" >0.00</td>
+      <td id="T_07ce1_row19_col14" class="data row19 col14" >0.00</td>
+      <td id="T_07ce1_row19_col15" class="data row19 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row20" class="row_heading level0 row20" rowspan="5">4</th>
+      <th id="T_07ce1_level1_row20" class="row_heading level1 row20" >DOWN</th>
+      <td id="T_07ce1_row20_col0" class="data row20 col0" >0.00</td>
+      <td id="T_07ce1_row20_col1" class="data row20 col1" >0.00</td>
+      <td id="T_07ce1_row20_col2" class="data row20 col2" >0.00</td>
+      <td id="T_07ce1_row20_col3" class="data row20 col3" >0.00</td>
+      <td id="T_07ce1_row20_col4" class="data row20 col4" >0.99</td>
+      <td id="T_07ce1_row20_col5" class="data row20 col5" >0.00</td>
+      <td id="T_07ce1_row20_col6" class="data row20 col6" >0.00</td>
+      <td id="T_07ce1_row20_col7" class="data row20 col7" >0.00</td>
+      <td id="T_07ce1_row20_col8" class="data row20 col8" >0.00</td>
+      <td id="T_07ce1_row20_col9" class="data row20 col9" >0.00</td>
+      <td id="T_07ce1_row20_col10" class="data row20 col10" >0.00</td>
+      <td id="T_07ce1_row20_col11" class="data row20 col11" >0.00</td>
+      <td id="T_07ce1_row20_col12" class="data row20 col12" >0.00</td>
+      <td id="T_07ce1_row20_col13" class="data row20 col13" >0.00</td>
+      <td id="T_07ce1_row20_col14" class="data row20 col14" >0.00</td>
+      <td id="T_07ce1_row20_col15" class="data row20 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row21" class="row_heading level1 row21" >LEFT</th>
+      <td id="T_07ce1_row21_col0" class="data row21 col0" >0.00</td>
+      <td id="T_07ce1_row21_col1" class="data row21 col1" >0.00</td>
+      <td id="T_07ce1_row21_col2" class="data row21 col2" >0.00</td>
+      <td id="T_07ce1_row21_col3" class="data row21 col3" >0.00</td>
+      <td id="T_07ce1_row21_col4" class="data row21 col4" >0.00</td>
+      <td id="T_07ce1_row21_col5" class="data row21 col5" >0.00</td>
+      <td id="T_07ce1_row21_col6" class="data row21 col6" >0.00</td>
+      <td id="T_07ce1_row21_col7" class="data row21 col7" >0.99</td>
+      <td id="T_07ce1_row21_col8" class="data row21 col8" >0.00</td>
+      <td id="T_07ce1_row21_col9" class="data row21 col9" >0.00</td>
+      <td id="T_07ce1_row21_col10" class="data row21 col10" >0.00</td>
+      <td id="T_07ce1_row21_col11" class="data row21 col11" >0.00</td>
+      <td id="T_07ce1_row21_col12" class="data row21 col12" >0.00</td>
+      <td id="T_07ce1_row21_col13" class="data row21 col13" >0.00</td>
+      <td id="T_07ce1_row21_col14" class="data row21 col14" >0.00</td>
+      <td id="T_07ce1_row21_col15" class="data row21 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row22" class="row_heading level1 row22" >NO_OP</th>
+      <td id="T_07ce1_row22_col0" class="data row22 col0" >0.99</td>
+      <td id="T_07ce1_row22_col1" class="data row22 col1" >0.00</td>
+      <td id="T_07ce1_row22_col2" class="data row22 col2" >0.00</td>
+      <td id="T_07ce1_row22_col3" class="data row22 col3" >0.00</td>
+      <td id="T_07ce1_row22_col4" class="data row22 col4" >0.00</td>
+      <td id="T_07ce1_row22_col5" class="data row22 col5" >0.00</td>
+      <td id="T_07ce1_row22_col6" class="data row22 col6" >0.00</td>
+      <td id="T_07ce1_row22_col7" class="data row22 col7" >0.00</td>
+      <td id="T_07ce1_row22_col8" class="data row22 col8" >0.00</td>
+      <td id="T_07ce1_row22_col9" class="data row22 col9" >0.00</td>
+      <td id="T_07ce1_row22_col10" class="data row22 col10" >0.00</td>
+      <td id="T_07ce1_row22_col11" class="data row22 col11" >0.00</td>
+      <td id="T_07ce1_row22_col12" class="data row22 col12" >0.00</td>
+      <td id="T_07ce1_row22_col13" class="data row22 col13" >0.00</td>
+      <td id="T_07ce1_row22_col14" class="data row22 col14" >0.00</td>
+      <td id="T_07ce1_row22_col15" class="data row22 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row23" class="row_heading level1 row23" >RIGHT</th>
+      <td id="T_07ce1_row23_col0" class="data row23 col0" >0.00</td>
+      <td id="T_07ce1_row23_col1" class="data row23 col1" >0.00</td>
+      <td id="T_07ce1_row23_col2" class="data row23 col2" >0.00</td>
+      <td id="T_07ce1_row23_col3" class="data row23 col3" >0.00</td>
+      <td id="T_07ce1_row23_col4" class="data row23 col4" >0.00</td>
+      <td id="T_07ce1_row23_col5" class="data row23 col5" >0.00</td>
+      <td id="T_07ce1_row23_col6" class="data row23 col6" >0.00</td>
+      <td id="T_07ce1_row23_col7" class="data row23 col7" >0.00</td>
+      <td id="T_07ce1_row23_col8" class="data row23 col8" >0.00</td>
+      <td id="T_07ce1_row23_col9" class="data row23 col9" >0.00</td>
+      <td id="T_07ce1_row23_col10" class="data row23 col10" >0.00</td>
+      <td id="T_07ce1_row23_col11" class="data row23 col11" >0.99</td>
+      <td id="T_07ce1_row23_col12" class="data row23 col12" >0.00</td>
+      <td id="T_07ce1_row23_col13" class="data row23 col13" >0.00</td>
+      <td id="T_07ce1_row23_col14" class="data row23 col14" >0.00</td>
+      <td id="T_07ce1_row23_col15" class="data row23 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row24" class="row_heading level1 row24" >UP</th>
+      <td id="T_07ce1_row24_col0" class="data row24 col0" >0.00</td>
+      <td id="T_07ce1_row24_col1" class="data row24 col1" >0.00</td>
+      <td id="T_07ce1_row24_col2" class="data row24 col2" >0.00</td>
+      <td id="T_07ce1_row24_col3" class="data row24 col3" >0.00</td>
+      <td id="T_07ce1_row24_col4" class="data row24 col4" >0.00</td>
+      <td id="T_07ce1_row24_col5" class="data row24 col5" >0.00</td>
+      <td id="T_07ce1_row24_col6" class="data row24 col6" >0.00</td>
+      <td id="T_07ce1_row24_col7" class="data row24 col7" >0.00</td>
+      <td id="T_07ce1_row24_col8" class="data row24 col8" >0.00</td>
+      <td id="T_07ce1_row24_col9" class="data row24 col9" >0.00</td>
+      <td id="T_07ce1_row24_col10" class="data row24 col10" >0.00</td>
+      <td id="T_07ce1_row24_col11" class="data row24 col11" >0.00</td>
+      <td id="T_07ce1_row24_col12" class="data row24 col12" >0.00</td>
+      <td id="T_07ce1_row24_col13" class="data row24 col13" >0.99</td>
+      <td id="T_07ce1_row24_col14" class="data row24 col14" >0.00</td>
+      <td id="T_07ce1_row24_col15" class="data row24 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row25" class="row_heading level0 row25" rowspan="5">5</th>
+      <th id="T_07ce1_level1_row25" class="row_heading level1 row25" >DOWN</th>
+      <td id="T_07ce1_row25_col0" class="data row25 col0" >0.00</td>
+      <td id="T_07ce1_row25_col1" class="data row25 col1" >0.00</td>
+      <td id="T_07ce1_row25_col2" class="data row25 col2" >0.00</td>
+      <td id="T_07ce1_row25_col3" class="data row25 col3" >0.00</td>
+      <td id="T_07ce1_row25_col4" class="data row25 col4" >0.00</td>
+      <td id="T_07ce1_row25_col5" class="data row25 col5" >0.00</td>
+      <td id="T_07ce1_row25_col6" class="data row25 col6" >0.00</td>
+      <td id="T_07ce1_row25_col7" class="data row25 col7" >0.00</td>
+      <td id="T_07ce1_row25_col8" class="data row25 col8" >0.00</td>
+      <td id="T_07ce1_row25_col9" class="data row25 col9" >0.99</td>
+      <td id="T_07ce1_row25_col10" class="data row25 col10" >0.00</td>
+      <td id="T_07ce1_row25_col11" class="data row25 col11" >0.00</td>
+      <td id="T_07ce1_row25_col12" class="data row25 col12" >0.00</td>
+      <td id="T_07ce1_row25_col13" class="data row25 col13" >0.00</td>
+      <td id="T_07ce1_row25_col14" class="data row25 col14" >0.00</td>
+      <td id="T_07ce1_row25_col15" class="data row25 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row26" class="row_heading level1 row26" >LEFT</th>
+      <td id="T_07ce1_row26_col0" class="data row26 col0" >0.00</td>
+      <td id="T_07ce1_row26_col1" class="data row26 col1" >0.99</td>
+      <td id="T_07ce1_row26_col2" class="data row26 col2" >0.00</td>
+      <td id="T_07ce1_row26_col3" class="data row26 col3" >0.00</td>
+      <td id="T_07ce1_row26_col4" class="data row26 col4" >0.00</td>
+      <td id="T_07ce1_row26_col5" class="data row26 col5" >0.00</td>
+      <td id="T_07ce1_row26_col6" class="data row26 col6" >0.00</td>
+      <td id="T_07ce1_row26_col7" class="data row26 col7" >0.00</td>
+      <td id="T_07ce1_row26_col8" class="data row26 col8" >0.00</td>
+      <td id="T_07ce1_row26_col9" class="data row26 col9" >0.00</td>
+      <td id="T_07ce1_row26_col10" class="data row26 col10" >0.00</td>
+      <td id="T_07ce1_row26_col11" class="data row26 col11" >0.00</td>
+      <td id="T_07ce1_row26_col12" class="data row26 col12" >0.00</td>
+      <td id="T_07ce1_row26_col13" class="data row26 col13" >0.00</td>
+      <td id="T_07ce1_row26_col14" class="data row26 col14" >0.00</td>
+      <td id="T_07ce1_row26_col15" class="data row26 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row27" class="row_heading level1 row27" >NO_OP</th>
+      <td id="T_07ce1_row27_col0" class="data row27 col0" >0.00</td>
+      <td id="T_07ce1_row27_col1" class="data row27 col1" >0.00</td>
+      <td id="T_07ce1_row27_col2" class="data row27 col2" >0.00</td>
+      <td id="T_07ce1_row27_col3" class="data row27 col3" >0.00</td>
+      <td id="T_07ce1_row27_col4" class="data row27 col4" >0.00</td>
+      <td id="T_07ce1_row27_col5" class="data row27 col5" >0.99</td>
+      <td id="T_07ce1_row27_col6" class="data row27 col6" >0.00</td>
+      <td id="T_07ce1_row27_col7" class="data row27 col7" >0.00</td>
+      <td id="T_07ce1_row27_col8" class="data row27 col8" >0.00</td>
+      <td id="T_07ce1_row27_col9" class="data row27 col9" >0.00</td>
+      <td id="T_07ce1_row27_col10" class="data row27 col10" >0.00</td>
+      <td id="T_07ce1_row27_col11" class="data row27 col11" >0.00</td>
+      <td id="T_07ce1_row27_col12" class="data row27 col12" >0.00</td>
+      <td id="T_07ce1_row27_col13" class="data row27 col13" >0.00</td>
+      <td id="T_07ce1_row27_col14" class="data row27 col14" >0.00</td>
+      <td id="T_07ce1_row27_col15" class="data row27 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row28" class="row_heading level1 row28" >RIGHT</th>
+      <td id="T_07ce1_row28_col0" class="data row28 col0" >0.00</td>
+      <td id="T_07ce1_row28_col1" class="data row28 col1" >0.00</td>
+      <td id="T_07ce1_row28_col2" class="data row28 col2" >0.00</td>
+      <td id="T_07ce1_row28_col3" class="data row28 col3" >0.00</td>
+      <td id="T_07ce1_row28_col4" class="data row28 col4" >0.00</td>
+      <td id="T_07ce1_row28_col5" class="data row28 col5" >0.99</td>
+      <td id="T_07ce1_row28_col6" class="data row28 col6" >0.00</td>
+      <td id="T_07ce1_row28_col7" class="data row28 col7" >0.00</td>
+      <td id="T_07ce1_row28_col8" class="data row28 col8" >0.00</td>
+      <td id="T_07ce1_row28_col9" class="data row28 col9" >0.00</td>
+      <td id="T_07ce1_row28_col10" class="data row28 col10" >0.00</td>
+      <td id="T_07ce1_row28_col11" class="data row28 col11" >0.00</td>
+      <td id="T_07ce1_row28_col12" class="data row28 col12" >0.00</td>
+      <td id="T_07ce1_row28_col13" class="data row28 col13" >0.00</td>
+      <td id="T_07ce1_row28_col14" class="data row28 col14" >0.00</td>
+      <td id="T_07ce1_row28_col15" class="data row28 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row29" class="row_heading level1 row29" >UP</th>
+      <td id="T_07ce1_row29_col0" class="data row29 col0" >0.00</td>
+      <td id="T_07ce1_row29_col1" class="data row29 col1" >0.00</td>
+      <td id="T_07ce1_row29_col2" class="data row29 col2" >0.00</td>
+      <td id="T_07ce1_row29_col3" class="data row29 col3" >0.00</td>
+      <td id="T_07ce1_row29_col4" class="data row29 col4" >0.00</td>
+      <td id="T_07ce1_row29_col5" class="data row29 col5" >0.00</td>
+      <td id="T_07ce1_row29_col6" class="data row29 col6" >0.00</td>
+      <td id="T_07ce1_row29_col7" class="data row29 col7" >0.00</td>
+      <td id="T_07ce1_row29_col8" class="data row29 col8" >0.99</td>
+      <td id="T_07ce1_row29_col9" class="data row29 col9" >0.00</td>
+      <td id="T_07ce1_row29_col10" class="data row29 col10" >0.00</td>
+      <td id="T_07ce1_row29_col11" class="data row29 col11" >0.00</td>
+      <td id="T_07ce1_row29_col12" class="data row29 col12" >0.00</td>
+      <td id="T_07ce1_row29_col13" class="data row29 col13" >0.00</td>
+      <td id="T_07ce1_row29_col14" class="data row29 col14" >0.00</td>
+      <td id="T_07ce1_row29_col15" class="data row29 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row30" class="row_heading level0 row30" rowspan="5">6</th>
+      <th id="T_07ce1_level1_row30" class="row_heading level1 row30" >DOWN</th>
+      <td id="T_07ce1_row30_col0" class="data row30 col0" >0.00</td>
+      <td id="T_07ce1_row30_col1" class="data row30 col1" >0.00</td>
+      <td id="T_07ce1_row30_col2" class="data row30 col2" >0.00</td>
+      <td id="T_07ce1_row30_col3" class="data row30 col3" >0.00</td>
+      <td id="T_07ce1_row30_col4" class="data row30 col4" >0.00</td>
+      <td id="T_07ce1_row30_col5" class="data row30 col5" >0.00</td>
+      <td id="T_07ce1_row30_col6" class="data row30 col6" >0.99</td>
+      <td id="T_07ce1_row30_col7" class="data row30 col7" >0.00</td>
+      <td id="T_07ce1_row30_col8" class="data row30 col8" >0.00</td>
+      <td id="T_07ce1_row30_col9" class="data row30 col9" >0.00</td>
+      <td id="T_07ce1_row30_col10" class="data row30 col10" >0.00</td>
+      <td id="T_07ce1_row30_col11" class="data row30 col11" >0.00</td>
+      <td id="T_07ce1_row30_col12" class="data row30 col12" >0.00</td>
+      <td id="T_07ce1_row30_col13" class="data row30 col13" >0.00</td>
+      <td id="T_07ce1_row30_col14" class="data row30 col14" >0.00</td>
+      <td id="T_07ce1_row30_col15" class="data row30 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row31" class="row_heading level1 row31" >LEFT</th>
+      <td id="T_07ce1_row31_col0" class="data row31 col0" >0.00</td>
+      <td id="T_07ce1_row31_col1" class="data row31 col1" >0.00</td>
+      <td id="T_07ce1_row31_col2" class="data row31 col2" >0.99</td>
+      <td id="T_07ce1_row31_col3" class="data row31 col3" >0.00</td>
+      <td id="T_07ce1_row31_col4" class="data row31 col4" >0.00</td>
+      <td id="T_07ce1_row31_col5" class="data row31 col5" >0.00</td>
+      <td id="T_07ce1_row31_col6" class="data row31 col6" >0.00</td>
+      <td id="T_07ce1_row31_col7" class="data row31 col7" >0.00</td>
+      <td id="T_07ce1_row31_col8" class="data row31 col8" >0.00</td>
+      <td id="T_07ce1_row31_col9" class="data row31 col9" >0.00</td>
+      <td id="T_07ce1_row31_col10" class="data row31 col10" >0.00</td>
+      <td id="T_07ce1_row31_col11" class="data row31 col11" >0.00</td>
+      <td id="T_07ce1_row31_col12" class="data row31 col12" >0.00</td>
+      <td id="T_07ce1_row31_col13" class="data row31 col13" >0.00</td>
+      <td id="T_07ce1_row31_col14" class="data row31 col14" >0.00</td>
+      <td id="T_07ce1_row31_col15" class="data row31 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row32" class="row_heading level1 row32" >NO_OP</th>
+      <td id="T_07ce1_row32_col0" class="data row32 col0" >0.00</td>
+      <td id="T_07ce1_row32_col1" class="data row32 col1" >0.00</td>
+      <td id="T_07ce1_row32_col2" class="data row32 col2" >0.00</td>
+      <td id="T_07ce1_row32_col3" class="data row32 col3" >0.00</td>
+      <td id="T_07ce1_row32_col4" class="data row32 col4" >0.00</td>
+      <td id="T_07ce1_row32_col5" class="data row32 col5" >0.00</td>
+      <td id="T_07ce1_row32_col6" class="data row32 col6" >0.99</td>
+      <td id="T_07ce1_row32_col7" class="data row32 col7" >0.00</td>
+      <td id="T_07ce1_row32_col8" class="data row32 col8" >0.00</td>
+      <td id="T_07ce1_row32_col9" class="data row32 col9" >0.00</td>
+      <td id="T_07ce1_row32_col10" class="data row32 col10" >0.00</td>
+      <td id="T_07ce1_row32_col11" class="data row32 col11" >0.00</td>
+      <td id="T_07ce1_row32_col12" class="data row32 col12" >0.00</td>
+      <td id="T_07ce1_row32_col13" class="data row32 col13" >0.00</td>
+      <td id="T_07ce1_row32_col14" class="data row32 col14" >0.00</td>
+      <td id="T_07ce1_row32_col15" class="data row32 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row33" class="row_heading level1 row33" >RIGHT</th>
+      <td id="T_07ce1_row33_col0" class="data row33 col0" >0.00</td>
+      <td id="T_07ce1_row33_col1" class="data row33 col1" >0.00</td>
+      <td id="T_07ce1_row33_col2" class="data row33 col2" >0.00</td>
+      <td id="T_07ce1_row33_col3" class="data row33 col3" >0.00</td>
+      <td id="T_07ce1_row33_col4" class="data row33 col4" >0.00</td>
+      <td id="T_07ce1_row33_col5" class="data row33 col5" >0.00</td>
+      <td id="T_07ce1_row33_col6" class="data row33 col6" >0.00</td>
+      <td id="T_07ce1_row33_col7" class="data row33 col7" >0.00</td>
+      <td id="T_07ce1_row33_col8" class="data row33 col8" >0.99</td>
+      <td id="T_07ce1_row33_col9" class="data row33 col9" >0.00</td>
+      <td id="T_07ce1_row33_col10" class="data row33 col10" >0.00</td>
+      <td id="T_07ce1_row33_col11" class="data row33 col11" >0.00</td>
+      <td id="T_07ce1_row33_col12" class="data row33 col12" >0.00</td>
+      <td id="T_07ce1_row33_col13" class="data row33 col13" >0.00</td>
+      <td id="T_07ce1_row33_col14" class="data row33 col14" >0.00</td>
+      <td id="T_07ce1_row33_col15" class="data row33 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row34" class="row_heading level1 row34" >UP</th>
+      <td id="T_07ce1_row34_col0" class="data row34 col0" >0.00</td>
+      <td id="T_07ce1_row34_col1" class="data row34 col1" >0.99</td>
+      <td id="T_07ce1_row34_col2" class="data row34 col2" >0.00</td>
+      <td id="T_07ce1_row34_col3" class="data row34 col3" >0.00</td>
+      <td id="T_07ce1_row34_col4" class="data row34 col4" >0.00</td>
+      <td id="T_07ce1_row34_col5" class="data row34 col5" >0.00</td>
+      <td id="T_07ce1_row34_col6" class="data row34 col6" >0.00</td>
+      <td id="T_07ce1_row34_col7" class="data row34 col7" >0.00</td>
+      <td id="T_07ce1_row34_col8" class="data row34 col8" >0.00</td>
+      <td id="T_07ce1_row34_col9" class="data row34 col9" >0.00</td>
+      <td id="T_07ce1_row34_col10" class="data row34 col10" >0.00</td>
+      <td id="T_07ce1_row34_col11" class="data row34 col11" >0.00</td>
+      <td id="T_07ce1_row34_col12" class="data row34 col12" >0.00</td>
+      <td id="T_07ce1_row34_col13" class="data row34 col13" >0.00</td>
+      <td id="T_07ce1_row34_col14" class="data row34 col14" >0.00</td>
+      <td id="T_07ce1_row34_col15" class="data row34 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row35" class="row_heading level0 row35" rowspan="5">7</th>
+      <th id="T_07ce1_level1_row35" class="row_heading level1 row35" >DOWN</th>
+      <td id="T_07ce1_row35_col0" class="data row35 col0" >0.00</td>
+      <td id="T_07ce1_row35_col1" class="data row35 col1" >0.00</td>
+      <td id="T_07ce1_row35_col2" class="data row35 col2" >0.00</td>
+      <td id="T_07ce1_row35_col3" class="data row35 col3" >0.00</td>
+      <td id="T_07ce1_row35_col4" class="data row35 col4" >0.99</td>
+      <td id="T_07ce1_row35_col5" class="data row35 col5" >0.00</td>
+      <td id="T_07ce1_row35_col6" class="data row35 col6" >0.00</td>
+      <td id="T_07ce1_row35_col7" class="data row35 col7" >0.00</td>
+      <td id="T_07ce1_row35_col8" class="data row35 col8" >0.00</td>
+      <td id="T_07ce1_row35_col9" class="data row35 col9" >0.00</td>
+      <td id="T_07ce1_row35_col10" class="data row35 col10" >0.00</td>
+      <td id="T_07ce1_row35_col11" class="data row35 col11" >0.00</td>
+      <td id="T_07ce1_row35_col12" class="data row35 col12" >0.00</td>
+      <td id="T_07ce1_row35_col13" class="data row35 col13" >0.00</td>
+      <td id="T_07ce1_row35_col14" class="data row35 col14" >0.00</td>
+      <td id="T_07ce1_row35_col15" class="data row35 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row36" class="row_heading level1 row36" >LEFT</th>
+      <td id="T_07ce1_row36_col0" class="data row36 col0" >0.00</td>
+      <td id="T_07ce1_row36_col1" class="data row36 col1" >0.00</td>
+      <td id="T_07ce1_row36_col2" class="data row36 col2" >0.00</td>
+      <td id="T_07ce1_row36_col3" class="data row36 col3" >0.00</td>
+      <td id="T_07ce1_row36_col4" class="data row36 col4" >0.00</td>
+      <td id="T_07ce1_row36_col5" class="data row36 col5" >0.00</td>
+      <td id="T_07ce1_row36_col6" class="data row36 col6" >0.00</td>
+      <td id="T_07ce1_row36_col7" class="data row36 col7" >0.00</td>
+      <td id="T_07ce1_row36_col8" class="data row36 col8" >0.00</td>
+      <td id="T_07ce1_row36_col9" class="data row36 col9" >0.00</td>
+      <td id="T_07ce1_row36_col10" class="data row36 col10" >0.00</td>
+      <td id="T_07ce1_row36_col11" class="data row36 col11" >0.00</td>
+      <td id="T_07ce1_row36_col12" class="data row36 col12" >0.00</td>
+      <td id="T_07ce1_row36_col13" class="data row36 col13" >0.00</td>
+      <td id="T_07ce1_row36_col14" class="data row36 col14" >0.99</td>
+      <td id="T_07ce1_row36_col15" class="data row36 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row37" class="row_heading level1 row37" >NO_OP</th>
+      <td id="T_07ce1_row37_col0" class="data row37 col0" >0.00</td>
+      <td id="T_07ce1_row37_col1" class="data row37 col1" >0.99</td>
+      <td id="T_07ce1_row37_col2" class="data row37 col2" >0.00</td>
+      <td id="T_07ce1_row37_col3" class="data row37 col3" >0.00</td>
+      <td id="T_07ce1_row37_col4" class="data row37 col4" >0.00</td>
+      <td id="T_07ce1_row37_col5" class="data row37 col5" >0.00</td>
+      <td id="T_07ce1_row37_col6" class="data row37 col6" >0.00</td>
+      <td id="T_07ce1_row37_col7" class="data row37 col7" >0.00</td>
+      <td id="T_07ce1_row37_col8" class="data row37 col8" >0.00</td>
+      <td id="T_07ce1_row37_col9" class="data row37 col9" >0.00</td>
+      <td id="T_07ce1_row37_col10" class="data row37 col10" >0.00</td>
+      <td id="T_07ce1_row37_col11" class="data row37 col11" >0.00</td>
+      <td id="T_07ce1_row37_col12" class="data row37 col12" >0.00</td>
+      <td id="T_07ce1_row37_col13" class="data row37 col13" >0.00</td>
+      <td id="T_07ce1_row37_col14" class="data row37 col14" >0.00</td>
+      <td id="T_07ce1_row37_col15" class="data row37 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row38" class="row_heading level1 row38" >RIGHT</th>
+      <td id="T_07ce1_row38_col0" class="data row38 col0" >0.00</td>
+      <td id="T_07ce1_row38_col1" class="data row38 col1" >0.00</td>
+      <td id="T_07ce1_row38_col2" class="data row38 col2" >0.00</td>
+      <td id="T_07ce1_row38_col3" class="data row38 col3" >0.00</td>
+      <td id="T_07ce1_row38_col4" class="data row38 col4" >0.00</td>
+      <td id="T_07ce1_row38_col5" class="data row38 col5" >0.00</td>
+      <td id="T_07ce1_row38_col6" class="data row38 col6" >0.00</td>
+      <td id="T_07ce1_row38_col7" class="data row38 col7" >0.99</td>
+      <td id="T_07ce1_row38_col8" class="data row38 col8" >0.00</td>
+      <td id="T_07ce1_row38_col9" class="data row38 col9" >0.00</td>
+      <td id="T_07ce1_row38_col10" class="data row38 col10" >0.00</td>
+      <td id="T_07ce1_row38_col11" class="data row38 col11" >0.00</td>
+      <td id="T_07ce1_row38_col12" class="data row38 col12" >0.00</td>
+      <td id="T_07ce1_row38_col13" class="data row38 col13" >0.00</td>
+      <td id="T_07ce1_row38_col14" class="data row38 col14" >0.00</td>
+      <td id="T_07ce1_row38_col15" class="data row38 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row39" class="row_heading level1 row39" >UP</th>
+      <td id="T_07ce1_row39_col0" class="data row39 col0" >0.00</td>
+      <td id="T_07ce1_row39_col1" class="data row39 col1" >0.00</td>
+      <td id="T_07ce1_row39_col2" class="data row39 col2" >0.00</td>
+      <td id="T_07ce1_row39_col3" class="data row39 col3" >0.00</td>
+      <td id="T_07ce1_row39_col4" class="data row39 col4" >0.00</td>
+      <td id="T_07ce1_row39_col5" class="data row39 col5" >0.00</td>
+      <td id="T_07ce1_row39_col6" class="data row39 col6" >0.00</td>
+      <td id="T_07ce1_row39_col7" class="data row39 col7" >0.00</td>
+      <td id="T_07ce1_row39_col8" class="data row39 col8" >0.00</td>
+      <td id="T_07ce1_row39_col9" class="data row39 col9" >0.99</td>
+      <td id="T_07ce1_row39_col10" class="data row39 col10" >0.00</td>
+      <td id="T_07ce1_row39_col11" class="data row39 col11" >0.00</td>
+      <td id="T_07ce1_row39_col12" class="data row39 col12" >0.00</td>
+      <td id="T_07ce1_row39_col13" class="data row39 col13" >0.00</td>
+      <td id="T_07ce1_row39_col14" class="data row39 col14" >0.00</td>
+      <td id="T_07ce1_row39_col15" class="data row39 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row40" class="row_heading level0 row40" rowspan="5">8</th>
+      <th id="T_07ce1_level1_row40" class="row_heading level1 row40" >DOWN</th>
+      <td id="T_07ce1_row40_col0" class="data row40 col0" >0.00</td>
+      <td id="T_07ce1_row40_col1" class="data row40 col1" >0.00</td>
+      <td id="T_07ce1_row40_col2" class="data row40 col2" >0.00</td>
+      <td id="T_07ce1_row40_col3" class="data row40 col3" >0.00</td>
+      <td id="T_07ce1_row40_col4" class="data row40 col4" >0.00</td>
+      <td id="T_07ce1_row40_col5" class="data row40 col5" >0.00</td>
+      <td id="T_07ce1_row40_col6" class="data row40 col6" >0.00</td>
+      <td id="T_07ce1_row40_col7" class="data row40 col7" >0.00</td>
+      <td id="T_07ce1_row40_col8" class="data row40 col8" >1.00</td>
+      <td id="T_07ce1_row40_col9" class="data row40 col9" >0.00</td>
+      <td id="T_07ce1_row40_col10" class="data row40 col10" >0.00</td>
+      <td id="T_07ce1_row40_col11" class="data row40 col11" >0.00</td>
+      <td id="T_07ce1_row40_col12" class="data row40 col12" >0.00</td>
+      <td id="T_07ce1_row40_col13" class="data row40 col13" >0.00</td>
+      <td id="T_07ce1_row40_col14" class="data row40 col14" >0.00</td>
+      <td id="T_07ce1_row40_col15" class="data row40 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row41" class="row_heading level1 row41" >LEFT</th>
+      <td id="T_07ce1_row41_col0" class="data row41 col0" >0.00</td>
+      <td id="T_07ce1_row41_col1" class="data row41 col1" >0.00</td>
+      <td id="T_07ce1_row41_col2" class="data row41 col2" >0.00</td>
+      <td id="T_07ce1_row41_col3" class="data row41 col3" >0.00</td>
+      <td id="T_07ce1_row41_col4" class="data row41 col4" >0.00</td>
+      <td id="T_07ce1_row41_col5" class="data row41 col5" >0.00</td>
+      <td id="T_07ce1_row41_col6" class="data row41 col6" >0.99</td>
+      <td id="T_07ce1_row41_col7" class="data row41 col7" >0.00</td>
+      <td id="T_07ce1_row41_col8" class="data row41 col8" >0.01</td>
+      <td id="T_07ce1_row41_col9" class="data row41 col9" >0.00</td>
+      <td id="T_07ce1_row41_col10" class="data row41 col10" >0.00</td>
+      <td id="T_07ce1_row41_col11" class="data row41 col11" >0.00</td>
+      <td id="T_07ce1_row41_col12" class="data row41 col12" >0.00</td>
+      <td id="T_07ce1_row41_col13" class="data row41 col13" >0.00</td>
+      <td id="T_07ce1_row41_col14" class="data row41 col14" >0.00</td>
+      <td id="T_07ce1_row41_col15" class="data row41 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row42" class="row_heading level1 row42" >NO_OP</th>
+      <td id="T_07ce1_row42_col0" class="data row42 col0" >0.00</td>
+      <td id="T_07ce1_row42_col1" class="data row42 col1" >0.00</td>
+      <td id="T_07ce1_row42_col2" class="data row42 col2" >0.00</td>
+      <td id="T_07ce1_row42_col3" class="data row42 col3" >0.00</td>
+      <td id="T_07ce1_row42_col4" class="data row42 col4" >0.00</td>
+      <td id="T_07ce1_row42_col5" class="data row42 col5" >0.00</td>
+      <td id="T_07ce1_row42_col6" class="data row42 col6" >0.00</td>
+      <td id="T_07ce1_row42_col7" class="data row42 col7" >0.00</td>
+      <td id="T_07ce1_row42_col8" class="data row42 col8" >1.00</td>
+      <td id="T_07ce1_row42_col9" class="data row42 col9" >0.00</td>
+      <td id="T_07ce1_row42_col10" class="data row42 col10" >0.00</td>
+      <td id="T_07ce1_row42_col11" class="data row42 col11" >0.00</td>
+      <td id="T_07ce1_row42_col12" class="data row42 col12" >0.00</td>
+      <td id="T_07ce1_row42_col13" class="data row42 col13" >0.00</td>
+      <td id="T_07ce1_row42_col14" class="data row42 col14" >0.00</td>
+      <td id="T_07ce1_row42_col15" class="data row42 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row43" class="row_heading level1 row43" >RIGHT</th>
+      <td id="T_07ce1_row43_col0" class="data row43 col0" >0.00</td>
+      <td id="T_07ce1_row43_col1" class="data row43 col1" >0.00</td>
+      <td id="T_07ce1_row43_col2" class="data row43 col2" >0.00</td>
+      <td id="T_07ce1_row43_col3" class="data row43 col3" >0.00</td>
+      <td id="T_07ce1_row43_col4" class="data row43 col4" >0.00</td>
+      <td id="T_07ce1_row43_col5" class="data row43 col5" >0.99</td>
+      <td id="T_07ce1_row43_col6" class="data row43 col6" >0.00</td>
+      <td id="T_07ce1_row43_col7" class="data row43 col7" >0.00</td>
+      <td id="T_07ce1_row43_col8" class="data row43 col8" >0.01</td>
+      <td id="T_07ce1_row43_col9" class="data row43 col9" >0.00</td>
+      <td id="T_07ce1_row43_col10" class="data row43 col10" >0.00</td>
+      <td id="T_07ce1_row43_col11" class="data row43 col11" >0.00</td>
+      <td id="T_07ce1_row43_col12" class="data row43 col12" >0.00</td>
+      <td id="T_07ce1_row43_col13" class="data row43 col13" >0.00</td>
+      <td id="T_07ce1_row43_col14" class="data row43 col14" >0.00</td>
+      <td id="T_07ce1_row43_col15" class="data row43 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row44" class="row_heading level1 row44" >UP</th>
+      <td id="T_07ce1_row44_col0" class="data row44 col0" >0.00</td>
+      <td id="T_07ce1_row44_col1" class="data row44 col1" >0.00</td>
+      <td id="T_07ce1_row44_col2" class="data row44 col2" >0.00</td>
+      <td id="T_07ce1_row44_col3" class="data row44 col3" >0.00</td>
+      <td id="T_07ce1_row44_col4" class="data row44 col4" >0.00</td>
+      <td id="T_07ce1_row44_col5" class="data row44 col5" >0.00</td>
+      <td id="T_07ce1_row44_col6" class="data row44 col6" >0.00</td>
+      <td id="T_07ce1_row44_col7" class="data row44 col7" >0.00</td>
+      <td id="T_07ce1_row44_col8" class="data row44 col8" >1.00</td>
+      <td id="T_07ce1_row44_col9" class="data row44 col9" >0.00</td>
+      <td id="T_07ce1_row44_col10" class="data row44 col10" >0.00</td>
+      <td id="T_07ce1_row44_col11" class="data row44 col11" >0.00</td>
+      <td id="T_07ce1_row44_col12" class="data row44 col12" >0.00</td>
+      <td id="T_07ce1_row44_col13" class="data row44 col13" >0.00</td>
+      <td id="T_07ce1_row44_col14" class="data row44 col14" >0.00</td>
+      <td id="T_07ce1_row44_col15" class="data row44 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row45" class="row_heading level0 row45" rowspan="5">9</th>
+      <th id="T_07ce1_level1_row45" class="row_heading level1 row45" >DOWN</th>
+      <td id="T_07ce1_row45_col0" class="data row45 col0" >0.00</td>
+      <td id="T_07ce1_row45_col1" class="data row45 col1" >0.00</td>
+      <td id="T_07ce1_row45_col2" class="data row45 col2" >0.00</td>
+      <td id="T_07ce1_row45_col3" class="data row45 col3" >0.00</td>
+      <td id="T_07ce1_row45_col4" class="data row45 col4" >0.00</td>
+      <td id="T_07ce1_row45_col5" class="data row45 col5" >0.00</td>
+      <td id="T_07ce1_row45_col6" class="data row45 col6" >0.00</td>
+      <td id="T_07ce1_row45_col7" class="data row45 col7" >0.00</td>
+      <td id="T_07ce1_row45_col8" class="data row45 col8" >0.00</td>
+      <td id="T_07ce1_row45_col9" class="data row45 col9" >0.99</td>
+      <td id="T_07ce1_row45_col10" class="data row45 col10" >0.00</td>
+      <td id="T_07ce1_row45_col11" class="data row45 col11" >0.00</td>
+      <td id="T_07ce1_row45_col12" class="data row45 col12" >0.00</td>
+      <td id="T_07ce1_row45_col13" class="data row45 col13" >0.00</td>
+      <td id="T_07ce1_row45_col14" class="data row45 col14" >0.00</td>
+      <td id="T_07ce1_row45_col15" class="data row45 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row46" class="row_heading level1 row46" >LEFT</th>
+      <td id="T_07ce1_row46_col0" class="data row46 col0" >0.00</td>
+      <td id="T_07ce1_row46_col1" class="data row46 col1" >0.00</td>
+      <td id="T_07ce1_row46_col2" class="data row46 col2" >0.00</td>
+      <td id="T_07ce1_row46_col3" class="data row46 col3" >0.00</td>
+      <td id="T_07ce1_row46_col4" class="data row46 col4" >0.00</td>
+      <td id="T_07ce1_row46_col5" class="data row46 col5" >0.99</td>
+      <td id="T_07ce1_row46_col6" class="data row46 col6" >0.00</td>
+      <td id="T_07ce1_row46_col7" class="data row46 col7" >0.00</td>
+      <td id="T_07ce1_row46_col8" class="data row46 col8" >0.00</td>
+      <td id="T_07ce1_row46_col9" class="data row46 col9" >0.00</td>
+      <td id="T_07ce1_row46_col10" class="data row46 col10" >0.00</td>
+      <td id="T_07ce1_row46_col11" class="data row46 col11" >0.00</td>
+      <td id="T_07ce1_row46_col12" class="data row46 col12" >0.00</td>
+      <td id="T_07ce1_row46_col13" class="data row46 col13" >0.00</td>
+      <td id="T_07ce1_row46_col14" class="data row46 col14" >0.00</td>
+      <td id="T_07ce1_row46_col15" class="data row46 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row47" class="row_heading level1 row47" >NO_OP</th>
+      <td id="T_07ce1_row47_col0" class="data row47 col0" >0.00</td>
+      <td id="T_07ce1_row47_col1" class="data row47 col1" >0.00</td>
+      <td id="T_07ce1_row47_col2" class="data row47 col2" >0.00</td>
+      <td id="T_07ce1_row47_col3" class="data row47 col3" >0.00</td>
+      <td id="T_07ce1_row47_col4" class="data row47 col4" >0.00</td>
+      <td id="T_07ce1_row47_col5" class="data row47 col5" >0.00</td>
+      <td id="T_07ce1_row47_col6" class="data row47 col6" >0.00</td>
+      <td id="T_07ce1_row47_col7" class="data row47 col7" >0.00</td>
+      <td id="T_07ce1_row47_col8" class="data row47 col8" >0.00</td>
+      <td id="T_07ce1_row47_col9" class="data row47 col9" >0.00</td>
+      <td id="T_07ce1_row47_col10" class="data row47 col10" >0.00</td>
+      <td id="T_07ce1_row47_col11" class="data row47 col11" >0.00</td>
+      <td id="T_07ce1_row47_col12" class="data row47 col12" >0.00</td>
+      <td id="T_07ce1_row47_col13" class="data row47 col13" >0.00</td>
+      <td id="T_07ce1_row47_col14" class="data row47 col14" >0.00</td>
+      <td id="T_07ce1_row47_col15" class="data row47 col15" >0.99</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row48" class="row_heading level1 row48" >RIGHT</th>
+      <td id="T_07ce1_row48_col0" class="data row48 col0" >0.00</td>
+      <td id="T_07ce1_row48_col1" class="data row48 col1" >0.00</td>
+      <td id="T_07ce1_row48_col2" class="data row48 col2" >0.00</td>
+      <td id="T_07ce1_row48_col3" class="data row48 col3" >0.00</td>
+      <td id="T_07ce1_row48_col4" class="data row48 col4" >0.00</td>
+      <td id="T_07ce1_row48_col5" class="data row48 col5" >0.00</td>
+      <td id="T_07ce1_row48_col6" class="data row48 col6" >0.00</td>
+      <td id="T_07ce1_row48_col7" class="data row48 col7" >0.00</td>
+      <td id="T_07ce1_row48_col8" class="data row48 col8" >0.00</td>
+      <td id="T_07ce1_row48_col9" class="data row48 col9" >0.99</td>
+      <td id="T_07ce1_row48_col10" class="data row48 col10" >0.00</td>
+      <td id="T_07ce1_row48_col11" class="data row48 col11" >0.00</td>
+      <td id="T_07ce1_row48_col12" class="data row48 col12" >0.00</td>
+      <td id="T_07ce1_row48_col13" class="data row48 col13" >0.00</td>
+      <td id="T_07ce1_row48_col14" class="data row48 col14" >0.00</td>
+      <td id="T_07ce1_row48_col15" class="data row48 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row49" class="row_heading level1 row49" >UP</th>
+      <td id="T_07ce1_row49_col0" class="data row49 col0" >0.00</td>
+      <td id="T_07ce1_row49_col1" class="data row49 col1" >0.00</td>
+      <td id="T_07ce1_row49_col2" class="data row49 col2" >0.00</td>
+      <td id="T_07ce1_row49_col3" class="data row49 col3" >0.00</td>
+      <td id="T_07ce1_row49_col4" class="data row49 col4" >0.00</td>
+      <td id="T_07ce1_row49_col5" class="data row49 col5" >0.00</td>
+      <td id="T_07ce1_row49_col6" class="data row49 col6" >0.00</td>
+      <td id="T_07ce1_row49_col7" class="data row49 col7" >0.99</td>
+      <td id="T_07ce1_row49_col8" class="data row49 col8" >0.00</td>
+      <td id="T_07ce1_row49_col9" class="data row49 col9" >0.00</td>
+      <td id="T_07ce1_row49_col10" class="data row49 col10" >0.00</td>
+      <td id="T_07ce1_row49_col11" class="data row49 col11" >0.00</td>
+      <td id="T_07ce1_row49_col12" class="data row49 col12" >0.00</td>
+      <td id="T_07ce1_row49_col13" class="data row49 col13" >0.00</td>
+      <td id="T_07ce1_row49_col14" class="data row49 col14" >0.00</td>
+      <td id="T_07ce1_row49_col15" class="data row49 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row50" class="row_heading level0 row50" rowspan="5">10</th>
+      <th id="T_07ce1_level1_row50" class="row_heading level1 row50" >DOWN</th>
+      <td id="T_07ce1_row50_col0" class="data row50 col0" >0.00</td>
+      <td id="T_07ce1_row50_col1" class="data row50 col1" >0.00</td>
+      <td id="T_07ce1_row50_col2" class="data row50 col2" >0.00</td>
+      <td id="T_07ce1_row50_col3" class="data row50 col3" >0.00</td>
+      <td id="T_07ce1_row50_col4" class="data row50 col4" >0.00</td>
+      <td id="T_07ce1_row50_col5" class="data row50 col5" >0.00</td>
+      <td id="T_07ce1_row50_col6" class="data row50 col6" >0.00</td>
+      <td id="T_07ce1_row50_col7" class="data row50 col7" >0.00</td>
+      <td id="T_07ce1_row50_col8" class="data row50 col8" >0.00</td>
+      <td id="T_07ce1_row50_col9" class="data row50 col9" >0.00</td>
+      <td id="T_07ce1_row50_col10" class="data row50 col10" >1.00</td>
+      <td id="T_07ce1_row50_col11" class="data row50 col11" >0.00</td>
+      <td id="T_07ce1_row50_col12" class="data row50 col12" >0.00</td>
+      <td id="T_07ce1_row50_col13" class="data row50 col13" >0.00</td>
+      <td id="T_07ce1_row50_col14" class="data row50 col14" >0.00</td>
+      <td id="T_07ce1_row50_col15" class="data row50 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row51" class="row_heading level1 row51" >LEFT</th>
+      <td id="T_07ce1_row51_col0" class="data row51 col0" >0.00</td>
+      <td id="T_07ce1_row51_col1" class="data row51 col1" >0.00</td>
+      <td id="T_07ce1_row51_col2" class="data row51 col2" >0.00</td>
+      <td id="T_07ce1_row51_col3" class="data row51 col3" >0.00</td>
+      <td id="T_07ce1_row51_col4" class="data row51 col4" >0.00</td>
+      <td id="T_07ce1_row51_col5" class="data row51 col5" >0.00</td>
+      <td id="T_07ce1_row51_col6" class="data row51 col6" >0.00</td>
+      <td id="T_07ce1_row51_col7" class="data row51 col7" >0.00</td>
+      <td id="T_07ce1_row51_col8" class="data row51 col8" >0.00</td>
+      <td id="T_07ce1_row51_col9" class="data row51 col9" >0.00</td>
+      <td id="T_07ce1_row51_col10" class="data row51 col10" >1.00</td>
+      <td id="T_07ce1_row51_col11" class="data row51 col11" >0.00</td>
+      <td id="T_07ce1_row51_col12" class="data row51 col12" >0.00</td>
+      <td id="T_07ce1_row51_col13" class="data row51 col13" >0.00</td>
+      <td id="T_07ce1_row51_col14" class="data row51 col14" >0.00</td>
+      <td id="T_07ce1_row51_col15" class="data row51 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row52" class="row_heading level1 row52" >NO_OP</th>
+      <td id="T_07ce1_row52_col0" class="data row52 col0" >0.00</td>
+      <td id="T_07ce1_row52_col1" class="data row52 col1" >0.00</td>
+      <td id="T_07ce1_row52_col2" class="data row52 col2" >0.00</td>
+      <td id="T_07ce1_row52_col3" class="data row52 col3" >0.99</td>
+      <td id="T_07ce1_row52_col4" class="data row52 col4" >0.00</td>
+      <td id="T_07ce1_row52_col5" class="data row52 col5" >0.00</td>
+      <td id="T_07ce1_row52_col6" class="data row52 col6" >0.00</td>
+      <td id="T_07ce1_row52_col7" class="data row52 col7" >0.00</td>
+      <td id="T_07ce1_row52_col8" class="data row52 col8" >0.00</td>
+      <td id="T_07ce1_row52_col9" class="data row52 col9" >0.00</td>
+      <td id="T_07ce1_row52_col10" class="data row52 col10" >0.01</td>
+      <td id="T_07ce1_row52_col11" class="data row52 col11" >0.00</td>
+      <td id="T_07ce1_row52_col12" class="data row52 col12" >0.00</td>
+      <td id="T_07ce1_row52_col13" class="data row52 col13" >0.00</td>
+      <td id="T_07ce1_row52_col14" class="data row52 col14" >0.00</td>
+      <td id="T_07ce1_row52_col15" class="data row52 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row53" class="row_heading level1 row53" >RIGHT</th>
+      <td id="T_07ce1_row53_col0" class="data row53 col0" >0.00</td>
+      <td id="T_07ce1_row53_col1" class="data row53 col1" >0.00</td>
+      <td id="T_07ce1_row53_col2" class="data row53 col2" >0.99</td>
+      <td id="T_07ce1_row53_col3" class="data row53 col3" >0.00</td>
+      <td id="T_07ce1_row53_col4" class="data row53 col4" >0.00</td>
+      <td id="T_07ce1_row53_col5" class="data row53 col5" >0.00</td>
+      <td id="T_07ce1_row53_col6" class="data row53 col6" >0.00</td>
+      <td id="T_07ce1_row53_col7" class="data row53 col7" >0.00</td>
+      <td id="T_07ce1_row53_col8" class="data row53 col8" >0.00</td>
+      <td id="T_07ce1_row53_col9" class="data row53 col9" >0.00</td>
+      <td id="T_07ce1_row53_col10" class="data row53 col10" >0.01</td>
+      <td id="T_07ce1_row53_col11" class="data row53 col11" >0.00</td>
+      <td id="T_07ce1_row53_col12" class="data row53 col12" >0.00</td>
+      <td id="T_07ce1_row53_col13" class="data row53 col13" >0.00</td>
+      <td id="T_07ce1_row53_col14" class="data row53 col14" >0.00</td>
+      <td id="T_07ce1_row53_col15" class="data row53 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row54" class="row_heading level1 row54" >UP</th>
+      <td id="T_07ce1_row54_col0" class="data row54 col0" >0.00</td>
+      <td id="T_07ce1_row54_col1" class="data row54 col1" >0.00</td>
+      <td id="T_07ce1_row54_col2" class="data row54 col2" >0.00</td>
+      <td id="T_07ce1_row54_col3" class="data row54 col3" >0.00</td>
+      <td id="T_07ce1_row54_col4" class="data row54 col4" >0.00</td>
+      <td id="T_07ce1_row54_col5" class="data row54 col5" >0.00</td>
+      <td id="T_07ce1_row54_col6" class="data row54 col6" >0.00</td>
+      <td id="T_07ce1_row54_col7" class="data row54 col7" >0.00</td>
+      <td id="T_07ce1_row54_col8" class="data row54 col8" >0.00</td>
+      <td id="T_07ce1_row54_col9" class="data row54 col9" >0.00</td>
+      <td id="T_07ce1_row54_col10" class="data row54 col10" >1.00</td>
+      <td id="T_07ce1_row54_col11" class="data row54 col11" >0.00</td>
+      <td id="T_07ce1_row54_col12" class="data row54 col12" >0.00</td>
+      <td id="T_07ce1_row54_col13" class="data row54 col13" >0.00</td>
+      <td id="T_07ce1_row54_col14" class="data row54 col14" >0.00</td>
+      <td id="T_07ce1_row54_col15" class="data row54 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row55" class="row_heading level0 row55" rowspan="5">11</th>
+      <th id="T_07ce1_level1_row55" class="row_heading level1 row55" >DOWN</th>
+      <td id="T_07ce1_row55_col0" class="data row55 col0" >0.00</td>
+      <td id="T_07ce1_row55_col1" class="data row55 col1" >0.00</td>
+      <td id="T_07ce1_row55_col2" class="data row55 col2" >0.00</td>
+      <td id="T_07ce1_row55_col3" class="data row55 col3" >0.00</td>
+      <td id="T_07ce1_row55_col4" class="data row55 col4" >0.99</td>
+      <td id="T_07ce1_row55_col5" class="data row55 col5" >0.00</td>
+      <td id="T_07ce1_row55_col6" class="data row55 col6" >0.00</td>
+      <td id="T_07ce1_row55_col7" class="data row55 col7" >0.00</td>
+      <td id="T_07ce1_row55_col8" class="data row55 col8" >0.00</td>
+      <td id="T_07ce1_row55_col9" class="data row55 col9" >0.00</td>
+      <td id="T_07ce1_row55_col10" class="data row55 col10" >0.00</td>
+      <td id="T_07ce1_row55_col11" class="data row55 col11" >0.00</td>
+      <td id="T_07ce1_row55_col12" class="data row55 col12" >0.00</td>
+      <td id="T_07ce1_row55_col13" class="data row55 col13" >0.00</td>
+      <td id="T_07ce1_row55_col14" class="data row55 col14" >0.00</td>
+      <td id="T_07ce1_row55_col15" class="data row55 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row56" class="row_heading level1 row56" >LEFT</th>
+      <td id="T_07ce1_row56_col0" class="data row56 col0" >0.00</td>
+      <td id="T_07ce1_row56_col1" class="data row56 col1" >0.00</td>
+      <td id="T_07ce1_row56_col2" class="data row56 col2" >0.00</td>
+      <td id="T_07ce1_row56_col3" class="data row56 col3" >0.00</td>
+      <td id="T_07ce1_row56_col4" class="data row56 col4" >0.00</td>
+      <td id="T_07ce1_row56_col5" class="data row56 col5" >0.00</td>
+      <td id="T_07ce1_row56_col6" class="data row56 col6" >0.00</td>
+      <td id="T_07ce1_row56_col7" class="data row56 col7" >0.00</td>
+      <td id="T_07ce1_row56_col8" class="data row56 col8" >0.00</td>
+      <td id="T_07ce1_row56_col9" class="data row56 col9" >0.00</td>
+      <td id="T_07ce1_row56_col10" class="data row56 col10" >0.00</td>
+      <td id="T_07ce1_row56_col11" class="data row56 col11" >0.99</td>
+      <td id="T_07ce1_row56_col12" class="data row56 col12" >0.00</td>
+      <td id="T_07ce1_row56_col13" class="data row56 col13" >0.00</td>
+      <td id="T_07ce1_row56_col14" class="data row56 col14" >0.00</td>
+      <td id="T_07ce1_row56_col15" class="data row56 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row57" class="row_heading level1 row57" >NO_OP</th>
+      <td id="T_07ce1_row57_col0" class="data row57 col0" >0.00</td>
+      <td id="T_07ce1_row57_col1" class="data row57 col1" >0.00</td>
+      <td id="T_07ce1_row57_col2" class="data row57 col2" >0.00</td>
+      <td id="T_07ce1_row57_col3" class="data row57 col3" >0.00</td>
+      <td id="T_07ce1_row57_col4" class="data row57 col4" >0.00</td>
+      <td id="T_07ce1_row57_col5" class="data row57 col5" >0.00</td>
+      <td id="T_07ce1_row57_col6" class="data row57 col6" >0.00</td>
+      <td id="T_07ce1_row57_col7" class="data row57 col7" >0.00</td>
+      <td id="T_07ce1_row57_col8" class="data row57 col8" >0.00</td>
+      <td id="T_07ce1_row57_col9" class="data row57 col9" >0.00</td>
+      <td id="T_07ce1_row57_col10" class="data row57 col10" >0.00</td>
+      <td id="T_07ce1_row57_col11" class="data row57 col11" >0.00</td>
+      <td id="T_07ce1_row57_col12" class="data row57 col12" >0.99</td>
+      <td id="T_07ce1_row57_col13" class="data row57 col13" >0.00</td>
+      <td id="T_07ce1_row57_col14" class="data row57 col14" >0.00</td>
+      <td id="T_07ce1_row57_col15" class="data row57 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row58" class="row_heading level1 row58" >RIGHT</th>
+      <td id="T_07ce1_row58_col0" class="data row58 col0" >0.00</td>
+      <td id="T_07ce1_row58_col1" class="data row58 col1" >0.00</td>
+      <td id="T_07ce1_row58_col2" class="data row58 col2" >0.00</td>
+      <td id="T_07ce1_row58_col3" class="data row58 col3" >0.99</td>
+      <td id="T_07ce1_row58_col4" class="data row58 col4" >0.00</td>
+      <td id="T_07ce1_row58_col5" class="data row58 col5" >0.00</td>
+      <td id="T_07ce1_row58_col6" class="data row58 col6" >0.00</td>
+      <td id="T_07ce1_row58_col7" class="data row58 col7" >0.00</td>
+      <td id="T_07ce1_row58_col8" class="data row58 col8" >0.00</td>
+      <td id="T_07ce1_row58_col9" class="data row58 col9" >0.00</td>
+      <td id="T_07ce1_row58_col10" class="data row58 col10" >0.00</td>
+      <td id="T_07ce1_row58_col11" class="data row58 col11" >0.00</td>
+      <td id="T_07ce1_row58_col12" class="data row58 col12" >0.00</td>
+      <td id="T_07ce1_row58_col13" class="data row58 col13" >0.00</td>
+      <td id="T_07ce1_row58_col14" class="data row58 col14" >0.00</td>
+      <td id="T_07ce1_row58_col15" class="data row58 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row59" class="row_heading level1 row59" >UP</th>
+      <td id="T_07ce1_row59_col0" class="data row59 col0" >0.00</td>
+      <td id="T_07ce1_row59_col1" class="data row59 col1" >0.00</td>
+      <td id="T_07ce1_row59_col2" class="data row59 col2" >0.00</td>
+      <td id="T_07ce1_row59_col3" class="data row59 col3" >0.00</td>
+      <td id="T_07ce1_row59_col4" class="data row59 col4" >0.00</td>
+      <td id="T_07ce1_row59_col5" class="data row59 col5" >0.00</td>
+      <td id="T_07ce1_row59_col6" class="data row59 col6" >0.00</td>
+      <td id="T_07ce1_row59_col7" class="data row59 col7" >0.00</td>
+      <td id="T_07ce1_row59_col8" class="data row59 col8" >0.00</td>
+      <td id="T_07ce1_row59_col9" class="data row59 col9" >0.00</td>
+      <td id="T_07ce1_row59_col10" class="data row59 col10" >0.00</td>
+      <td id="T_07ce1_row59_col11" class="data row59 col11" >0.99</td>
+      <td id="T_07ce1_row59_col12" class="data row59 col12" >0.00</td>
+      <td id="T_07ce1_row59_col13" class="data row59 col13" >0.00</td>
+      <td id="T_07ce1_row59_col14" class="data row59 col14" >0.00</td>
+      <td id="T_07ce1_row59_col15" class="data row59 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row60" class="row_heading level0 row60" rowspan="5">12</th>
+      <th id="T_07ce1_level1_row60" class="row_heading level1 row60" >DOWN</th>
+      <td id="T_07ce1_row60_col0" class="data row60 col0" >0.00</td>
+      <td id="T_07ce1_row60_col1" class="data row60 col1" >0.00</td>
+      <td id="T_07ce1_row60_col2" class="data row60 col2" >0.00</td>
+      <td id="T_07ce1_row60_col3" class="data row60 col3" >0.00</td>
+      <td id="T_07ce1_row60_col4" class="data row60 col4" >0.00</td>
+      <td id="T_07ce1_row60_col5" class="data row60 col5" >0.00</td>
+      <td id="T_07ce1_row60_col6" class="data row60 col6" >0.00</td>
+      <td id="T_07ce1_row60_col7" class="data row60 col7" >0.00</td>
+      <td id="T_07ce1_row60_col8" class="data row60 col8" >0.00</td>
+      <td id="T_07ce1_row60_col9" class="data row60 col9" >0.00</td>
+      <td id="T_07ce1_row60_col10" class="data row60 col10" >0.00</td>
+      <td id="T_07ce1_row60_col11" class="data row60 col11" >0.00</td>
+      <td id="T_07ce1_row60_col12" class="data row60 col12" >0.01</td>
+      <td id="T_07ce1_row60_col13" class="data row60 col13" >0.99</td>
+      <td id="T_07ce1_row60_col14" class="data row60 col14" >0.00</td>
+      <td id="T_07ce1_row60_col15" class="data row60 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row61" class="row_heading level1 row61" >LEFT</th>
+      <td id="T_07ce1_row61_col0" class="data row61 col0" >0.00</td>
+      <td id="T_07ce1_row61_col1" class="data row61 col1" >0.00</td>
+      <td id="T_07ce1_row61_col2" class="data row61 col2" >0.00</td>
+      <td id="T_07ce1_row61_col3" class="data row61 col3" >0.00</td>
+      <td id="T_07ce1_row61_col4" class="data row61 col4" >0.00</td>
+      <td id="T_07ce1_row61_col5" class="data row61 col5" >0.00</td>
+      <td id="T_07ce1_row61_col6" class="data row61 col6" >0.00</td>
+      <td id="T_07ce1_row61_col7" class="data row61 col7" >0.00</td>
+      <td id="T_07ce1_row61_col8" class="data row61 col8" >0.00</td>
+      <td id="T_07ce1_row61_col9" class="data row61 col9" >0.00</td>
+      <td id="T_07ce1_row61_col10" class="data row61 col10" >0.00</td>
+      <td id="T_07ce1_row61_col11" class="data row61 col11" >0.00</td>
+      <td id="T_07ce1_row61_col12" class="data row61 col12" >1.00</td>
+      <td id="T_07ce1_row61_col13" class="data row61 col13" >0.00</td>
+      <td id="T_07ce1_row61_col14" class="data row61 col14" >0.00</td>
+      <td id="T_07ce1_row61_col15" class="data row61 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row62" class="row_heading level1 row62" >NO_OP</th>
+      <td id="T_07ce1_row62_col0" class="data row62 col0" >0.00</td>
+      <td id="T_07ce1_row62_col1" class="data row62 col1" >0.00</td>
+      <td id="T_07ce1_row62_col2" class="data row62 col2" >0.00</td>
+      <td id="T_07ce1_row62_col3" class="data row62 col3" >0.00</td>
+      <td id="T_07ce1_row62_col4" class="data row62 col4" >0.00</td>
+      <td id="T_07ce1_row62_col5" class="data row62 col5" >0.00</td>
+      <td id="T_07ce1_row62_col6" class="data row62 col6" >0.00</td>
+      <td id="T_07ce1_row62_col7" class="data row62 col7" >0.00</td>
+      <td id="T_07ce1_row62_col8" class="data row62 col8" >0.00</td>
+      <td id="T_07ce1_row62_col9" class="data row62 col9" >0.00</td>
+      <td id="T_07ce1_row62_col10" class="data row62 col10" >0.00</td>
+      <td id="T_07ce1_row62_col11" class="data row62 col11" >0.00</td>
+      <td id="T_07ce1_row62_col12" class="data row62 col12" >1.00</td>
+      <td id="T_07ce1_row62_col13" class="data row62 col13" >0.00</td>
+      <td id="T_07ce1_row62_col14" class="data row62 col14" >0.00</td>
+      <td id="T_07ce1_row62_col15" class="data row62 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row63" class="row_heading level1 row63" >RIGHT</th>
+      <td id="T_07ce1_row63_col0" class="data row63 col0" >0.00</td>
+      <td id="T_07ce1_row63_col1" class="data row63 col1" >0.00</td>
+      <td id="T_07ce1_row63_col2" class="data row63 col2" >0.00</td>
+      <td id="T_07ce1_row63_col3" class="data row63 col3" >0.00</td>
+      <td id="T_07ce1_row63_col4" class="data row63 col4" >0.00</td>
+      <td id="T_07ce1_row63_col5" class="data row63 col5" >0.00</td>
+      <td id="T_07ce1_row63_col6" class="data row63 col6" >0.00</td>
+      <td id="T_07ce1_row63_col7" class="data row63 col7" >0.00</td>
+      <td id="T_07ce1_row63_col8" class="data row63 col8" >0.00</td>
+      <td id="T_07ce1_row63_col9" class="data row63 col9" >0.00</td>
+      <td id="T_07ce1_row63_col10" class="data row63 col10" >0.00</td>
+      <td id="T_07ce1_row63_col11" class="data row63 col11" >0.00</td>
+      <td id="T_07ce1_row63_col12" class="data row63 col12" >1.00</td>
+      <td id="T_07ce1_row63_col13" class="data row63 col13" >0.00</td>
+      <td id="T_07ce1_row63_col14" class="data row63 col14" >0.00</td>
+      <td id="T_07ce1_row63_col15" class="data row63 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row64" class="row_heading level1 row64" >UP</th>
+      <td id="T_07ce1_row64_col0" class="data row64 col0" >0.00</td>
+      <td id="T_07ce1_row64_col1" class="data row64 col1" >0.00</td>
+      <td id="T_07ce1_row64_col2" class="data row64 col2" >0.00</td>
+      <td id="T_07ce1_row64_col3" class="data row64 col3" >0.00</td>
+      <td id="T_07ce1_row64_col4" class="data row64 col4" >0.00</td>
+      <td id="T_07ce1_row64_col5" class="data row64 col5" >0.00</td>
+      <td id="T_07ce1_row64_col6" class="data row64 col6" >0.00</td>
+      <td id="T_07ce1_row64_col7" class="data row64 col7" >0.00</td>
+      <td id="T_07ce1_row64_col8" class="data row64 col8" >0.00</td>
+      <td id="T_07ce1_row64_col9" class="data row64 col9" >0.00</td>
+      <td id="T_07ce1_row64_col10" class="data row64 col10" >0.00</td>
+      <td id="T_07ce1_row64_col11" class="data row64 col11" >0.99</td>
+      <td id="T_07ce1_row64_col12" class="data row64 col12" >0.01</td>
+      <td id="T_07ce1_row64_col13" class="data row64 col13" >0.00</td>
+      <td id="T_07ce1_row64_col14" class="data row64 col14" >0.00</td>
+      <td id="T_07ce1_row64_col15" class="data row64 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row65" class="row_heading level0 row65" rowspan="5">13</th>
+      <th id="T_07ce1_level1_row65" class="row_heading level1 row65" >DOWN</th>
+      <td id="T_07ce1_row65_col0" class="data row65 col0" >0.00</td>
+      <td id="T_07ce1_row65_col1" class="data row65 col1" >0.00</td>
+      <td id="T_07ce1_row65_col2" class="data row65 col2" >0.00</td>
+      <td id="T_07ce1_row65_col3" class="data row65 col3" >0.00</td>
+      <td id="T_07ce1_row65_col4" class="data row65 col4" >0.00</td>
+      <td id="T_07ce1_row65_col5" class="data row65 col5" >0.00</td>
+      <td id="T_07ce1_row65_col6" class="data row65 col6" >0.00</td>
+      <td id="T_07ce1_row65_col7" class="data row65 col7" >0.00</td>
+      <td id="T_07ce1_row65_col8" class="data row65 col8" >0.00</td>
+      <td id="T_07ce1_row65_col9" class="data row65 col9" >0.00</td>
+      <td id="T_07ce1_row65_col10" class="data row65 col10" >0.00</td>
+      <td id="T_07ce1_row65_col11" class="data row65 col11" >0.00</td>
+      <td id="T_07ce1_row65_col12" class="data row65 col12" >0.99</td>
+      <td id="T_07ce1_row65_col13" class="data row65 col13" >0.00</td>
+      <td id="T_07ce1_row65_col14" class="data row65 col14" >0.00</td>
+      <td id="T_07ce1_row65_col15" class="data row65 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row66" class="row_heading level1 row66" >LEFT</th>
+      <td id="T_07ce1_row66_col0" class="data row66 col0" >0.00</td>
+      <td id="T_07ce1_row66_col1" class="data row66 col1" >0.00</td>
+      <td id="T_07ce1_row66_col2" class="data row66 col2" >0.00</td>
+      <td id="T_07ce1_row66_col3" class="data row66 col3" >0.00</td>
+      <td id="T_07ce1_row66_col4" class="data row66 col4" >0.00</td>
+      <td id="T_07ce1_row66_col5" class="data row66 col5" >0.00</td>
+      <td id="T_07ce1_row66_col6" class="data row66 col6" >0.00</td>
+      <td id="T_07ce1_row66_col7" class="data row66 col7" >0.00</td>
+      <td id="T_07ce1_row66_col8" class="data row66 col8" >0.00</td>
+      <td id="T_07ce1_row66_col9" class="data row66 col9" >0.00</td>
+      <td id="T_07ce1_row66_col10" class="data row66 col10" >0.00</td>
+      <td id="T_07ce1_row66_col11" class="data row66 col11" >0.00</td>
+      <td id="T_07ce1_row66_col12" class="data row66 col12" >0.00</td>
+      <td id="T_07ce1_row66_col13" class="data row66 col13" >0.99</td>
+      <td id="T_07ce1_row66_col14" class="data row66 col14" >0.00</td>
+      <td id="T_07ce1_row66_col15" class="data row66 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row67" class="row_heading level1 row67" >NO_OP</th>
+      <td id="T_07ce1_row67_col0" class="data row67 col0" >0.00</td>
+      <td id="T_07ce1_row67_col1" class="data row67 col1" >0.00</td>
+      <td id="T_07ce1_row67_col2" class="data row67 col2" >0.00</td>
+      <td id="T_07ce1_row67_col3" class="data row67 col3" >0.00</td>
+      <td id="T_07ce1_row67_col4" class="data row67 col4" >0.99</td>
+      <td id="T_07ce1_row67_col5" class="data row67 col5" >0.00</td>
+      <td id="T_07ce1_row67_col6" class="data row67 col6" >0.00</td>
+      <td id="T_07ce1_row67_col7" class="data row67 col7" >0.00</td>
+      <td id="T_07ce1_row67_col8" class="data row67 col8" >0.00</td>
+      <td id="T_07ce1_row67_col9" class="data row67 col9" >0.00</td>
+      <td id="T_07ce1_row67_col10" class="data row67 col10" >0.00</td>
+      <td id="T_07ce1_row67_col11" class="data row67 col11" >0.00</td>
+      <td id="T_07ce1_row67_col12" class="data row67 col12" >0.00</td>
+      <td id="T_07ce1_row67_col13" class="data row67 col13" >0.00</td>
+      <td id="T_07ce1_row67_col14" class="data row67 col14" >0.00</td>
+      <td id="T_07ce1_row67_col15" class="data row67 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row68" class="row_heading level1 row68" >RIGHT</th>
+      <td id="T_07ce1_row68_col0" class="data row68 col0" >0.00</td>
+      <td id="T_07ce1_row68_col1" class="data row68 col1" >0.00</td>
+      <td id="T_07ce1_row68_col2" class="data row68 col2" >0.00</td>
+      <td id="T_07ce1_row68_col3" class="data row68 col3" >0.00</td>
+      <td id="T_07ce1_row68_col4" class="data row68 col4" >0.00</td>
+      <td id="T_07ce1_row68_col5" class="data row68 col5" >0.00</td>
+      <td id="T_07ce1_row68_col6" class="data row68 col6" >0.00</td>
+      <td id="T_07ce1_row68_col7" class="data row68 col7" >0.00</td>
+      <td id="T_07ce1_row68_col8" class="data row68 col8" >0.00</td>
+      <td id="T_07ce1_row68_col9" class="data row68 col9" >0.00</td>
+      <td id="T_07ce1_row68_col10" class="data row68 col10" >0.00</td>
+      <td id="T_07ce1_row68_col11" class="data row68 col11" >0.00</td>
+      <td id="T_07ce1_row68_col12" class="data row68 col12" >0.00</td>
+      <td id="T_07ce1_row68_col13" class="data row68 col13" >0.99</td>
+      <td id="T_07ce1_row68_col14" class="data row68 col14" >0.00</td>
+      <td id="T_07ce1_row68_col15" class="data row68 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row69" class="row_heading level1 row69" >UP</th>
+      <td id="T_07ce1_row69_col0" class="data row69 col0" >0.00</td>
+      <td id="T_07ce1_row69_col1" class="data row69 col1" >0.00</td>
+      <td id="T_07ce1_row69_col2" class="data row69 col2" >0.00</td>
+      <td id="T_07ce1_row69_col3" class="data row69 col3" >0.00</td>
+      <td id="T_07ce1_row69_col4" class="data row69 col4" >0.00</td>
+      <td id="T_07ce1_row69_col5" class="data row69 col5" >0.00</td>
+      <td id="T_07ce1_row69_col6" class="data row69 col6" >0.00</td>
+      <td id="T_07ce1_row69_col7" class="data row69 col7" >0.00</td>
+      <td id="T_07ce1_row69_col8" class="data row69 col8" >0.00</td>
+      <td id="T_07ce1_row69_col9" class="data row69 col9" >0.00</td>
+      <td id="T_07ce1_row69_col10" class="data row69 col10" >0.00</td>
+      <td id="T_07ce1_row69_col11" class="data row69 col11" >0.00</td>
+      <td id="T_07ce1_row69_col12" class="data row69 col12" >0.00</td>
+      <td id="T_07ce1_row69_col13" class="data row69 col13" >0.00</td>
+      <td id="T_07ce1_row69_col14" class="data row69 col14" >0.99</td>
+      <td id="T_07ce1_row69_col15" class="data row69 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row70" class="row_heading level0 row70" rowspan="5">14</th>
+      <th id="T_07ce1_level1_row70" class="row_heading level1 row70" >DOWN</th>
+      <td id="T_07ce1_row70_col0" class="data row70 col0" >0.00</td>
+      <td id="T_07ce1_row70_col1" class="data row70 col1" >0.00</td>
+      <td id="T_07ce1_row70_col2" class="data row70 col2" >0.00</td>
+      <td id="T_07ce1_row70_col3" class="data row70 col3" >0.00</td>
+      <td id="T_07ce1_row70_col4" class="data row70 col4" >0.00</td>
+      <td id="T_07ce1_row70_col5" class="data row70 col5" >0.00</td>
+      <td id="T_07ce1_row70_col6" class="data row70 col6" >0.00</td>
+      <td id="T_07ce1_row70_col7" class="data row70 col7" >0.00</td>
+      <td id="T_07ce1_row70_col8" class="data row70 col8" >0.00</td>
+      <td id="T_07ce1_row70_col9" class="data row70 col9" >0.00</td>
+      <td id="T_07ce1_row70_col10" class="data row70 col10" >0.00</td>
+      <td id="T_07ce1_row70_col11" class="data row70 col11" >0.00</td>
+      <td id="T_07ce1_row70_col12" class="data row70 col12" >0.00</td>
+      <td id="T_07ce1_row70_col13" class="data row70 col13" >0.00</td>
+      <td id="T_07ce1_row70_col14" class="data row70 col14" >0.99</td>
+      <td id="T_07ce1_row70_col15" class="data row70 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row71" class="row_heading level1 row71" >LEFT</th>
+      <td id="T_07ce1_row71_col0" class="data row71 col0" >0.00</td>
+      <td id="T_07ce1_row71_col1" class="data row71 col1" >0.00</td>
+      <td id="T_07ce1_row71_col2" class="data row71 col2" >0.00</td>
+      <td id="T_07ce1_row71_col3" class="data row71 col3" >0.00</td>
+      <td id="T_07ce1_row71_col4" class="data row71 col4" >0.00</td>
+      <td id="T_07ce1_row71_col5" class="data row71 col5" >0.00</td>
+      <td id="T_07ce1_row71_col6" class="data row71 col6" >0.00</td>
+      <td id="T_07ce1_row71_col7" class="data row71 col7" >0.99</td>
+      <td id="T_07ce1_row71_col8" class="data row71 col8" >0.00</td>
+      <td id="T_07ce1_row71_col9" class="data row71 col9" >0.00</td>
+      <td id="T_07ce1_row71_col10" class="data row71 col10" >0.00</td>
+      <td id="T_07ce1_row71_col11" class="data row71 col11" >0.00</td>
+      <td id="T_07ce1_row71_col12" class="data row71 col12" >0.00</td>
+      <td id="T_07ce1_row71_col13" class="data row71 col13" >0.00</td>
+      <td id="T_07ce1_row71_col14" class="data row71 col14" >0.00</td>
+      <td id="T_07ce1_row71_col15" class="data row71 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row72" class="row_heading level1 row72" >NO_OP</th>
+      <td id="T_07ce1_row72_col0" class="data row72 col0" >0.00</td>
+      <td id="T_07ce1_row72_col1" class="data row72 col1" >0.00</td>
+      <td id="T_07ce1_row72_col2" class="data row72 col2" >0.00</td>
+      <td id="T_07ce1_row72_col3" class="data row72 col3" >0.00</td>
+      <td id="T_07ce1_row72_col4" class="data row72 col4" >0.00</td>
+      <td id="T_07ce1_row72_col5" class="data row72 col5" >0.00</td>
+      <td id="T_07ce1_row72_col6" class="data row72 col6" >0.00</td>
+      <td id="T_07ce1_row72_col7" class="data row72 col7" >0.00</td>
+      <td id="T_07ce1_row72_col8" class="data row72 col8" >0.00</td>
+      <td id="T_07ce1_row72_col9" class="data row72 col9" >0.00</td>
+      <td id="T_07ce1_row72_col10" class="data row72 col10" >0.00</td>
+      <td id="T_07ce1_row72_col11" class="data row72 col11" >0.00</td>
+      <td id="T_07ce1_row72_col12" class="data row72 col12" >0.00</td>
+      <td id="T_07ce1_row72_col13" class="data row72 col13" >0.99</td>
+      <td id="T_07ce1_row72_col14" class="data row72 col14" >0.00</td>
+      <td id="T_07ce1_row72_col15" class="data row72 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row73" class="row_heading level1 row73" >RIGHT</th>
+      <td id="T_07ce1_row73_col0" class="data row73 col0" >0.00</td>
+      <td id="T_07ce1_row73_col1" class="data row73 col1" >0.00</td>
+      <td id="T_07ce1_row73_col2" class="data row73 col2" >0.00</td>
+      <td id="T_07ce1_row73_col3" class="data row73 col3" >0.00</td>
+      <td id="T_07ce1_row73_col4" class="data row73 col4" >0.00</td>
+      <td id="T_07ce1_row73_col5" class="data row73 col5" >0.00</td>
+      <td id="T_07ce1_row73_col6" class="data row73 col6" >0.00</td>
+      <td id="T_07ce1_row73_col7" class="data row73 col7" >0.00</td>
+      <td id="T_07ce1_row73_col8" class="data row73 col8" >0.00</td>
+      <td id="T_07ce1_row73_col9" class="data row73 col9" >0.00</td>
+      <td id="T_07ce1_row73_col10" class="data row73 col10" >0.00</td>
+      <td id="T_07ce1_row73_col11" class="data row73 col11" >0.00</td>
+      <td id="T_07ce1_row73_col12" class="data row73 col12" >0.00</td>
+      <td id="T_07ce1_row73_col13" class="data row73 col13" >0.00</td>
+      <td id="T_07ce1_row73_col14" class="data row73 col14" >0.00</td>
+      <td id="T_07ce1_row73_col15" class="data row73 col15" >0.99</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row74" class="row_heading level1 row74" >UP</th>
+      <td id="T_07ce1_row74_col0" class="data row74 col0" >0.00</td>
+      <td id="T_07ce1_row74_col1" class="data row74 col1" >0.00</td>
+      <td id="T_07ce1_row74_col2" class="data row74 col2" >0.00</td>
+      <td id="T_07ce1_row74_col3" class="data row74 col3" >0.00</td>
+      <td id="T_07ce1_row74_col4" class="data row74 col4" >0.00</td>
+      <td id="T_07ce1_row74_col5" class="data row74 col5" >0.00</td>
+      <td id="T_07ce1_row74_col6" class="data row74 col6" >0.00</td>
+      <td id="T_07ce1_row74_col7" class="data row74 col7" >0.00</td>
+      <td id="T_07ce1_row74_col8" class="data row74 col8" >0.00</td>
+      <td id="T_07ce1_row74_col9" class="data row74 col9" >0.00</td>
+      <td id="T_07ce1_row74_col10" class="data row74 col10" >0.00</td>
+      <td id="T_07ce1_row74_col11" class="data row74 col11" >0.00</td>
+      <td id="T_07ce1_row74_col12" class="data row74 col12" >0.00</td>
+      <td id="T_07ce1_row74_col13" class="data row74 col13" >0.00</td>
+      <td id="T_07ce1_row74_col14" class="data row74 col14" >0.99</td>
+      <td id="T_07ce1_row74_col15" class="data row74 col15" >0.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level0_row75" class="row_heading level0 row75" rowspan="5">15</th>
+      <th id="T_07ce1_level1_row75" class="row_heading level1 row75" >DOWN</th>
+      <td id="T_07ce1_row75_col0" class="data row75 col0" >0.00</td>
+      <td id="T_07ce1_row75_col1" class="data row75 col1" >0.00</td>
+      <td id="T_07ce1_row75_col2" class="data row75 col2" >0.00</td>
+      <td id="T_07ce1_row75_col3" class="data row75 col3" >0.00</td>
+      <td id="T_07ce1_row75_col4" class="data row75 col4" >0.00</td>
+      <td id="T_07ce1_row75_col5" class="data row75 col5" >0.00</td>
+      <td id="T_07ce1_row75_col6" class="data row75 col6" >0.00</td>
+      <td id="T_07ce1_row75_col7" class="data row75 col7" >0.00</td>
+      <td id="T_07ce1_row75_col8" class="data row75 col8" >0.00</td>
+      <td id="T_07ce1_row75_col9" class="data row75 col9" >0.99</td>
+      <td id="T_07ce1_row75_col10" class="data row75 col10" >0.00</td>
+      <td id="T_07ce1_row75_col11" class="data row75 col11" >0.00</td>
+      <td id="T_07ce1_row75_col12" class="data row75 col12" >0.00</td>
+      <td id="T_07ce1_row75_col13" class="data row75 col13" >0.00</td>
+      <td id="T_07ce1_row75_col14" class="data row75 col14" >0.00</td>
+      <td id="T_07ce1_row75_col15" class="data row75 col15" >0.01</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row76" class="row_heading level1 row76" >LEFT</th>
+      <td id="T_07ce1_row76_col0" class="data row76 col0" >0.00</td>
+      <td id="T_07ce1_row76_col1" class="data row76 col1" >0.00</td>
+      <td id="T_07ce1_row76_col2" class="data row76 col2" >0.00</td>
+      <td id="T_07ce1_row76_col3" class="data row76 col3" >0.00</td>
+      <td id="T_07ce1_row76_col4" class="data row76 col4" >0.00</td>
+      <td id="T_07ce1_row76_col5" class="data row76 col5" >0.00</td>
+      <td id="T_07ce1_row76_col6" class="data row76 col6" >0.00</td>
+      <td id="T_07ce1_row76_col7" class="data row76 col7" >0.00</td>
+      <td id="T_07ce1_row76_col8" class="data row76 col8" >0.00</td>
+      <td id="T_07ce1_row76_col9" class="data row76 col9" >0.00</td>
+      <td id="T_07ce1_row76_col10" class="data row76 col10" >0.00</td>
+      <td id="T_07ce1_row76_col11" class="data row76 col11" >0.00</td>
+      <td id="T_07ce1_row76_col12" class="data row76 col12" >0.00</td>
+      <td id="T_07ce1_row76_col13" class="data row76 col13" >0.00</td>
+      <td id="T_07ce1_row76_col14" class="data row76 col14" >0.00</td>
+      <td id="T_07ce1_row76_col15" class="data row76 col15" >1.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row77" class="row_heading level1 row77" >NO_OP</th>
+      <td id="T_07ce1_row77_col0" class="data row77 col0" >0.00</td>
+      <td id="T_07ce1_row77_col1" class="data row77 col1" >0.00</td>
+      <td id="T_07ce1_row77_col2" class="data row77 col2" >0.00</td>
+      <td id="T_07ce1_row77_col3" class="data row77 col3" >0.00</td>
+      <td id="T_07ce1_row77_col4" class="data row77 col4" >0.00</td>
+      <td id="T_07ce1_row77_col5" class="data row77 col5" >0.00</td>
+      <td id="T_07ce1_row77_col6" class="data row77 col6" >0.00</td>
+      <td id="T_07ce1_row77_col7" class="data row77 col7" >0.00</td>
+      <td id="T_07ce1_row77_col8" class="data row77 col8" >0.00</td>
+      <td id="T_07ce1_row77_col9" class="data row77 col9" >0.00</td>
+      <td id="T_07ce1_row77_col10" class="data row77 col10" >0.00</td>
+      <td id="T_07ce1_row77_col11" class="data row77 col11" >0.00</td>
+      <td id="T_07ce1_row77_col12" class="data row77 col12" >0.00</td>
+      <td id="T_07ce1_row77_col13" class="data row77 col13" >0.00</td>
+      <td id="T_07ce1_row77_col14" class="data row77 col14" >0.00</td>
+      <td id="T_07ce1_row77_col15" class="data row77 col15" >1.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row78" class="row_heading level1 row78" >RIGHT</th>
+      <td id="T_07ce1_row78_col0" class="data row78 col0" >0.00</td>
+      <td id="T_07ce1_row78_col1" class="data row78 col1" >0.00</td>
+      <td id="T_07ce1_row78_col2" class="data row78 col2" >0.00</td>
+      <td id="T_07ce1_row78_col3" class="data row78 col3" >0.00</td>
+      <td id="T_07ce1_row78_col4" class="data row78 col4" >0.00</td>
+      <td id="T_07ce1_row78_col5" class="data row78 col5" >0.00</td>
+      <td id="T_07ce1_row78_col6" class="data row78 col6" >0.00</td>
+      <td id="T_07ce1_row78_col7" class="data row78 col7" >0.00</td>
+      <td id="T_07ce1_row78_col8" class="data row78 col8" >0.00</td>
+      <td id="T_07ce1_row78_col9" class="data row78 col9" >0.00</td>
+      <td id="T_07ce1_row78_col10" class="data row78 col10" >0.00</td>
+      <td id="T_07ce1_row78_col11" class="data row78 col11" >0.00</td>
+      <td id="T_07ce1_row78_col12" class="data row78 col12" >0.00</td>
+      <td id="T_07ce1_row78_col13" class="data row78 col13" >0.00</td>
+      <td id="T_07ce1_row78_col14" class="data row78 col14" >0.00</td>
+      <td id="T_07ce1_row78_col15" class="data row78 col15" >1.00</td>
+    </tr>
+    <tr>
+      <th id="T_07ce1_level1_row79" class="row_heading level1 row79" >UP</th>
+      <td id="T_07ce1_row79_col0" class="data row79 col0" >0.00</td>
+      <td id="T_07ce1_row79_col1" class="data row79 col1" >0.00</td>
+      <td id="T_07ce1_row79_col2" class="data row79 col2" >0.00</td>
+      <td id="T_07ce1_row79_col3" class="data row79 col3" >0.00</td>
+      <td id="T_07ce1_row79_col4" class="data row79 col4" >0.00</td>
+      <td id="T_07ce1_row79_col5" class="data row79 col5" >0.00</td>
+      <td id="T_07ce1_row79_col6" class="data row79 col6" >0.00</td>
+      <td id="T_07ce1_row79_col7" class="data row79 col7" >0.00</td>
+      <td id="T_07ce1_row79_col8" class="data row79 col8" >0.00</td>
+      <td id="T_07ce1_row79_col9" class="data row79 col9" >0.00</td>
+      <td id="T_07ce1_row79_col10" class="data row79 col10" >0.00</td>
+      <td id="T_07ce1_row79_col11" class="data row79 col11" >0.00</td>
+      <td id="T_07ce1_row79_col12" class="data row79 col12" >0.00</td>
+      <td id="T_07ce1_row79_col13" class="data row79 col13" >0.00</td>
+      <td id="T_07ce1_row79_col14" class="data row79 col14" >0.99</td>
+      <td id="T_07ce1_row79_col15" class="data row79 col15" >0.01</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p><strong>Stationary distribution</strong><br />
+The
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.optimal_stationary_distribution"><code class="docutils literal notranslate"><span class="pre">optimal_stationary_distribution</span></code></a>
+, the
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.worst_stationary_distribution"><code class="docutils literal notranslate"><span class="pre">worst_stationary_distribution</span></code></a>
+, and the
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.random_stationary_distribution"><code class="docutils literal notranslate"><span class="pre">random_stationary_distribution</span></code></a>
+properties return Numpy arrays containing the stationary distributions of the Markov chain yielded by the optimal, worst, and uniformly random policies.
+We can compute the stationary distribution associated with a custom policy using the
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.get_stationary_distribution"><code class="docutils literal notranslate"><span class="pre">get_stationary_distribution</span></code></a>
+function.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">osd</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">optimal_stationary_distribution</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">wsd</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">worst_stationary_distribution</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">rsd</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">random_stationary_distribution</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">sd</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">get_stationary_distribution</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">osd_node_labels</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">get_node_labels</span><span class="p">(</span><span class="n">osd</span><span class="p">)</span>
+<span class="n">wsd_node_labels</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">get_node_labels</span><span class="p">(</span><span class="n">wsd</span><span class="p">)</span>
+<span class="n">rsd_node_labels</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">get_node_labels</span><span class="p">(</span><span class="n">rsd</span><span class="p">)</span>
+<span class="n">sd_node_labels</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">get_node_labels</span><span class="p">(</span><span class="n">sd</span><span class="p">)</span>
+
+
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">G</span><span class="p">,</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">graph_layout</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">osd_node_labels</span><span class="p">,</span>
+    <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;darkolivegreen&quot;</span><span class="p">,</span>
+    <span class="n">font_color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">node_size</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">glue</span><span class="p">(</span><span class="s2">&quot;osd&quot;</span><span class="p">,</span> <span class="n">fig1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">fig2</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">G</span><span class="p">,</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">graph_layout</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">wsd_node_labels</span><span class="p">,</span>
+    <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;darkred&quot;</span><span class="p">,</span>
+    <span class="n">font_color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">node_size</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">glue</span><span class="p">(</span><span class="s2">&quot;wsd&quot;</span><span class="p">,</span> <span class="n">fig2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">fig3</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">G</span><span class="p">,</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">graph_layout</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">rsd_node_labels</span><span class="p">,</span>
+    <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;darkslategray&quot;</span><span class="p">,</span>
+    <span class="n">font_color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">node_size</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">glue</span><span class="p">(</span><span class="s2">&quot;rsd&quot;</span><span class="p">,</span> <span class="n">fig3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">fig4</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">G</span><span class="p">,</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">graph_layout</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">sd_node_labels</span><span class="p">,</span>
+    <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;darkblue&quot;</span><span class="p">,</span>
+    <span class="n">font_color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">node_size</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">glue</span><span class="p">(</span><span class="s2">&quot;sd&quot;</span><span class="p">,</span> <span class="n">fig4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="id1" style="width: 500px">
+<div class="cell_output docutils container">
+<img alt="../_images/mdp-functionalities_18_0.png" src="../_images/mdp-functionalities_18_0.png" />
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">The stationary distribution of the optimal policy.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id2" style="width: 500px">
+<div class="cell_output docutils container">
+<img alt="../_images/mdp-functionalities_18_2.png" src="../_images/mdp-functionalities_18_2.png" />
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">The stationary distribution of the worst policy.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id3" style="width: 500px">
+<div class="cell_output docutils container">
+<img alt="../_images/mdp-functionalities_18_4.png" src="../_images/mdp-functionalities_18_4.png" />
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">The stationary distribution of the random policy.</span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id4" style="width: 500px">
+<div class="cell_output docutils container">
+<img alt="../_images/mdp-functionalities_18_6.png" src="../_images/mdp-functionalities_18_6.png" />
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">The stationary distribution of a randomly sampled policy.</span><a class="headerlink" href="#id4" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p><strong>Expected average reward</strong><br />
+The
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.optimal_average_reward"><code class="docutils literal notranslate"><span class="pre">optimal_average_reward</span></code></a>, the
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.worst_average_reward"><code class="docutils literal notranslate"><span class="pre">worst_average_reward</span></code></a>, and the
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.random_average_reward"><code class="docutils literal notranslate"><span class="pre">random_average_reward</span></code></a>
+properties return the expected time average reward, i.e.
+<span class="math notranslate nohighlight">\(
+  \underset{T\to \infty}{\text{lim inf}} \frac{1}{T} \mathbb{E}_\pi \sum_{t=0}^T R_t
+\)</span>, associated to the optimal, worst, and uniformly random policies.
+We can compute such measure for a custom policy using the
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.get_average_reward"><code class="docutils literal notranslate"><span class="pre">get_average_reward</span></code></a>
+function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mdp</span><span class="o">.</span><span class="n">optimal_average_reward</span>
+<span class="n">mdp</span><span class="o">.</span><span class="n">worst_average_reward</span>
+<span class="n">mdp</span><span class="o">.</span><span class="n">random_average_reward</span>
+<span class="n">mdp</span><span class="o">.</span><span class="n">get_average_reward</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+<table class="table">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Optimal policy</p></th>
+<th class="head"><p>Worst policy</p></th>
+<th class="head"><p>Random policy</p></th>
+<th class="head"><p>Randomly sampled policy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Average regret</p></td>
+<td><p><span class="pasted-text">0.996</span></p></td>
+<td><p><span class="pasted-text">0.004</span></p></td>
+<td><p><span class="pasted-text">0.500</span></p></td>
+<td><p><span class="pasted-text">0.484</span></p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Value functions</strong><br />
+The
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.optimal_value_functions"><code class="docutils literal notranslate"><span class="pre">optimal_value_functions</span></code></a>, the
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.worst_value_functions"><code class="docutils literal notranslate"><span class="pre">worst_value_functions</span></code></a>, and the
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.random_value_functions"><code class="docutils literal notranslate"><span class="pre">random_value_functions</span></code></a>
+properties return a tuple containing the state-action function and the state value function associated to the optimal, worst, and uniformly random policies.
+We can compute the value function for a custom policy using the
+<a href="../pdoc_files/colosseum/mdp/base.html#BaseMDP.get_value_functions"><code class="docutils literal notranslate"><span class="pre">get_value_functions</span></code></a>
+function.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ov</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">optimal_value_functions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ov_node_labels</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">get_node_labels</span><span class="p">(</span><span class="n">ov</span><span class="p">)</span>
+
+<span class="n">wv</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">worst_value_functions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">wv_node_labels</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">get_node_labels</span><span class="p">(</span><span class="n">wv</span><span class="p">)</span>
+
+<span class="n">rv</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">random_value_functions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">rv_node_labels</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">get_node_labels</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">get_value_functions</span><span class="p">(</span><span class="n">pi</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">v_node_labels</span> <span class="o">=</span> <span class="n">mdp</span><span class="o">.</span><span class="n">get_node_labels</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">G</span><span class="p">,</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">graph_layout</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">ov_node_labels</span><span class="p">,</span>
+    <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;darkolivegreen&quot;</span><span class="p">,</span>
+    <span class="n">font_color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">node_size</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Optimal value function&quot;</span><span class="p">)</span>
+<span class="n">glue</span><span class="p">(</span><span class="s2">&quot;ov&quot;</span><span class="p">,</span> <span class="n">fig</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1">#%%</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">G</span><span class="p">,</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">graph_layout</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">wv_node_labels</span><span class="p">,</span>
+    <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;darkred&quot;</span><span class="p">,</span>
+    <span class="n">font_color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">node_size</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Value function of the worst policy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">glue</span><span class="p">(</span><span class="s2">&quot;wv&quot;</span><span class="p">,</span> <span class="n">fig</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1">#%%</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">G</span><span class="p">,</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">graph_layout</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">rv_node_labels</span><span class="p">,</span>
+    <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;darkslategray&quot;</span><span class="p">,</span>
+    <span class="n">font_color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">node_size</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Value function of the random policy&quot;</span><span class="p">)</span>
+<span class="n">glue</span><span class="p">(</span><span class="s2">&quot;rv&quot;</span><span class="p">,</span> <span class="n">fig</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1">#%%</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">G</span><span class="p">,</span>
+    <span class="n">mdp</span><span class="o">.</span><span class="n">graph_layout</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">v_node_labels</span><span class="p">,</span>
+    <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;darkblue&quot;</span><span class="p">,</span>
+    <span class="n">font_color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">node_size</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Value function of a randomly sampled policy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">glue</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="n">fig</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<figure class="align-default" id="id5" style="width: 500px">
+<div class="cell_output docutils container">
+<img alt="../_images/mdp-functionalities_23_1.png" src="../_images/mdp-functionalities_23_1.png" />
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">The value function of the optimal policy.</span><a class="headerlink" href="#id5" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id6" style="width: 500px">
+<div class="cell_output docutils container">
+<img alt="../_images/mdp-functionalities_23_5.png" src="../_images/mdp-functionalities_23_5.png" />
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">The value function of the random policy.</span><a class="headerlink" href="#id6" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id7" style="width: 500px">
+<div class="cell_output docutils container">
+<img alt="../_images/mdp-functionalities_23_3.png" src="../_images/mdp-functionalities_23_3.png" />
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text">The value function of the worst policy.</span><a class="headerlink" href="#id7" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id8" style="width: 500px">
+<div class="cell_output docutils container">
+<img alt="../_images/mdp-functionalities_23_7.png" src="../_images/mdp-functionalities_23_7.png" />
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">The value function of a randomly sampled policy.</span><a class="headerlink" href="#id8" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./mds"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="agent-performance-analysis.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Inspect Agents Performances</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="mdp-visual-representations.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Visualize Markov Decision Processes</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Michelangelo Conserva<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

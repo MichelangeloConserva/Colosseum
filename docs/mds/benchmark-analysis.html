@@ -1,0 +1,905 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Analyse Benchmarking Results &#8212; The hitchhiker&#39;s guide to Colosseum</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/myfile.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"bR": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/colosseum_icon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Create Custom Benchmarks" href="benchmark-custom.html" />
+    <link rel="prev" title="The Colosseum Benchmark" href="benchmark-introduction.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-0RT6KZEQPZ"></script>
+<script>
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){ dataLayer.push(arguments); }
+                    gtag('js', new Date());
+                    gtag('config', 'G-0RT6KZEQPZ');
+                </script>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/colosseum_banner.svg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">The hitchhiker's guide to Colosseum</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    What is Colosseum?
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="manifesto.html">
+   Motivation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api-reference.html">
+   API Documentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="contributions.html">
+   Contributions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="quickstart.html">
+   Quickstart
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="colosseum-configurations.html">
+   Configure Colosseum
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="agent-performance-analysis.html">
+   Inspect Agents Performances
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-functionalities.html">
+   Inspect Markov Decision Processes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-visual-representations.html">
+   Visualize Markov Decision Processes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-introduction.html">
+   The Colosseum Benchmark
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Analyse Benchmarking Results
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-custom.html">
+   Create Custom Benchmarks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-running.html">
+   Benchmarking Agents
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hyperopt.html">
+   Hyperparameters Optimization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-scaling.html">
+   Scale Benchmarking to a Cluster
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hardness-analysis.html">
+   Empirical hardness analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="non-tabular.html">
+   Non-Tabular Benchmarking
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/MichelangeloConserva/Colosseum/main?urlpath=tree/docs/book_files/mds/benchmark-analysis.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum/issues/new?title=Issue%20on%20page%20%2Fmds/benchmark-analysis.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/mds/benchmark-analysis.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="../_sources/mds/benchmark-analysis.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Analyse Benchmarking Results</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="analyse-benchmarking-results">
+<h1>Analyse Benchmarking Results<a class="headerlink" href="#analyse-benchmarking-results" title="Permalink to this headline">#</a></h1>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+Necessary imports<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">colosseum.analysis.plots</span> <span class="kn">import</span> <span class="n">plot_indicator_in_hardness_space</span><span class="p">,</span> <span class="n">agent_performances_per_mdp_plot</span>
+<span class="kn">from</span> <span class="nn">colosseum.analysis.tables</span> <span class="kn">import</span> <span class="n">get_latex_table_of_average_indicator</span><span class="p">,</span> <span class="n">get_latex_table_of_indicators</span>
+</pre></div>
+</div>
+</div>
+</details></aside>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+<p>We’ll reproduce the analysis of the benchmark results of the tabular agents in the continuous communicating setting presented in the accompanying <a href="https://www.investopedia.com/thmb/8eqLLlAayH0avgNDllcSC_MyN-A=/2121x1414/filters:fill(auto,1)/toy-foam-letter-in-word-tba--abbreviation-of-to-be-announced---on-green-grass-background-1160797545-6c35b6e874564114ab52f0ab5f48cda2.jpg">paper</a>.</p>
+<h3> Visualization tools </h3>
+<p>Two types of visualizations are available, tables and plots.
+Note that <span class="math notranslate nohighlight">\(\LaTeX\)</span> code for the tables is automatically generated.</p>
+<h4> Tables </h4>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The <em>booktabs</em>, <em>colortbl</em>, and  <em>xcolor</em> packages are required to compile the <span class="math notranslate nohighlight">\(\LaTeX\)</span> tables.</p>
+</div>
+</aside>
+<p><strong>Summary table</strong></p>
+<p>The <a class="reference external" href="../pdoc_files/colosseum/analysis/tables.html#get_latex_table_of_average_indicator"><code class="docutils literal notranslate"><span class="pre">get_latex_table_of_average_indicator</span></code></a>
+function produces a table that summarises the agents’ performances in terms of a single indicator.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The tex variable contains a LaTex ready version, whereas pd_table is a Pandas table</span>
+<span class="n">tex</span><span class="p">,</span> <span class="n">pd_table</span> <span class="o">=</span> <span class="n">get_latex_table_of_average_indicator</span><span class="p">(</span>
+    <span class="n">benchmark_log_folder</span><span class="p">,</span>
+    <span class="s2">&quot;normalized_cumulative_regret&quot;</span><span class="p">,</span>
+    <span class="n">print_table</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">return_table</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                    PSRL              Q-learning                   UCRL2
+                                 prms_41                 prms_49                 prms_49
+MDP                                                                                     
+DeepSea           $\mathbf{0.78}\pm0.05$  $\mathbf{0.78}\pm0.00$           $0.90\pm0.01$
+DeepSea           $\mathbf{0.99}\pm0.00$  $\mathbf{0.99}\pm0.00$  $\mathbf{0.99}\pm0.00$
+DeepSea           $\mathbf{0.79}\pm0.04$  $\mathbf{0.79}\pm0.00$           $0.92\pm0.01$
+FrozenLake        $\mathbf{0.01}\pm0.04$           $0.77\pm0.04$  $\mathbf{0.01}\pm0.01$
+FrozenLake        $\mathbf{0.01}\pm0.02$           $0.84\pm0.04$           $0.04\pm0.06$
+MiniGridEmpty              $0.95\pm0.22$           $0.51\pm0.23$  $\mathbf{0.02}\pm0.00$
+MiniGridEmpty              $1.00\pm0.00$  $\mathbf{0.01}\pm0.00$           $0.02\pm0.00$
+MiniGridEmpty              $0.60\pm0.50$  $\mathbf{0.00}\pm0.00$           $0.01\pm0.00$
+MiniGridEmpty              $1.00\pm0.00$           $0.35\pm0.17$  $\mathbf{0.01}\pm0.00$
+MiniGridEmpty              $1.00\pm0.00$           $0.75\pm0.21$  $\mathbf{0.08}\pm0.20$
+MiniGridRooms              $1.00\pm0.00$  $\mathbf{0.01}\pm0.01$           $0.78\pm0.40$
+MiniGridRooms              $1.00\pm0.00$  $\mathbf{0.01}\pm0.01$           $0.02\pm0.01$
+MiniGridRooms              $1.00\pm0.00$  $\mathbf{0.02}\pm0.02$           $0.66\pm0.47$
+RiverSwim         $\mathbf{0.00}\pm0.01$           $0.16\pm0.03$  $\mathbf{0.00}\pm0.00$
+RiverSwim         $\mathbf{0.01}\pm0.00$           $0.34\pm0.14$           $0.02\pm0.01$
+SimpleGrid                 $0.93\pm0.00$           $0.11\pm0.01$  $\mathbf{0.01}\pm0.00$
+SimpleGrid                 $0.45\pm0.15$  $\mathbf{0.01}\pm0.00$  $\mathbf{0.01}\pm0.00$
+SimpleGrid                 $0.93\pm0.00$  $\mathbf{0.15}\pm0.01$           $0.70\pm0.40$
+SimpleGrid                 $0.50\pm0.00$  $\mathbf{0.01}\pm0.00$           $0.33\pm0.24$
+Taxi                       $0.94\pm0.04$           $0.95\pm0.00$  $\mathbf{0.12}\pm0.01$
+\textit{Average}           $0.69\pm0.38$           $0.38\pm0.37$  $\mathbf{0.28}\pm0.37$
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/michelangelo/miniconda3/envs/py39/lib/python3.9/site-packages/colosseum/analysis/tables.py:146: FutureWarning: In future versions `DataFrame.to_latex` is expected to utilise the base implementation of `Styler.to_latex` for formatting and rendering. The arguments signature may therefore change. It is recommended instead to use `DataFrame.style.to_latex` which also contains additional functionality.
+  table_lat = table_lat.to_latex(escape=False).replace(
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <span class="math notranslate nohighlight">\(\LaTeX\)</span> summary table is provided below.</p>
+<div class="cell tag_hide-output tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>\begin{tabular}{lccc}
+\toprule
+{} &amp;                    PSRL &amp;              Q-learning &amp;                   UCRL2 \\
+\midrule
+DeepSea          &amp;  $\mathbf{0.78}\pm0.05$ &amp;  $\mathbf{0.78}\pm0.00$ &amp;           $0.90\pm0.01$ \\
+                 &amp;  $\mathbf{0.99}\pm0.00$ &amp;  $\mathbf{0.99}\pm0.00$ &amp;  $\mathbf{0.99}\pm0.00$ \\
+                 &amp;  $\mathbf{0.79}\pm0.04$ &amp;  $\mathbf{0.79}\pm0.00$ &amp;           $0.92\pm0.01$ \\
+\arrayrulecolor{black!15}\midrule%
+FrozenLake       &amp;  $\mathbf{0.01}\pm0.04$ &amp;           $0.77\pm0.04$ &amp;  $\mathbf{0.01}\pm0.01$ \\
+                 &amp;  $\mathbf{0.01}\pm0.02$ &amp;           $0.84\pm0.04$ &amp;           $0.04\pm0.06$ \\
+\arrayrulecolor{black!15}\midrule%
+MG-Empty    &amp;           $0.95\pm0.22$ &amp;           $0.51\pm0.23$ &amp;  $\mathbf{0.02}\pm0.00$ \\
+                 &amp;           $1.00\pm0.00$ &amp;  $\mathbf{0.01}\pm0.00$ &amp;           $0.02\pm0.00$ \\
+                 &amp;           $0.60\pm0.50$ &amp;  $\mathbf{0.00}\pm0.00$ &amp;           $0.01\pm0.00$ \\
+                 &amp;           $1.00\pm0.00$ &amp;           $0.35\pm0.17$ &amp;  $\mathbf{0.01}\pm0.00$ \\
+                 &amp;           $1.00\pm0.00$ &amp;           $0.75\pm0.21$ &amp;  $\mathbf{0.08}\pm0.20$ \\
+\arrayrulecolor{black!15}\midrule%
+MG-Rooms    &amp;           $1.00\pm0.00$ &amp;  $\mathbf{0.01}\pm0.01$ &amp;           $0.78\pm0.40$ \\
+                 &amp;           $1.00\pm0.00$ &amp;  $\mathbf{0.01}\pm0.01$ &amp;           $0.02\pm0.01$ \\
+                 &amp;           $1.00\pm0.00$ &amp;  $\mathbf{0.02}\pm0.02$ &amp;           $0.66\pm0.47$ \\
+\arrayrulecolor{black!15}\midrule%
+RiverSwim        &amp;  $\mathbf{0.00}\pm0.01$ &amp;           $0.16\pm0.03$ &amp;  $\mathbf{0.00}\pm0.00$ \\
+                 &amp;  $\mathbf{0.01}\pm0.00$ &amp;           $0.34\pm0.14$ &amp;           $0.02\pm0.01$ \\
+\arrayrulecolor{black!15}\midrule%
+SimpleGrid       &amp;           $0.93\pm0.00$ &amp;           $0.11\pm0.01$ &amp;  $\mathbf{0.01}\pm0.00$ \\
+                 &amp;           $0.45\pm0.15$ &amp;  $\mathbf{0.01}\pm0.00$ &amp;  $\mathbf{0.01}\pm0.00$ \\
+                 &amp;           $0.93\pm0.00$ &amp;  $\mathbf{0.15}\pm0.01$ &amp;           $0.70\pm0.40$ \\
+                 &amp;           $0.50\pm0.00$ &amp;  $\mathbf{0.01}\pm0.00$ &amp;           $0.33\pm0.24$ \\
+\arrayrulecolor{black!15}\midrule%
+Taxi             &amp;           $0.94\pm0.04$ &amp;           $0.95\pm0.00$ &amp;  $\mathbf{0.12}\pm0.01$ \\
+\arrayrulecolor{black!30}\midrule%
+\textit{Average} &amp;           $0.69\pm0.38$ &amp;           $0.38\pm0.37$ &amp;  $\mathbf{0.28}\pm0.37$ \\
+\arrayrulecolor{black!15}\midrule%
+\end{tabular}
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Indicators table</strong></p>
+<p>The <a class="reference external" href="../pdoc_files/colosseum/analysis/tables.html#get_latex_table_of_indicators"><code class="docutils literal notranslate"><span class="pre">get_latex_table_of_indicators</span></code></a>
+function produces a large table that can include multiple indicators. It also reports the the number of seeds that the agent was able to complete in the given training time limit.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The tex variable contains a LaTex ready version</span>
+<span class="n">tex</span> <span class="o">=</span> <span class="n">get_latex_table_of_indicators</span><span class="p">(</span>
+    <span class="n">benchmark_log_folder</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">&quot;normalized_cumulative_regret&quot;</span><span class="p">,</span> <span class="s2">&quot;steps_per_second&quot;</span><span class="p">],</span>
+    <span class="n">show_prm_mdp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">print_table</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                          Norm. cumulative regret Steps per second \# completed seeds
+MDP            Agent                                                                 
+DeepSea (1)    PSRL                 $0.78\pm0.05$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.78\pm0.00$    $0.00\pm0.00$            $20/20$
+               UCRL2                $0.90\pm0.01$    $0.00\pm0.00$             $0/20$
+DeepSea (2)    PSRL                 $0.99\pm0.00$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.99\pm0.00$    $0.00\pm0.00$            $20/20$
+               UCRL2                $0.99\pm0.00$    $0.00\pm0.00$             $0/20$
+DeepSea (3)    PSRL                 $0.79\pm0.04$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.79\pm0.00$    $0.00\pm0.00$            $20/20$
+               UCRL2                $0.92\pm0.01$    $0.00\pm0.00$             $0/20$
+FrozenLake (1) PSRL                 $0.01\pm0.03$    $0.02\pm0.00$            $20/20$
+               Q-learning           $0.77\pm0.04$    $0.01\pm0.00$            $20/20$
+               UCRL2                $0.01\pm0.01$    $0.02\pm0.01$            $20/20$
+FrozenLake (2) PSRL                 $0.01\pm0.02$    $0.01\pm0.00$            $20/20$
+               Q-learning           $0.84\pm0.04$    $0.01\pm0.00$            $20/20$
+               UCRL2                $0.04\pm0.06$    $0.02\pm0.01$            $20/20$
+MG-Empty (1)   PSRL                 $0.95\pm0.22$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.51\pm0.22$    $0.01\pm0.00$            $20/20$
+               UCRL2                $0.02\pm0.00$    $0.00\pm0.00$             $7/20$
+MG-Empty (2)   PSRL                 $1.00\pm0.00$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.01\pm0.00$    $0.01\pm0.00$            $20/20$
+               UCRL2                $0.02\pm0.00$    $0.00\pm0.00$             $9/20$
+MG-Empty (3)   PSRL                 $0.60\pm0.49$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.00\pm0.00$    $0.02\pm0.01$            $20/20$
+               UCRL2                $0.01\pm0.00$    $0.01\pm0.00$            $20/20$
+MG-Empty (4)   PSRL                 $1.00\pm0.00$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.35\pm0.17$    $0.02\pm0.01$            $20/20$
+               UCRL2                $0.01\pm0.00$    $0.01\pm0.00$            $20/20$
+MG-Empty (5)   PSRL                 $1.00\pm0.00$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.75\pm0.20$    $0.01\pm0.00$            $20/20$
+               UCRL2                $0.08\pm0.20$    $0.00\pm0.00$             $0/20$
+MG-Rooms (1)   PSRL                 $1.00\pm0.00$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.01\pm0.01$    $0.01\pm0.00$            $20/20$
+               UCRL2                $0.78\pm0.39$    $0.00\pm0.00$             $0/20$
+MG-Rooms (2)   PSRL                 $1.00\pm0.00$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.01\pm0.01$    $0.02\pm0.01$            $20/20$
+               UCRL2                $0.02\pm0.01$    $0.00\pm0.00$            $18/20$
+MG-Rooms (3)   PSRL                 $1.00\pm0.00$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.02\pm0.02$    $0.01\pm0.00$            $20/20$
+               UCRL2                $0.66\pm0.46$    $0.00\pm0.00$             $0/20$
+RiverSwim (1)  PSRL                 $0.00\pm0.01$    $0.01\pm0.00$            $20/20$
+               Q-learning           $0.16\pm0.03$    $0.03\pm0.01$            $20/20$
+               UCRL2                $0.00\pm0.00$    $0.02\pm0.00$            $20/20$
+RiverSwim (2)  PSRL                 $0.01\pm0.00$    $0.01\pm0.00$            $20/20$
+               Q-learning           $0.34\pm0.13$    $0.02\pm0.01$            $20/20$
+               UCRL2                $0.02\pm0.01$    $0.01\pm0.00$            $20/20$
+SimpleGrid (1) PSRL                 $0.93\pm0.00$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.11\pm0.01$    $0.02\pm0.00$            $20/20$
+               UCRL2                $0.01\pm0.00$    $0.00\pm0.00$            $20/20$
+SimpleGrid (2) PSRL                 $0.45\pm0.15$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.01\pm0.00$    $0.02\pm0.00$            $20/20$
+               UCRL2                $0.01\pm0.00$    $0.00\pm0.00$            $13/20$
+SimpleGrid (3) PSRL                 $0.93\pm0.00$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.15\pm0.01$    $0.01\pm0.00$            $20/20$
+               UCRL2                $0.70\pm0.39$    $0.00\pm0.00$             $0/20$
+SimpleGrid (4) PSRL                 $0.50\pm0.00$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.01\pm0.00$    $0.01\pm0.00$            $20/20$
+               UCRL2                $0.33\pm0.23$    $0.00\pm0.00$             $0/20$
+Taxi (1)       PSRL                 $0.94\pm0.03$    $0.00\pm0.00$             $0/20$
+               Q-learning           $0.95\pm0.00$    $0.01\pm0.00$            $20/20$
+               UCRL2                $0.12\pm0.01$    $0.01\pm0.00$            $20/20$
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/michelangelo/miniconda3/envs/py39/lib/python3.9/site-packages/colosseum/analysis/tables.py:317: FutureWarning: In future versions `DataFrame.to_latex` is expected to utilise the base implementation of `Styler.to_latex` for formatting and rendering. The arguments signature may therefore change. It is recommended instead to use `DataFrame.style.to_latex` which also contains additional functionality.
+  table = table.to_latex(escape=False).split(&quot;\n&quot;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <span class="math notranslate nohighlight">\(\LaTeX\)</span> indicators table is provided below.</p>
+<div class="cell tag_hide-output tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>\begin{tabular}{lllll}
+\toprule
+         &amp;       &amp; Norm. cumulative regret &amp; Steps per second &amp; \# completed seeds \\
+MDP &amp; Agent &amp;                         &amp;                  &amp;                    \\
+\midrule
+DeepSea (1) &amp; PSRL &amp;           $0.78\pm0.05$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.78\pm0.00$ &amp;    $0.00\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.90\pm0.01$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+DeepSea (2) &amp; PSRL &amp;           $0.99\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.99\pm0.00$ &amp;    $0.00\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.99\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+DeepSea (3) &amp; PSRL &amp;           $0.79\pm0.04$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.79\pm0.00$ &amp;    $0.00\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.92\pm0.01$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+FrozenLake (1) &amp; PSRL &amp;           $0.01\pm0.03$ &amp;    $0.02\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.77\pm0.04$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.01\pm0.01$ &amp;    $0.02\pm0.01$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+FrozenLake (2) &amp; PSRL &amp;           $0.01\pm0.02$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.84\pm0.04$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.04\pm0.06$ &amp;    $0.02\pm0.01$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+MG-Empty (1) &amp; PSRL &amp;           $0.95\pm0.22$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.51\pm0.22$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.02\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $7/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+MG-Empty (2) &amp; PSRL &amp;           $1.00\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.01\pm0.00$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.02\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $9/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+MG-Empty (3) &amp; PSRL &amp;           $0.60\pm0.49$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.00\pm0.00$ &amp;    $0.02\pm0.01$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.01\pm0.00$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+MG-Empty (4) &amp; PSRL &amp;           $1.00\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.35\pm0.17$ &amp;    $0.02\pm0.01$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.01\pm0.00$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+MG-Empty (5) &amp; PSRL &amp;           $1.00\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.75\pm0.20$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.08\pm0.20$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+MG-Rooms (1) &amp; PSRL &amp;           $1.00\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.01\pm0.01$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.78\pm0.39$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+MG-Rooms (2) &amp; PSRL &amp;           $1.00\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.01\pm0.01$ &amp;    $0.02\pm0.01$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.02\pm0.01$ &amp;    $0.00\pm0.00$ &amp;            $18/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+MG-Rooms (3) &amp; PSRL &amp;           $1.00\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.02\pm0.02$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.66\pm0.46$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+RiverSwim (1) &amp; PSRL &amp;           $0.00\pm0.01$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.16\pm0.03$ &amp;    $0.03\pm0.01$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.00\pm0.00$ &amp;    $0.02\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+RiverSwim (2) &amp; PSRL &amp;           $0.01\pm0.00$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.34\pm0.13$ &amp;    $0.02\pm0.01$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.02\pm0.01$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+SimpleGrid (1) &amp; PSRL &amp;           $0.93\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.11\pm0.01$ &amp;    $0.02\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.01\pm0.00$ &amp;    $0.00\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+SimpleGrid (2) &amp; PSRL &amp;           $0.45\pm0.15$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.01\pm0.00$ &amp;    $0.02\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.01\pm0.00$ &amp;    $0.00\pm0.00$ &amp;            $13/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+SimpleGrid (3) &amp; PSRL &amp;           $0.93\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.15\pm0.01$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.70\pm0.39$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+SimpleGrid (4) &amp; PSRL &amp;           $0.50\pm0.00$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.01\pm0.00$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.33\pm0.23$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{1-4}
+Taxi (1) &amp; PSRL &amp;           $0.94\pm0.03$ &amp;    $0.00\pm0.00$ &amp;             $0/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; Q-learning &amp;           $0.95\pm0.00$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\arrayrulecolor{black!15}\cmidrule{2-4}
+         &amp; UCRL2 &amp;           $0.12\pm0.01$ &amp;    $0.01\pm0.00$ &amp;            $20/20$ \\
+\bottomrule
+\end{tabular}
+</pre></div>
+</div>
+</div>
+</div>
+<h4> Plots </h4>
+<p><strong>Hardness space plot</strong></p>
+<p>The <a class="reference external" href="../pdoc_files/colosseum/analysis/plots.html#plot_indicator_in_hardness_space"><code class="docutils literal notranslate"><span class="pre">plot_indicator_in_hardness_space</span></code></a>
+function produces a plot that places the average cumulative regret obtained by each agent in the benchmark MDPs in the
+position corresponding to the diameter and environmental value norm of the corresponding MDP.
+This plot enables investigating which kind of complexity impacts the performance of the agents most.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plot_indicator_in_hardness_space</span><span class="p">(</span><span class="n">benchmark_log_folder</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">savefig_folder</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output tag_remove-input docutils container">
+</div>
+<div class="full-width docutils">
+<div class="cell_output docutils container">
+<img alt="../_images/benchmark-analysis_12_0.png" src="../_images/benchmark-analysis_12_0.png" />
+</div>
+</div>
+<p><strong>Online agents’ performances</strong></p>
+<p>The <a class="reference external" href="../pdoc_files/colosseum/analysis/plots.html#agent_performances_per_mdp_plot"><code class="docutils literal notranslate"><span class="pre">agent_performances_per_mdp_plot</span></code></a> function
+produces a plot that shows the values for a given indicator during the agent/MDP interactions.
+This plot enables easily comparing agents’ performances in the benchmark MDPs and provides an intuitive overview of the critical moments of the agent/MDP interaction, e.g., when an agent runs out of time or reaches the optimal policy.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">agent_performances_per_mdp_plot</span><span class="p">(</span>
+    <span class="n">benchmark_log_folder</span><span class="p">,</span>
+    <span class="s2">&quot;normalized_cumulative_regret&quot;</span><span class="p">,</span>
+    <span class="n">figsize_scale</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">standard_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">n_rows</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+    <span class="n">savefig_folder</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output tag_remove-input docutils container">
+</div>
+<div class="full-width docutils">
+<div class="cell_output docutils container">
+<img alt="../_images/benchmark-analysis_15_0.png" src="../_images/benchmark-analysis_15_0.png" />
+</div>
+</div>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./mds"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="benchmark-introduction.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">The Colosseum Benchmark</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="benchmark-custom.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Create Custom Benchmarks</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Michelangelo Conserva<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

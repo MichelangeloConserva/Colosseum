@@ -1,5 +1,0 @@
-last training step at (12844) for experiments_done/benchmark_continuous_communicating/logs/prms_2-SimpleGridContinuous____prms_1-UCRL2Continuous/seed1_logs.csv
-last training step at (13094) for experiments_done/benchmark_continuous_communicating/logs/prms_2-SimpleGridContinuous____prms_1-UCRL2Continuous/seed3_logs.csv
-last training step at (6244) for experiments_done/benchmark_continuous_communicating/logs/prms_2-SimpleGridContinuous____prms_1-UCRL2Continuous/seed4_logs.csv
-last training step at (4421) for experiments_done/benchmark_continuous_communicating/logs/prms_2-SimpleGridContinuous____prms_1-UCRL2Continuous/seed0_logs.csv
-last training step at (98793) for experiments_done/benchmark_continuous_communicating/logs/prms_2-SimpleGridContinuous____prms_1-UCRL2Continuous/seed2_logs.csv

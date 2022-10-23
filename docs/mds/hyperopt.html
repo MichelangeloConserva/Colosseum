@@ -1,0 +1,711 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Hyperparameters Optimization &#8212; The hitchhiker&#39;s guide to Colosseum</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/myfile.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="../_static/colosseum_icon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Scale Benchmarking to a Cluster" href="benchmark-scaling.html" />
+    <link rel="prev" title="Benchmarking Agents" href="benchmark-running.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-0RT6KZEQPZ"></script>
+<script>
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){ dataLayer.push(arguments); }
+                    gtag('js', new Date());
+                    gtag('config', 'G-0RT6KZEQPZ');
+                </script>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/colosseum_banner.svg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">The hitchhiker's guide to Colosseum</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    What is Colosseum?
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="manifesto.html">
+   Motivation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api-reference.html">
+   API Documentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="contributions.html">
+   Contributions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="quickstart.html">
+   Quickstart
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="colosseum-configurations.html">
+   Configure Colosseum
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="agent-performance-analysis.html">
+   Inspect Agents Performances
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-functionalities.html">
+   Inspect Markov Decision Processes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mdp-visual-representations.html">
+   Visualize Markov Decision Processes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-introduction.html">
+   The Colosseum Benchmark
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-analysis.html">
+   Analyse Benchmarking Results
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-custom.html">
+   Create Custom Benchmarks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-running.html">
+   Benchmarking Agents
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Hyperparameters Optimization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmark-scaling.html">
+   Scale Benchmarking to a Cluster
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hardness-analysis.html">
+   Empirical hardness analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="non-tabular.html">
+   Non-Tabular Benchmarking
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/MichelangeloConserva/Colosseum/main?urlpath=tree/docs/book_files/mds/hyperopt.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/MichelangeloConserva/Colosseum/issues/new?title=Issue%20on%20page%20%2Fmds/hyperopt.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/mds/hyperopt.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="../_sources/mds/hyperopt.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Hyperparameters Optimization</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="hyperparameters-optimization">
+<h1>Hyperparameters Optimization<a class="headerlink" href="#hyperparameters-optimization" title="Permalink to this headline">#</a></h1>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+Necessary imports<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">asdict</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">myst_nb</span> <span class="kn">import</span> <span class="n">glue</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">beta</span>
+
+<span class="kn">from</span> <span class="nn">colosseum</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">colosseum.agent.agents.episodic</span> <span class="kn">import</span> <span class="n">QLearningEpisodic</span>
+<span class="kn">from</span> <span class="nn">colosseum.agent.agents.infinite_horizon</span> <span class="kn">import</span> <span class="n">QLearningContinuous</span>
+<span class="kn">from</span> <span class="nn">colosseum.benchmark.run</span> <span class="kn">import</span> <span class="n">instantiate_and_get_exp_instances_from_agents_and_benchmarks_for_hyperopt</span>
+<span class="kn">from</span> <span class="nn">colosseum.experiment.experiment_instances</span> <span class="kn">import</span> <span class="n">run_experiment_instances</span>
+<span class="kn">from</span> <span class="nn">colosseum.hyperopt</span> <span class="kn">import</span> <span class="n">DEFAULT_HYPEROPT_CONF</span><span class="p">,</span> <span class="n">DEFAULT_HYPEROPT_CONF_NONTABULAR</span><span class="p">,</span> <span class="n">SMALL_HYPEROPT_CONF</span><span class="p">,</span> \
+    <span class="n">SMALL_HYPEROPT_CONF_NONTABULAR</span><span class="p">,</span> <span class="n">HyperOptConfig</span>
+<span class="kn">from</span> <span class="nn">colosseum.hyperopt.selection</span> <span class="kn">import</span> <span class="n">get_optimal_agents_configs</span>
+<span class="kn">from</span> <span class="nn">colosseum.hyperopt.utils</span> <span class="kn">import</span> <span class="n">sample_agent_configs_and_benchmarks_for_hyperopt</span>
+<span class="kn">from</span> <span class="nn">colosseum.mdp.custom_mdp</span> <span class="kn">import</span> <span class="n">CustomEpisodic</span>
+<span class="kn">from</span> <span class="nn">colosseum.mdp.river_swim</span> <span class="kn">import</span> <span class="n">RiverSwimEpisodic</span>
+<span class="kn">from</span> <span class="nn">colosseum.mdp.simple_grid</span> <span class="kn">import</span> <span class="n">SimpleGridContinuous</span>
+
+<span class="n">experiments_folder</span> <span class="o">=</span> <span class="s2">&quot;tutorial&quot;</span>
+<span class="n">experiment_name</span> <span class="o">=</span> <span class="s2">&quot;bench_run&quot;</span>
+
+<span class="n">config</span><span class="o">.</span><span class="n">set_experiments_folder</span><span class="p">(</span><span class="n">experiments_folder</span><span class="p">,</span> <span class="n">experiment_name</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">set_hyperopt_folder</span><span class="p">(</span><span class="n">experiments_folder</span><span class="p">,</span> <span class="n">experiment_name</span><span class="p">)</span>
+
+<span class="n">config</span><span class="o">.</span><span class="n">enable_verbose_logging</span><span class="p">()</span>
+
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span>
+</pre></div>
+</div>
+</div>
+</details></aside>
+<div class="cell tag_remove-output tag_remove-input docutils container">
+</div>
+<p>The sampling spaces defined in the agents classes are used by the hyperparameters optimization procedure, which aims to
+minimize the cumulative regret across a set of randomly sampled environments.</p>
+<p><strong>Hyperparameters optimization configurations</strong></p>
+<p>The <a class="reference external" href="../pdoc_files/colosseum/hyperopt/config.html#HyperOptConfig"><code class="docutils literal notranslate"><span class="pre">HyperOptConfig</span></code></a> class controls the parameters of the hyperparameter optimization procedure.
+There are four default hyperparameters optimization configurations available in the package.
+<a class="reference external" href="../pdoc_files/colosseum/hyperopt/config.html#DEFAULT_HYPEROPT_CONF"><code class="docutils literal notranslate"><span class="pre">DEFAULT_HYPEROPT_CONF</span></code></a> is the default hyperparameters optimization configuration for tabular agents,
+<a class="reference external" href="../pdoc_files/colosseum/hyperopt/config.html#SMALL_HYPEROPT_CONF"><code class="docutils literal notranslate"><span class="pre">SMALL_HYPEROPT_CONF</span></code></a> is a quick hyperparameters optimization configuration for tabular agents that can be used for quick testing,
+<a class="reference external" href="../pdoc_files/colosseum/hyperopt/config.html#DEFAULT_HYPEROPT_CONF_NONTABULAR"><code class="docutils literal notranslate"><span class="pre">DEFAULT_HYPEROPT_CONF_NONTABULAR</span></code></a> is the default hyperparameters optimization configuration for non-tabular agents, and
+<a class="reference external" href="../pdoc_files/colosseum/hyperopt/config.html#SMALL_HYPEROPT_CONF_NONTABULAR"><code class="docutils literal notranslate"><span class="pre">SMALL_HYPEROPT_CONF_NONTABULAR</span></code></a> is the default hyperparameters optimization configuration for non-tabular agents that can be used for quick testing.</p>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<div class="output text_html"><style type="text/css">
+#T_22e76 .row_heading {
+  text-align: left;
+}
+</style>
+<table id="T_22e76" style="font-size: 14px">
+  <thead>
+    <tr>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_22e76_level0_col0" class="col_heading level0 col0" >Default tabular</th>
+      <th id="T_22e76_level0_col1" class="col_heading level0 col1" >Small tabular</th>
+      <th id="T_22e76_level0_col2" class="col_heading level0 col2" >Default non-tabular</th>
+      <th id="T_22e76_level0_col3" class="col_heading level0 col3" >Small non-tabular</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_22e76_level0_row0" class="row_heading level0 row0" >seed</th>
+      <td id="T_22e76_row0_col0" class="data row0 col0" >42</td>
+      <td id="T_22e76_row0_col1" class="data row0 col1" >42</td>
+      <td id="T_22e76_row0_col2" class="data row0 col2" >42</td>
+      <td id="T_22e76_row0_col3" class="data row0 col3" >42</td>
+    </tr>
+    <tr>
+      <th id="T_22e76_level0_row1" class="row_heading level0 row1" >n_timesteps</th>
+      <td id="T_22e76_row1_col0" class="data row1 col0" >250000</td>
+      <td id="T_22e76_row1_col1" class="data row1 col1" >30000</td>
+      <td id="T_22e76_row1_col2" class="data row1 col2" >250000</td>
+      <td id="T_22e76_row1_col3" class="data row1 col3" >50000</td>
+    </tr>
+    <tr>
+      <th id="T_22e76_level0_row2" class="row_heading level0 row2" >max_interaction_time_s</th>
+      <td id="T_22e76_row2_col0" class="data row2 col0" >300</td>
+      <td id="T_22e76_row2_col1" class="data row2 col1" >120</td>
+      <td id="T_22e76_row2_col2" class="data row2 col2" >600</td>
+      <td id="T_22e76_row2_col3" class="data row2 col3" >60</td>
+    </tr>
+    <tr>
+      <th id="T_22e76_level0_row3" class="row_heading level0 row3" >n_samples_agents</th>
+      <td id="T_22e76_row3_col0" class="data row3 col0" >50</td>
+      <td id="T_22e76_row3_col1" class="data row3 col1" >2</td>
+      <td id="T_22e76_row3_col2" class="data row3 col2" >50</td>
+      <td id="T_22e76_row3_col3" class="data row3 col3" >2</td>
+    </tr>
+    <tr>
+      <th id="T_22e76_level0_row4" class="row_heading level0 row4" >n_samples_mdps</th>
+      <td id="T_22e76_row4_col0" class="data row4 col0" >5</td>
+      <td id="T_22e76_row4_col1" class="data row4 col1" >2</td>
+      <td id="T_22e76_row4_col2" class="data row4 col2" >5</td>
+      <td id="T_22e76_row4_col3" class="data row4 col3" >2</td>
+    </tr>
+    <tr>
+      <th id="T_22e76_level0_row5" class="row_heading level0 row5" >log_every</th>
+      <td id="T_22e76_row5_col0" class="data row5 col0" >100000</td>
+      <td id="T_22e76_row5_col1" class="data row5 col1" >10000</td>
+      <td id="T_22e76_row5_col2" class="data row5 col2" >50000</td>
+      <td id="T_22e76_row5_col3" class="data row5 col3" >10000</td>
+    </tr>
+    <tr>
+      <th id="T_22e76_level0_row6" class="row_heading level0 row6" >emission_map</th>
+      <td id="T_22e76_row6_col0" class="data row6 col0" >None</td>
+      <td id="T_22e76_row6_col1" class="data row6 col1" >None</td>
+      <td id="T_22e76_row6_col2" class="data row6 col2" >StateInfo</td>
+      <td id="T_22e76_row6_col3" class="data row6 col3" >StateInfo</td>
+    </tr>
+    <tr>
+      <th id="T_22e76_level0_row7" class="row_heading level0 row7" >mdp_classes</th>
+      <td id="T_22e76_row7_col0" class="data row7 col0" >None</td>
+      <td id="T_22e76_row7_col1" class="data row7 col1" >None</td>
+      <td id="T_22e76_row7_col2" class="data row7 col2" >None</td>
+      <td id="T_22e76_row7_col3" class="data row7 col3" >None</td>
+    </tr>
+    <tr>
+      <th id="T_22e76_level0_row8" class="row_heading level0 row8" >n_seeds</th>
+      <td id="T_22e76_row8_col0" class="data row8 col0" >3</td>
+      <td id="T_22e76_row8_col1" class="data row8 col1" >1</td>
+      <td id="T_22e76_row8_col2" class="data row8 col2" >3</td>
+      <td id="T_22e76_row8_col3" class="data row8 col3" >1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p><strong>Hyperparameters optimization</strong></p>
+<p>Running the hyperparameters optimization procedure is very similar to running a benchmark.
+The only difference is that the benchmark environments are automatically sampled.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a custom small scale hyperparameters optimization procedure</span>
+<span class="n">hpoc</span> <span class="o">=</span> <span class="n">HyperOptConfig</span><span class="p">(</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">n_timesteps</span><span class="o">=</span><span class="mi">20_000</span><span class="p">,</span>
+    <span class="n">max_interaction_time_s</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">n_samples_agents</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">n_samples_mdps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">log_every</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">n_seeds</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Take the q-learning agents as running example</span>
+<span class="n">agent_cls</span> <span class="o">=</span> <span class="p">[</span><span class="n">QLearningContinuous</span><span class="p">,</span> <span class="n">QLearningEpisodic</span><span class="p">]</span>
+
+<span class="c1"># Create the benchmarks for the given agents classes and hyperparameters optimzation configuration</span>
+<span class="n">hyperopt_agents_and_benchmarks</span> <span class="o">=</span> <span class="n">sample_agent_configs_and_benchmarks_for_hyperopt</span><span class="p">(</span><span class="n">agent_cls</span><span class="p">,</span> <span class="n">hpoc</span><span class="p">)</span>
+
+<span class="c1"># Obtain the instances and run them locally</span>
+<span class="n">hp_exp_instances</span> <span class="o">=</span> <span class="n">instantiate_and_get_exp_instances_from_agents_and_benchmarks_for_hyperopt</span><span class="p">(</span>
+    <span class="n">hyperopt_agents_and_benchmarks</span>
+<span class="p">)</span>
+<span class="n">run_experiment_instances</span><span class="p">(</span><span class="n">hp_exp_instances</span><span class="p">)</span>
+
+<span class="c1"># Compute the best hyperparameters, which, by default, minimize the average normalized cumulative regret</span>
+<span class="n">optimal_agent_configs</span> <span class="o">=</span> <span class="n">retrieve_best_agent_config_from_hp_folder</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>prms_0/QLearningEpisodic.p=0.05
+prms_0/QLearningEpisodic.UCB_type=&quot;bernstein&quot;
+prms_0/QLearningEpisodic.c_1 = 0.4126
+prms_0/QLearningEpisodic.c_2 = 1.0458
+prms_0/QLearningEpisodic.min_at = 0.1467
+
+
+prms_0/QLearningContinuous.h_weight = 0.4126
+prms_0/QLearningContinuous.span_approx_weight = 1.0458
+prms_0/QLearningContinuous.min_at = 0.1467
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-input tag_remove-output docutils container">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./mds"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="benchmark-running.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Benchmarking Agents</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="benchmark-scaling.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Scale Benchmarking to a Cluster</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Michelangelo Conserva<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

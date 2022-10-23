@@ -1,5 +1,0 @@
-from colosseum.agent.mdp_models import bayesian_models
-prms_0/PSRLEpisodic.reward_prior_model = %bayesian_models.RewardsConjugateModel.N_NIG
-prms_0/PSRLEpisodic.transitions_prior_model = %bayesian_models.TransitionsConjugateModel.M_DIR
-prms_0/PSRLEpisodic.rewards_prior_prms = [0.41854463543357456, 1, 1, 1]
-prms_0/PSRLEpisodic.transitions_prior_prms = [0.32345772625210756]
