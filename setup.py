@@ -1,16 +1,5 @@
 import imp
-import os
-from glob import glob
-
 import setuptools
-
-extra_files = glob(
-    "colosseum" + os.sep + "benchmark" + os.sep + "**" + os.sep + "*.gin",
-    recursive=True,
-) + glob(
-    "colosseum" + os.sep + "benchmark" + os.sep + "**" + os.sep + "*.yml",
-    recursive=True,
-)
 
 setuptools.setup(
     name="rl-colosseum",
@@ -26,7 +15,6 @@ setuptools.setup(
     version=imp.load_source("_metadata", "colosseum/_metadata.py").__version__,
     keywords="reinforcement-learning python machine-learning",
     packages=setuptools.find_packages(),
-    package_data={"rl-colosseum": extra_files},
     include_package_data=True,
     install_requires=[
         "adjustText",
