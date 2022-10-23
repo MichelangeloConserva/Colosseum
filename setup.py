@@ -27,6 +27,7 @@ setuptools.setup(
     keywords="reinforcement-learning python machine-learning",
     packages=setuptools.find_packages(),
     package_data={"rl-colosseum": extra_files},
+    include_package_data=True,
     install_requires=[
         "adjustText",
         "dm-env",
