@@ -1,5 +1,16 @@
 import imp
+import os
+from glob import glob
+
 import setuptools
+
+extra_files = glob(
+    "colosseum" + os.sep + "benchmark" + os.sep + "**" + os.sep + "*.gin",
+    recursive=True,
+) + glob(
+    "colosseum" + os.sep + "benchmark" + os.sep + "**" + os.sep + "*.yml",
+    recursive=True,
+)
 
 setuptools.setup(
     name="rl-colosseum",
@@ -15,6 +26,7 @@ setuptools.setup(
     version=imp.load_source("_metadata", "colosseum/_metadata.py").__version__,
     keywords="reinforcement-learning python machine-learning",
     packages=setuptools.find_packages(),
+    package_data={"": extra_files},
     install_requires=[
         "adjustText",
         "dm-env",
@@ -37,12 +49,12 @@ setuptools.setup(
         "pygraphviz",
         "wrapt-timeout-decorator",
         "bsuite[baseline]",
-        'dm-sonnet',
-        'dm-tree',
-        'tensorflow',
-        'tensorflow_probability',
-        'trfl',
-        'tqdm',
+        "dm-sonnet",
+        "dm-tree",
+        "tensorflow",
+        "tensorflow_probability",
+        "trfl",
+        "tqdm",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
