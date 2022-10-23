@@ -37,6 +37,12 @@ setuptools.setup(
         "pygraphviz",
         "wrapt-timeout-decorator",
         "bsuite[baseline]",
+        'dm-sonnet',
+        'dm-tree',
+        'tensorflow',
+        'tensorflow_probability',
+        'trfl',
+        'tqdm',
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
