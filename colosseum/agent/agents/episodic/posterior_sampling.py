@@ -1,5 +1,6 @@
 from typing import Any, Callable, Dict, Union
 
+import dm_env
 import gin
 import numpy as np
 from ray import tune
@@ -23,6 +24,15 @@ class PSRLEpisodic(BaseAgent):
     Osband, Ian, Daniel Russo, and Benjamin Van Roy. "(More) efficient reinforcement learning via posterior sampling."
     Advances in Neural Information Processing Systems 26 (2013).
     """
+
+    def step_update(
+        self,
+        ts_t: dm_env.TimeStep,
+        a_t: "ACTION_TYPE",
+        ts_tp1: dm_env.TimeStep,
+        time: int,
+    ):
+        super(PSRLEpisodic, self).step_update(ts_t, a_t, ts_tp1, time)
 
     @staticmethod
     def is_emission_map_accepted(emission_map: "EmissionMap") -> bool:

@@ -202,6 +202,7 @@ class BaseAgent(abc.ABC):
         """
         return self._actor.select_action(ts, time)
 
+    @abc.abstractmethod
     def step_update(
         self,
         ts_t: dm_env.TimeStep,

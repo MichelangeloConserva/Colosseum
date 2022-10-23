@@ -6,7 +6,7 @@ from typing import List, Dict, TYPE_CHECKING, Type, Union
 
 import yaml
 
-from colosseum.benchmark.benchmark import ColosseumBenchmark
+from colosseum.benchmark.benchmark import ColosseumBenchmark, BENCHMARKS_DIRECTORY
 from colosseum.emission_maps import EmissionMap
 from colosseum.experiment import ExperimentConfig
 from colosseum.utils import ensure_folder
@@ -37,7 +37,7 @@ def get_mdps_configs_from_mdps(mdps: List["BaseMDP"]) -> List[str]:
 
 
 def instantiate_agent_configs(
-    agents_configs: Dict[Type["BaseAgent"], str],
+    agents_configs: Dict[Type["BaseAgent"], Union[str, None]],
     benchmark_folder: str,
 ):
     """
@@ -45,11 +45,30 @@ def instantiate_agent_configs(
 
     Parameters
     ----------
-    agents_configs : Dict[Type["BaseAgent"], str]
-        The dictionary associates agent classes to their gin config files.
+    agents_configs : Dict[Type["BaseAgent"], Union[str, None]]
+        The dictionary associates agent classes to their gin config files. If no agent config is given, we try to
+        retrieve it from the cached_hyperparameters folder in package
     benchmark_folder : str
         The folder where the corresponding benchmark is located.
     """
+
+    # If no agent config is given, we retrieve it from the cached_hyperparameters folder in package
+    for ag_cl in list(agents_configs):
+        if agents_configs[ag_cl] is None:
+            cached_config = (
+                BENCHMARKS_DIRECTORY
+                + "cached_hyperparameters"
+                + os.sep
+                + "agent_configs"
+                + os.sep
+                + ag_cl.__name__
+                + ".gin"
+            )
+            if os.path.isfile(cached_config):
+                with open(cached_config, "r") as f:
+                    agents_configs[ag_cl] = f.read()
+            else:
+                raise f"No configuration was given for agent {ag_cl.__name__}"
 
     if os.path.isdir(benchmark_folder + "agents_configs" + os.sep):
         try:
@@ -64,12 +83,12 @@ def instantiate_agent_configs(
             shutil.rmtree(benchmark_folder + "agents_configs")
     else:
         os.makedirs(ensure_folder(benchmark_folder) + "agents_configs", exist_ok=True)
-        for mdp_cl, gin_config in agents_configs.items():
+        for ag_cl, gin_config in agents_configs.items():
             with open(
                 ensure_folder(benchmark_folder)
                 + "agents_configs"
                 + os.sep
-                + mdp_cl.__name__
+                + ag_cl.__name__
                 + ".gin",
                 "w",
             ) as f:

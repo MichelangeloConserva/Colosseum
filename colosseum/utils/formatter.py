@@ -30,7 +30,7 @@ def cleaner(x) -> Union[float, str]:
 
     if "numpy" in str(type(x)) and "bool" not in str(type(x)):
         return float(np.round(x, 5))
-    if "rv_frozen" in str(type(x)):
+    if "scipy" in str(type(x)) and "frozen" in str(type(x)):
         return (
             f"{x.dist.name.capitalize()}"
             f"({', '.join(map(str, map(lambda y : float(np.round(y, 2)), x.args)))})"
