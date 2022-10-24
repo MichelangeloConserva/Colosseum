@@ -30,3 +30,5 @@ dependencies:
     - bsuite[baselines]
     - tqdm
     - jupytext>=0.16
+    - myst_nb
+    - git+https://github.com/MichelangeloConserva/Colosseum
