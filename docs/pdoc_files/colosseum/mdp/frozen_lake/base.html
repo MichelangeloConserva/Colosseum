@@ -458,7 +458,8 @@
                 <section id="FrozenLakeNode">
                             <input id="FrozenLakeNode-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@dataclass(frozen=True)</div>
+
     <span class="def">class</span>
     <span class="name">FrozenLakeNode</span>:
 
@@ -466,7 +467,8 @@
 
     </div>
     <a class="headerlink" href="#FrozenLakeNode"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="FrozenLakeNode-25"><a href="#FrozenLakeNode-25"><span class="linenos">25</span></a><span class="k">class</span> <span class="nc">FrozenLakeNode</span><span class="p">:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="FrozenLakeNode-24"><a href="#FrozenLakeNode-24"><span class="linenos">24</span></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="FrozenLakeNode-25"><a href="#FrozenLakeNode-25"><span class="linenos">25</span></a><span class="k">class</span> <span class="nc">FrozenLakeNode</span><span class="p">:</span>
 </span><span id="FrozenLakeNode-26"><a href="#FrozenLakeNode-26"><span class="linenos">26</span></a>    <span class="sd">&quot;&quot;&quot;</span>
 </span><span id="FrozenLakeNode-27"><a href="#FrozenLakeNode-27"><span class="linenos">27</span></a><span class="sd">    The node for the FrozenLake MDP.</span>
 </span><span id="FrozenLakeNode-28"><a href="#FrozenLakeNode-28"><span class="linenos">28</span></a><span class="sd">    &quot;&quot;&quot;</span>
@@ -621,6 +623,7 @@
                 <dd id="FrozenLakeAction.bit_length" class="function">bit_length</dd>
                 <dd id="FrozenLakeAction.to_bytes" class="function">to_bytes</dd>
                 <dd id="FrozenLakeAction.from_bytes" class="function">from_bytes</dd>
+                <dd id="FrozenLakeAction.as_integer_ratio" class="function">as_integer_ratio</dd>
                 <dd id="FrozenLakeAction.real" class="variable">real</dd>
                 <dd id="FrozenLakeAction.imag" class="variable">imag</dd>
                 <dd id="FrozenLakeAction.numerator" class="variable">numerator</dd>
@@ -1183,7 +1186,7 @@ The lower the value, the higher the variance. By default, it is set to 1.</li>
                     <div class="decorator">@staticmethod</div>
 
         <span class="def">def</span>
-        <span class="name">get_node_class</span><span class="signature pdoc-code multiline">(<span class="return-annotation">) -> <span class="nb">type</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n"><a href="../custom_mdp.html#CustomNode">colosseum.mdp.custom_mdp.CustomNode</a></span><span class="p">,</span> <span class="n"><a href="../river_swim/base.html#RiverSwimNode">colosseum.mdp.river_swim.base.RiverSwimNode</a></span><span class="p">,</span> <span class="n"><a href="../deep_sea/base.html#DeepSeaNode">colosseum.mdp.deep_sea.base.DeepSeaNode</a></span><span class="p">,</span> <span class="n"><a href="#FrozenLakeNode">colosseum.mdp.frozen_lake.base.FrozenLakeNode</a></span><span class="p">,</span> <span class="n"><a href="../simple_grid/base.html#SimpleGridNode">colosseum.mdp.simple_grid.base.SimpleGridNode</a></span><span class="p">,</span> <span class="n"><a href="../minigrid_empty/base.html#MiniGridEmptyNode">colosseum.mdp.minigrid_empty.base.MiniGridEmptyNode</a></span><span class="p">,</span> <span class="n"><a href="../minigrid_rooms/base.html#MiniGridRoomsNode">colosseum.mdp.minigrid_rooms.base.MiniGridRoomsNode</a></span><span class="p">,</span> <span class="n"><a href="../taxi/base.html#TaxiNode">colosseum.mdp.taxi.base.TaxiNode</a></span><span class="p">]]</span>:</span></span>
+        <span class="name">get_node_class</span><span class="signature pdoc-code multiline">(<span class="return-annotation">) -> <span class="n">Type</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n"><a href="../custom_mdp.html#CustomNode">colosseum.mdp.custom_mdp.CustomNode</a></span><span class="p">,</span> <span class="n"><a href="../river_swim/base.html#RiverSwimNode">colosseum.mdp.river_swim.base.RiverSwimNode</a></span><span class="p">,</span> <span class="n"><a href="../deep_sea/base.html#DeepSeaNode">colosseum.mdp.deep_sea.base.DeepSeaNode</a></span><span class="p">,</span> <span class="n"><a href="#FrozenLakeNode">colosseum.mdp.frozen_lake.base.FrozenLakeNode</a></span><span class="p">,</span> <span class="n"><a href="../simple_grid/base.html#SimpleGridNode">colosseum.mdp.simple_grid.base.SimpleGridNode</a></span><span class="p">,</span> <span class="n"><a href="../minigrid_empty/base.html#MiniGridEmptyNode">colosseum.mdp.minigrid_empty.base.MiniGridEmptyNode</a></span><span class="p">,</span> <span class="n"><a href="../minigrid_rooms/base.html#MiniGridRoomsNode">colosseum.mdp.minigrid_rooms.base.MiniGridRoomsNode</a></span><span class="p">,</span> <span class="n"><a href="../taxi/base.html#TaxiNode">colosseum.mdp.taxi.base.TaxiNode</a></span><span class="p">]]</span>:</span></span>
 
                 <label class="view-source-button" for="FrozenLakeMDP.get_node_class-view-source"><span>View Source</span></label>
 

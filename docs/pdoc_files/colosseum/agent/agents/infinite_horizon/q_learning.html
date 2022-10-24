@@ -439,7 +439,8 @@ One minus the probability of failure.</li>
                 <section id="QLearningContinuous">
                             <input id="QLearningContinuous-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@gin.configurable</div>
+
     <span class="def">class</span>
     <span class="name">QLearningContinuous</span><wbr>(<span class="base"><a href="../base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span>):
 
@@ -447,7 +448,8 @@ One minus the probability of failure.</li>
 
     </div>
     <a class="headerlink" href="#QLearningContinuous"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="QLearningContinuous-115"><a href="#QLearningContinuous-115"><span class="linenos">115</span></a><span class="k">class</span> <span class="nc">QLearningContinuous</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="QLearningContinuous-114"><a href="#QLearningContinuous-114"><span class="linenos">114</span></a><span class="nd">@gin</span><span class="o">.</span><span class="n">configurable</span>
+</span><span id="QLearningContinuous-115"><a href="#QLearningContinuous-115"><span class="linenos">115</span></a><span class="k">class</span> <span class="nc">QLearningContinuous</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
 </span><span id="QLearningContinuous-116"><a href="#QLearningContinuous-116"><span class="linenos">116</span></a>    <span class="sd">&quot;&quot;&quot;</span>
 </span><span id="QLearningContinuous-117"><a href="#QLearningContinuous-117"><span class="linenos">117</span></a><span class="sd">    The q-learning algorithm with optimism.</span>
 </span><span id="QLearningContinuous-118"><a href="#QLearningContinuous-118"><span class="linenos">118</span></a>

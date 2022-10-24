@@ -461,7 +461,8 @@
                 <section id="DeepSeaNode">
                             <input id="DeepSeaNode-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@dataclass(frozen=True)</div>
+
     <span class="def">class</span>
     <span class="name">DeepSeaNode</span>:
 
@@ -469,7 +470,8 @@
 
     </div>
     <a class="headerlink" href="#DeepSeaNode"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="DeepSeaNode-24"><a href="#DeepSeaNode-24"><span class="linenos">24</span></a><span class="k">class</span> <span class="nc">DeepSeaNode</span><span class="p">:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="DeepSeaNode-23"><a href="#DeepSeaNode-23"><span class="linenos">23</span></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="DeepSeaNode-24"><a href="#DeepSeaNode-24"><span class="linenos">24</span></a><span class="k">class</span> <span class="nc">DeepSeaNode</span><span class="p">:</span>
 </span><span id="DeepSeaNode-25"><a href="#DeepSeaNode-25"><span class="linenos">25</span></a>    <span class="sd">&quot;&quot;&quot;</span>
 </span><span id="DeepSeaNode-26"><a href="#DeepSeaNode-26"><span class="linenos">26</span></a><span class="sd">    The node for the DeepSea MDP.</span>
 </span><span id="DeepSeaNode-27"><a href="#DeepSeaNode-27"><span class="linenos">27</span></a><span class="sd">    &quot;&quot;&quot;</span>
@@ -596,6 +598,7 @@
                 <dd id="DeepSeaAction.bit_length" class="function">bit_length</dd>
                 <dd id="DeepSeaAction.to_bytes" class="function">to_bytes</dd>
                 <dd id="DeepSeaAction.from_bytes" class="function">from_bytes</dd>
+                <dd id="DeepSeaAction.as_integer_ratio" class="function">as_integer_ratio</dd>
                 <dd id="DeepSeaAction.real" class="variable">real</dd>
                 <dd id="DeepSeaAction.imag" class="variable">imag</dd>
                 <dd id="DeepSeaAction.numerator" class="variable">numerator</dd>

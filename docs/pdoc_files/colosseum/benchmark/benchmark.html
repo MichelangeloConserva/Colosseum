@@ -325,7 +325,8 @@
                 <section id="ColosseumBenchmark">
                             <input id="ColosseumBenchmark-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@dataclasses.dataclass(frozen=True)</div>
+
     <span class="def">class</span>
     <span class="name">ColosseumBenchmark</span>:
 
@@ -333,7 +334,8 @@
 
     </div>
     <a class="headerlink" href="#ColosseumBenchmark"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ColosseumBenchmark-24"><a href="#ColosseumBenchmark-24"><span class="linenos">24</span></a><span class="k">class</span> <span class="nc">ColosseumBenchmark</span><span class="p">:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ColosseumBenchmark-23"><a href="#ColosseumBenchmark-23"><span class="linenos">23</span></a><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ColosseumBenchmark-24"><a href="#ColosseumBenchmark-24"><span class="linenos">24</span></a><span class="k">class</span> <span class="nc">ColosseumBenchmark</span><span class="p">:</span>
 </span><span id="ColosseumBenchmark-25"><a href="#ColosseumBenchmark-25"><span class="linenos">25</span></a>    <span class="sd">&quot;&quot;&quot;</span>
 </span><span id="ColosseumBenchmark-26"><a href="#ColosseumBenchmark-26"><span class="linenos">26</span></a><span class="sd">    The `ColosseumBenchmark` encodes a benchmark, which is composed of MDP configurations and an experimental</span>
 </span><span id="ColosseumBenchmark-27"><a href="#ColosseumBenchmark-27"><span class="linenos">27</span></a><span class="sd">    configuration.</span>
@@ -420,7 +422,7 @@ configuration.</p>
                             <div id="ColosseumBenchmark.__init__" class="classattr">
                                 <div class="attr function">
             
-        <span class="name">ColosseumBenchmark</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">mdps_gin_configs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">experiment_config</span><span class="p">:</span> <span class="n"><a href="../experiment/config.html#ExperimentConfig">colosseum.experiment.config.ExperimentConfig</a></span></span>)</span>
+        <span class="name">ColosseumBenchmark</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">name</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">mdps_gin_configs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">experiment_config</span><span class="p">:</span> <span class="n"><a href="../experiment/config.html#ExperimentConfig">colosseum.experiment.config.ExperimentConfig</a></span></span>)</span>
 
         
     </div>
@@ -444,7 +446,7 @@ configuration.</p>
                             </div>
                             <div id="ColosseumBenchmark.mdps_gin_configs" class="classattr">
                                 <div class="attr variable">
-            <span class="name">mdps_gin_configs</span><span class="annotation">: dict[type[<a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a>], str]</span>
+            <span class="name">mdps_gin_configs</span><span class="annotation">: Dict[Type[<a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a>], str]</span>
 
         
     </div>
@@ -971,6 +973,7 @@ If True, the default non-tabular experimental configuration is used.</li>
                 <dd id="ColosseumDefaultBenchmark.bit_length" class="function">bit_length</dd>
                 <dd id="ColosseumDefaultBenchmark.to_bytes" class="function">to_bytes</dd>
                 <dd id="ColosseumDefaultBenchmark.from_bytes" class="function">from_bytes</dd>
+                <dd id="ColosseumDefaultBenchmark.as_integer_ratio" class="function">as_integer_ratio</dd>
                 <dd id="ColosseumDefaultBenchmark.real" class="variable">real</dd>
                 <dd id="ColosseumDefaultBenchmark.imag" class="variable">imag</dd>
                 <dd id="ColosseumDefaultBenchmark.numerator" class="variable">numerator</dd>

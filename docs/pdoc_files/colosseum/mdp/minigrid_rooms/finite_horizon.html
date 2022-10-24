@@ -102,7 +102,8 @@
                 <section id="MiniGridRoomsEpisodic">
                             <input id="MiniGridRoomsEpisodic-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@gin.configurable</div>
+
     <span class="def">class</span>
     <span class="name">MiniGridRoomsEpisodic</span><wbr>(<span class="base"><a href="../base_finite.html#EpisodicMDP">colosseum.mdp.base_finite.EpisodicMDP</a></span>, <span class="base"><a href="base.html#MiniGridRoomsMDP">colosseum.mdp.minigrid_rooms.base.MiniGridRoomsMDP</a></span>):
 
@@ -110,7 +111,8 @@
 
     </div>
     <a class="headerlink" href="#MiniGridRoomsEpisodic"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MiniGridRoomsEpisodic-11"><a href="#MiniGridRoomsEpisodic-11"><span class="linenos">11</span></a><span class="k">class</span> <span class="nc">MiniGridRoomsEpisodic</span><span class="p">(</span><span class="n">EpisodicMDP</span><span class="p">,</span> <span class="n">MiniGridRoomsMDP</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MiniGridRoomsEpisodic-10"><a href="#MiniGridRoomsEpisodic-10"><span class="linenos">10</span></a><span class="nd">@gin</span><span class="o">.</span><span class="n">configurable</span>
+</span><span id="MiniGridRoomsEpisodic-11"><a href="#MiniGridRoomsEpisodic-11"><span class="linenos">11</span></a><span class="k">class</span> <span class="nc">MiniGridRoomsEpisodic</span><span class="p">(</span><span class="n">EpisodicMDP</span><span class="p">,</span> <span class="n">MiniGridRoomsMDP</span><span class="p">):</span>
 </span><span id="MiniGridRoomsEpisodic-12"><a href="#MiniGridRoomsEpisodic-12"><span class="linenos">12</span></a>    <span class="nd">@staticmethod</span>
 </span><span id="MiniGridRoomsEpisodic-13"><a href="#MiniGridRoomsEpisodic-13"><span class="linenos">13</span></a>    <span class="k">def</span> <span class="nf">sample_parameters</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 </span><span id="MiniGridRoomsEpisodic-14"><a href="#MiniGridRoomsEpisodic-14"><span class="linenos">14</span></a>        <span class="k">return</span> <span class="n">MiniGridRoomsMDP</span><span class="o">.</span><span class="n">sample_mdp_parameters</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>

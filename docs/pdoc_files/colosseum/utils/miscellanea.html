@@ -478,7 +478,7 @@
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">compare_gin_configs</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">gin_configs1</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">],</span> <span class="nb">type</span><span class="p">[</span><span class="n"><a href="../agent/agents/base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span><span class="p">]],</span> <span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">gin_configs2</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">],</span> <span class="nb">type</span><span class="p">[</span><span class="n"><a href="../agent/agents/base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span><span class="p">]],</span> <span class="nb">str</span><span class="p">]</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+        <span class="name">compare_gin_configs</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">gin_configs1</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">],</span> <span class="n">Type</span><span class="p">[</span><span class="n"><a href="../agent/agents/base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span><span class="p">]],</span> <span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">gin_configs2</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">],</span> <span class="n">Type</span><span class="p">[</span><span class="n"><a href="../agent/agents/base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span><span class="p">]],</span> <span class="nb">str</span><span class="p">]</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
 
                 <label class="view-source-button" for="compare_gin_configs-view-source"><span>View Source</span></label>
 
@@ -521,7 +521,7 @@
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">sample_mdp_gin_configs</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">mdp_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">]</span>,</span><span class="param">	<span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>,</span><span class="param">	<span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span></span><span class="return-annotation">) -> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>:</span></span>
+        <span class="name">sample_mdp_gin_configs</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">mdp_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">]</span>,</span><span class="param">	<span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>,</span><span class="param">	<span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span></span><span class="return-annotation">) -> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>:</span></span>
 
                 <label class="view-source-button" for="sample_mdp_gin_configs-view-source"><span>View Source</span></label>
 
@@ -577,7 +577,7 @@ The random seed. By default, it is set to 42.</li>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">sample_mdp_gin_configs_file</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">mdp_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">]</span>,</span><span class="param">	<span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>,</span><span class="param">	<span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
+        <span class="name">sample_mdp_gin_configs_file</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">mdp_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">]</span>,</span><span class="param">	<span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>,</span><span class="param">	<span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
 
                 <label class="view-source-button" for="sample_mdp_gin_configs_file-view-source"><span>View Source</span></label>
 
@@ -681,7 +681,7 @@ The random seed. By default, it is set to 42.</li>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">get_colosseum_mdp_classes</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">episodic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">list</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">]]</span>:</span></span>
+        <span class="name">get_colosseum_mdp_classes</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">episodic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">]]</span>:</span></span>
 
                 <label class="view-source-button" for="get_colosseum_mdp_classes-view-source"><span>View Source</span></label>
 
@@ -716,7 +716,7 @@ The random seed. By default, it is set to 42.</li>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">get_mdp_class_from_name</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">mdp_class_name</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">]</span>:</span></span>
+        <span class="name">get_mdp_class_from_name</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">mdp_class_name</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="n">Type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">]</span>:</span></span>
 
                 <label class="view-source-button" for="get_mdp_class_from_name-view-source"><span>View Source</span></label>
 
@@ -755,7 +755,7 @@ The random seed. By default, it is set to 42.</li>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">get_colosseum_agent_classes</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">episodic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">list</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n"><a href="../agent/agents/base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span><span class="p">]]</span>:</span></span>
+        <span class="name">get_colosseum_agent_classes</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">episodic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n"><a href="../agent/agents/base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span><span class="p">]]</span>:</span></span>
 
                 <label class="view-source-button" for="get_colosseum_agent_classes-view-source"><span>View Source</span></label>
 
@@ -790,7 +790,7 @@ The random seed. By default, it is set to 42.</li>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">get_agent_class_from_name</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">agent_class_name</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">type</span><span class="p">[</span><span class="n"><a href="../agent/agents/base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span><span class="p">]</span>:</span></span>
+        <span class="name">get_agent_class_from_name</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">agent_class_name</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="n">Type</span><span class="p">[</span><span class="n"><a href="../agent/agents/base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span><span class="p">]</span>:</span></span>
 
                 <label class="view-source-button" for="get_agent_class_from_name-view-source"><span>View Source</span></label>
 
@@ -1122,7 +1122,6 @@ essentially computes <code>y = (x - loc) / scale</code> and
                 <dd id="deterministic_gen.logsf" class="function">logsf</dd>
                 <dd id="deterministic_gen.ppf" class="function">ppf</dd>
                 <dd id="deterministic_gen.isf" class="function">isf</dd>
-                <dd id="deterministic_gen.nnlf" class="function">nnlf</dd>
                 <dd id="deterministic_gen.fit" class="function">fit</dd>
                 <dd id="deterministic_gen.fit_loc_scale" class="function">fit_loc_scale</dd>
                 <dd id="deterministic_gen.expect" class="function">expect</dd>
@@ -1141,6 +1140,7 @@ essentially computes <code>y = (x - loc) / scale</code> and
                 <dd id="deterministic_gen.std" class="function">std</dd>
                 <dd id="deterministic_gen.interval" class="function">interval</dd>
                 <dd id="deterministic_gen.support" class="function">support</dd>
+                <dd id="deterministic_gen.nnlf" class="function">nnlf</dd>
 
             </div>
                                 </dl>
@@ -1173,7 +1173,7 @@ essentially computes <code>y = (x - loc) / scale</code> and
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">check_distributions</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">dists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">_distn_infrastructure</span><span class="o">.</span><span class="n">rv_continuous</span><span class="p">,</span> <span class="n">NoneType</span><span class="p">]]</span>,</span><span class="param">	<span class="n">are_stochastic</span><span class="p">:</span> <span class="nb">bool</span></span><span class="return-annotation">):</span></span>
+        <span class="name">check_distributions</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">dists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">_distn_infrastructure</span><span class="o">.</span><span class="n">rv_continuous</span><span class="p">]]</span>,</span><span class="param">	<span class="n">are_stochastic</span><span class="p">:</span> <span class="nb">bool</span></span><span class="return-annotation">):</span></span>
 
                 <label class="view-source-button" for="check_distributions-view-source"><span>View Source</span></label>
 

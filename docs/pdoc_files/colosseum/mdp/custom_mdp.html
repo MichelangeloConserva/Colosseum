@@ -381,7 +381,8 @@
                 <section id="CustomNode">
                             <input id="CustomNode-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@dataclass(frozen=True)</div>
+
     <span class="def">class</span>
     <span class="name">CustomNode</span>:
 
@@ -389,7 +390,8 @@
 
     </div>
     <a class="headerlink" href="#CustomNode"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CustomNode-19"><a href="#CustomNode-19"><span class="linenos">19</span></a><span class="k">class</span> <span class="nc">CustomNode</span><span class="p">:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CustomNode-18"><a href="#CustomNode-18"><span class="linenos">18</span></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="CustomNode-19"><a href="#CustomNode-19"><span class="linenos">19</span></a><span class="k">class</span> <span class="nc">CustomNode</span><span class="p">:</span>
 </span><span id="CustomNode-20"><a href="#CustomNode-20"><span class="linenos">20</span></a>    <span class="sd">&quot;&quot;&quot;</span>
 </span><span id="CustomNode-21"><a href="#CustomNode-21"><span class="linenos">21</span></a><span class="sd">    The node for the CustomMDP.</span>
 </span><span id="CustomNode-22"><a href="#CustomNode-22"><span class="linenos">22</span></a><span class="sd">    &quot;&quot;&quot;</span>
@@ -841,7 +843,7 @@ state action pairs and rv_continuous objects.</li>
                     <div class="decorator">@staticmethod</div>
 
         <span class="def">def</span>
-        <span class="name">get_node_class</span><span class="signature pdoc-code multiline">(<span class="return-annotation">) -> <span class="nb">type</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n"><a href="#CustomNode">colosseum.mdp.custom_mdp.CustomNode</a></span><span class="p">,</span> <span class="n"><a href="river_swim/base.html#RiverSwimNode">colosseum.mdp.river_swim.base.RiverSwimNode</a></span><span class="p">,</span> <span class="n"><a href="deep_sea/base.html#DeepSeaNode">colosseum.mdp.deep_sea.base.DeepSeaNode</a></span><span class="p">,</span> <span class="n"><a href="frozen_lake/base.html#FrozenLakeNode">colosseum.mdp.frozen_lake.base.FrozenLakeNode</a></span><span class="p">,</span> <span class="n"><a href="simple_grid/base.html#SimpleGridNode">colosseum.mdp.simple_grid.base.SimpleGridNode</a></span><span class="p">,</span> <span class="n"><a href="minigrid_empty/base.html#MiniGridEmptyNode">colosseum.mdp.minigrid_empty.base.MiniGridEmptyNode</a></span><span class="p">,</span> <span class="n"><a href="minigrid_rooms/base.html#MiniGridRoomsNode">colosseum.mdp.minigrid_rooms.base.MiniGridRoomsNode</a></span><span class="p">,</span> <span class="n"><a href="taxi/base.html#TaxiNode">colosseum.mdp.taxi.base.TaxiNode</a></span><span class="p">]]</span>:</span></span>
+        <span class="name">get_node_class</span><span class="signature pdoc-code multiline">(<span class="return-annotation">) -> <span class="n">Type</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n"><a href="#CustomNode">colosseum.mdp.custom_mdp.CustomNode</a></span><span class="p">,</span> <span class="n"><a href="river_swim/base.html#RiverSwimNode">colosseum.mdp.river_swim.base.RiverSwimNode</a></span><span class="p">,</span> <span class="n"><a href="deep_sea/base.html#DeepSeaNode">colosseum.mdp.deep_sea.base.DeepSeaNode</a></span><span class="p">,</span> <span class="n"><a href="frozen_lake/base.html#FrozenLakeNode">colosseum.mdp.frozen_lake.base.FrozenLakeNode</a></span><span class="p">,</span> <span class="n"><a href="simple_grid/base.html#SimpleGridNode">colosseum.mdp.simple_grid.base.SimpleGridNode</a></span><span class="p">,</span> <span class="n"><a href="minigrid_empty/base.html#MiniGridEmptyNode">colosseum.mdp.minigrid_empty.base.MiniGridEmptyNode</a></span><span class="p">,</span> <span class="n"><a href="minigrid_rooms/base.html#MiniGridRoomsNode">colosseum.mdp.minigrid_rooms.base.MiniGridRoomsNode</a></span><span class="p">,</span> <span class="n"><a href="taxi/base.html#TaxiNode">colosseum.mdp.taxi.base.TaxiNode</a></span><span class="p">]]</span>:</span></span>
 
                 <label class="view-source-button" for="CustomMDP.get_node_class-view-source"><span>View Source</span></label>
 

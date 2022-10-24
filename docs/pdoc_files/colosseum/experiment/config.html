@@ -138,7 +138,8 @@
                 <section id="ExperimentConfig">
                             <input id="ExperimentConfig-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@dataclass(frozen=True)</div>
+
     <span class="def">class</span>
     <span class="name">ExperimentConfig</span>:
 
@@ -146,7 +147,8 @@
 
     </div>
     <a class="headerlink" href="#ExperimentConfig"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ExperimentConfig-12"><a href="#ExperimentConfig-12"><span class="linenos">12</span></a><span class="k">class</span> <span class="nc">ExperimentConfig</span><span class="p">:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ExperimentConfig-11"><a href="#ExperimentConfig-11"><span class="linenos">11</span></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ExperimentConfig-12"><a href="#ExperimentConfig-12"><span class="linenos">12</span></a><span class="k">class</span> <span class="nc">ExperimentConfig</span><span class="p">:</span>
 </span><span id="ExperimentConfig-13"><a href="#ExperimentConfig-13"><span class="linenos">13</span></a>    <span class="n">n_seeds</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="ExperimentConfig-14"><a href="#ExperimentConfig-14"><span class="linenos">14</span></a>    <span class="sd">&quot;&quot;&quot;is the number of seed each agent/MDP interaction is repeated.&quot;&quot;&quot;</span>
 </span><span id="ExperimentConfig-15"><a href="#ExperimentConfig-15"><span class="linenos">15</span></a>    <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span>
@@ -178,7 +180,7 @@
                             <div id="ExperimentConfig.__init__" class="classattr">
                                 <div class="attr function">
             
-        <span class="name">ExperimentConfig</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">n_seeds</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">max_interaction_time_s</span><span class="p">:</span> <span class="nb">float</span>,</span><span class="param">	<span class="n">log_performance_indicators_every</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">emission_map</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n"><a href="../emission_maps/base.html#EmissionMap">colosseum.emission_maps.base.EmissionMap</a></span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span>)</span>
+        <span class="name">ExperimentConfig</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">n_seeds</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">max_interaction_time_s</span><span class="p">:</span> <span class="nb">float</span>,</span><span class="param">	<span class="n">log_performance_indicators_every</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">emission_map</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n"><a href="../emission_maps/base.html#EmissionMap">colosseum.emission_maps.base.EmissionMap</a></span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></span>)</span>
 
         
     </div>
@@ -241,7 +243,7 @@
                             </div>
                             <div id="ExperimentConfig.emission_map" class="classattr">
                                 <div class="attr variable">
-            <span class="name">emission_map</span><span class="annotation">: type[<a href="../emission_maps/base.html#EmissionMap">colosseum.emission_maps.base.EmissionMap</a>]</span><span class="default_value"> = None</span>
+            <span class="name">emission_map</span><span class="annotation">: Type[<a href="../emission_maps/base.html#EmissionMap">colosseum.emission_maps.base.EmissionMap</a>]</span><span class="default_value"> = None</span>
 
         
     </div>

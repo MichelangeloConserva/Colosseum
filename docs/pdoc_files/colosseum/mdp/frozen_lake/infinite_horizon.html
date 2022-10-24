@@ -118,7 +118,8 @@
                 <section id="FrozenLakeContinuous">
                             <input id="FrozenLakeContinuous-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@gin.configurable</div>
+
     <span class="def">class</span>
     <span class="name">FrozenLakeContinuous</span><wbr>(<span class="base"><a href="../base_infinite.html#ContinuousMDP">colosseum.mdp.base_infinite.ContinuousMDP</a></span>, <span class="base"><a href="base.html#FrozenLakeMDP">colosseum.mdp.frozen_lake.base.FrozenLakeMDP</a></span>):
 
@@ -126,7 +127,8 @@
 
     </div>
     <a class="headerlink" href="#FrozenLakeContinuous"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="FrozenLakeContinuous-11"><a href="#FrozenLakeContinuous-11"><span class="linenos">11</span></a><span class="k">class</span> <span class="nc">FrozenLakeContinuous</span><span class="p">(</span><span class="n">ContinuousMDP</span><span class="p">,</span> <span class="n">FrozenLakeMDP</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="FrozenLakeContinuous-10"><a href="#FrozenLakeContinuous-10"><span class="linenos">10</span></a><span class="nd">@gin</span><span class="o">.</span><span class="n">configurable</span>
+</span><span id="FrozenLakeContinuous-11"><a href="#FrozenLakeContinuous-11"><span class="linenos">11</span></a><span class="k">class</span> <span class="nc">FrozenLakeContinuous</span><span class="p">(</span><span class="n">ContinuousMDP</span><span class="p">,</span> <span class="n">FrozenLakeMDP</span><span class="p">):</span>
 </span><span id="FrozenLakeContinuous-12"><a href="#FrozenLakeContinuous-12"><span class="linenos">12</span></a>    <span class="sd">&quot;&quot;&quot;</span>
 </span><span id="FrozenLakeContinuous-13"><a href="#FrozenLakeContinuous-13"><span class="linenos">13</span></a><span class="sd">    The FrozenLake continuous MDP.</span>
 </span><span id="FrozenLakeContinuous-14"><a href="#FrozenLakeContinuous-14"><span class="linenos">14</span></a><span class="sd">    &quot;&quot;&quot;</span>

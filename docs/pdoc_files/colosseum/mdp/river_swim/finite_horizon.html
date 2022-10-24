@@ -118,7 +118,8 @@
                 <section id="RiverSwimEpisodic">
                             <input id="RiverSwimEpisodic-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@gin.configurable</div>
+
     <span class="def">class</span>
     <span class="name">RiverSwimEpisodic</span><wbr>(<span class="base"><a href="../base_finite.html#EpisodicMDP">colosseum.mdp.base_finite.EpisodicMDP</a></span>, <span class="base"><a href="base.html#RiverSwimMDP">colosseum.mdp.river_swim.base.RiverSwimMDP</a></span>):
 
@@ -126,7 +127,8 @@
 
     </div>
     <a class="headerlink" href="#RiverSwimEpisodic"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="RiverSwimEpisodic-11"><a href="#RiverSwimEpisodic-11"><span class="linenos">11</span></a><span class="k">class</span> <span class="nc">RiverSwimEpisodic</span><span class="p">(</span><span class="n">EpisodicMDP</span><span class="p">,</span> <span class="n">RiverSwimMDP</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="RiverSwimEpisodic-10"><a href="#RiverSwimEpisodic-10"><span class="linenos">10</span></a><span class="nd">@gin</span><span class="o">.</span><span class="n">configurable</span>
+</span><span id="RiverSwimEpisodic-11"><a href="#RiverSwimEpisodic-11"><span class="linenos">11</span></a><span class="k">class</span> <span class="nc">RiverSwimEpisodic</span><span class="p">(</span><span class="n">EpisodicMDP</span><span class="p">,</span> <span class="n">RiverSwimMDP</span><span class="p">):</span>
 </span><span id="RiverSwimEpisodic-12"><a href="#RiverSwimEpisodic-12"><span class="linenos">12</span></a>    <span class="sd">&quot;&quot;&quot;</span>
 </span><span id="RiverSwimEpisodic-13"><a href="#RiverSwimEpisodic-13"><span class="linenos">13</span></a><span class="sd">    The episodic RiverSwim MDP.</span>
 </span><span id="RiverSwimEpisodic-14"><a href="#RiverSwimEpisodic-14"><span class="linenos">14</span></a><span class="sd">    &quot;&quot;&quot;</span>
@@ -310,7 +312,8 @@ The lower the value, the higher the variance. By default, it is set to 1.</li>
 
             </div>
             <div><dt><a href="base.html#RiverSwimMDP">colosseum.mdp.river_swim.base.RiverSwimMDP</a></dt>
-                                <dd id="RiverSwimEpisodic.get_unique_symbols" class="function"><a href="base.html#RiverSwimMDP.get_unique_symbols">get_unique_symbols</a></dd>
+                                <dd id="RiverSwimEpisodic.get_action_class" class="function"><a href="base.html#RiverSwimMDP.get_action_class">get_action_class</a></dd>
+                <dd id="RiverSwimEpisodic.get_unique_symbols" class="function"><a href="base.html#RiverSwimMDP.get_unique_symbols">get_unique_symbols</a></dd>
                 <dd id="RiverSwimEpisodic.does_seed_change_MDP_structure" class="function"><a href="base.html#RiverSwimMDP.does_seed_change_MDP_structure">does_seed_change_MDP_structure</a></dd>
                 <dd id="RiverSwimEpisodic.sample_mdp_parameters" class="function"><a href="base.html#RiverSwimMDP.sample_mdp_parameters">sample_mdp_parameters</a></dd>
                 <dd id="RiverSwimEpisodic.get_node_class" class="function"><a href="base.html#RiverSwimMDP.get_node_class">get_node_class</a></dd>

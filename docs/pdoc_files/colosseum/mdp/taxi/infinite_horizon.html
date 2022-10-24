@@ -102,7 +102,8 @@
                 <section id="TaxiContinuous">
                             <input id="TaxiContinuous-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@gin.configurable</div>
+
     <span class="def">class</span>
     <span class="name">TaxiContinuous</span><wbr>(<span class="base"><a href="../base_infinite.html#ContinuousMDP">colosseum.mdp.base_infinite.ContinuousMDP</a></span>, <span class="base"><a href="base.html#TaxiMDP">colosseum.mdp.taxi.base.TaxiMDP</a></span>):
 
@@ -110,7 +111,8 @@
 
     </div>
     <a class="headerlink" href="#TaxiContinuous"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="TaxiContinuous-11"><a href="#TaxiContinuous-11"><span class="linenos">11</span></a><span class="k">class</span> <span class="nc">TaxiContinuous</span><span class="p">(</span><span class="n">ContinuousMDP</span><span class="p">,</span> <span class="n">TaxiMDP</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="TaxiContinuous-10"><a href="#TaxiContinuous-10"><span class="linenos">10</span></a><span class="nd">@gin</span><span class="o">.</span><span class="n">configurable</span>
+</span><span id="TaxiContinuous-11"><a href="#TaxiContinuous-11"><span class="linenos">11</span></a><span class="k">class</span> <span class="nc">TaxiContinuous</span><span class="p">(</span><span class="n">ContinuousMDP</span><span class="p">,</span> <span class="n">TaxiMDP</span><span class="p">):</span>
 </span><span id="TaxiContinuous-12"><a href="#TaxiContinuous-12"><span class="linenos">12</span></a>    <span class="nd">@staticmethod</span>
 </span><span id="TaxiContinuous-13"><a href="#TaxiContinuous-13"><span class="linenos">13</span></a>    <span class="k">def</span> <span class="nf">sample_parameters</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 </span><span id="TaxiContinuous-14"><a href="#TaxiContinuous-14"><span class="linenos">14</span></a>        <span class="k">return</span> <span class="n">TaxiMDP</span><span class="o">.</span><span class="n">sample_mdp_parameters</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>

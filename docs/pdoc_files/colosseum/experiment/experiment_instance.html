@@ -210,7 +210,8 @@
                 <section id="ExperimentInstance">
                             <input id="ExperimentInstance-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@dataclass(frozen=True)</div>
+
     <span class="def">class</span>
     <span class="name">ExperimentInstance</span>:
 
@@ -218,7 +219,8 @@
 
     </div>
     <a class="headerlink" href="#ExperimentInstance"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ExperimentInstance-15"><a href="#ExperimentInstance-15"><span class="linenos">15</span></a><span class="k">class</span> <span class="nc">ExperimentInstance</span><span class="p">:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ExperimentInstance-14"><a href="#ExperimentInstance-14"><span class="linenos">14</span></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="ExperimentInstance-15"><a href="#ExperimentInstance-15"><span class="linenos">15</span></a><span class="k">class</span> <span class="nc">ExperimentInstance</span><span class="p">:</span>
 </span><span id="ExperimentInstance-16"><a href="#ExperimentInstance-16"><span class="linenos">16</span></a>    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="ExperimentInstance-17"><a href="#ExperimentInstance-17"><span class="linenos">17</span></a>    <span class="sd">&quot;&quot;&quot;The random seed for agent/MDP interaction.&quot;&quot;&quot;</span>
 </span><span id="ExperimentInstance-18"><a href="#ExperimentInstance-18"><span class="linenos">18</span></a>    <span class="n">mdp_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;BaseMDP&quot;</span><span class="p">]</span>
@@ -301,7 +303,7 @@
                             <div id="ExperimentInstance.__init__" class="classattr">
                                 <div class="attr function">
             
-        <span class="name">ExperimentInstance</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">seed</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">mdp_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">]</span>,</span><span class="param">	<span class="n">mdp_scope</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">agent_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n"><a href="../agent/agents/base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span><span class="p">]</span>,</span><span class="param">	<span class="n">agent_scope</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">result_folder</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">gin_config_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">experiment_config</span><span class="p">:</span> <span class="n"><a href="config.html#ExperimentConfig">colosseum.experiment.config.ExperimentConfig</a></span></span>)</span>
+        <span class="name">ExperimentInstance</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">seed</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">mdp_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n"><a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a></span><span class="p">]</span>,</span><span class="param">	<span class="n">mdp_scope</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">agent_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n"><a href="../agent/agents/base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span><span class="p">]</span>,</span><span class="param">	<span class="n">agent_scope</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">result_folder</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">gin_config_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>,</span><span class="param">	<span class="n">experiment_config</span><span class="p">:</span> <span class="n"><a href="config.html#ExperimentConfig">colosseum.experiment.config.ExperimentConfig</a></span></span>)</span>
 
         
     </div>
@@ -325,7 +327,7 @@
                             </div>
                             <div id="ExperimentInstance.mdp_class" class="classattr">
                                 <div class="attr variable">
-            <span class="name">mdp_class</span><span class="annotation">: type[<a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a>]</span>
+            <span class="name">mdp_class</span><span class="annotation">: Type[<a href="../mdp/base.html#BaseMDP">colosseum.mdp.base.BaseMDP</a>]</span>
 
         
     </div>
@@ -351,7 +353,7 @@
                             </div>
                             <div id="ExperimentInstance.agent_class" class="classattr">
                                 <div class="attr variable">
-            <span class="name">agent_class</span><span class="annotation">: type[<a href="../agent/agents/base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a>]</span>
+            <span class="name">agent_class</span><span class="annotation">: Type[<a href="../agent/agents/base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a>]</span>
 
         
     </div>

@@ -829,7 +829,8 @@ The omega parameter.</li>
                 <section id="PSRLContinuous">
                             <input id="PSRLContinuous-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@gin.configurable</div>
+
     <span class="def">class</span>
     <span class="name">PSRLContinuous</span><wbr>(<span class="base"><a href="../base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span>):
 
@@ -837,7 +838,8 @@ The omega parameter.</li>
 
     </div>
     <a class="headerlink" href="#PSRLContinuous"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="PSRLContinuous-118"><a href="#PSRLContinuous-118"><span class="linenos">118</span></a><span class="k">class</span> <span class="nc">PSRLContinuous</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="PSRLContinuous-117"><a href="#PSRLContinuous-117"><span class="linenos">117</span></a><span class="nd">@gin</span><span class="o">.</span><span class="n">configurable</span>
+</span><span id="PSRLContinuous-118"><a href="#PSRLContinuous-118"><span class="linenos">118</span></a><span class="k">class</span> <span class="nc">PSRLContinuous</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
 </span><span id="PSRLContinuous-119"><a href="#PSRLContinuous-119"><span class="linenos">119</span></a>    <span class="sd">&quot;&quot;&quot;</span>
 </span><span id="PSRLContinuous-120"><a href="#PSRLContinuous-120"><span class="linenos">120</span></a><span class="sd">    The posterior sampling for reinforcement learning algorithm with optimism.</span>
 </span><span id="PSRLContinuous-121"><a href="#PSRLContinuous-121"><span class="linenos">121</span></a>

@@ -509,7 +509,8 @@
                 <section id="UCRL2Continuous">
                             <input id="UCRL2Continuous-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@gin.configurable</div>
+
     <span class="def">class</span>
     <span class="name">UCRL2Continuous</span><wbr>(<span class="base"><a href="../base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span>):
 
@@ -517,7 +518,8 @@
 
     </div>
     <a class="headerlink" href="#UCRL2Continuous"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="UCRL2Continuous-35"><a href="#UCRL2Continuous-35"><span class="linenos"> 35</span></a><span class="k">class</span> <span class="nc">UCRL2Continuous</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="UCRL2Continuous-34"><a href="#UCRL2Continuous-34"><span class="linenos"> 34</span></a><span class="nd">@gin</span><span class="o">.</span><span class="n">configurable</span>
+</span><span id="UCRL2Continuous-35"><a href="#UCRL2Continuous-35"><span class="linenos"> 35</span></a><span class="k">class</span> <span class="nc">UCRL2Continuous</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
 </span><span id="UCRL2Continuous-36"><a href="#UCRL2Continuous-36"><span class="linenos"> 36</span></a>    <span class="sd">&quot;&quot;&quot;</span>
 </span><span id="UCRL2Continuous-37"><a href="#UCRL2Continuous-37"><span class="linenos"> 37</span></a><span class="sd">    The second version of upper confidence for reinforcement learning algorithm.</span>
 </span><span id="UCRL2Continuous-38"><a href="#UCRL2Continuous-38"><span class="linenos"> 38</span></a>
@@ -1494,7 +1496,7 @@ the continuous case this refers to the total number of previous interactions.</l
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">solve_optimistic_model</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="n">Union</span><span class="p">[</span><span class="n">NoneType</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>:</span></span>
+        <span class="name">solve_optimistic_model</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>:</span></span>
 
                 <label class="view-source-button" for="UCRL2Continuous.solve_optimistic_model-view-source"><span>View Source</span></label>
 

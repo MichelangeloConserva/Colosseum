@@ -612,7 +612,8 @@ the continuous case this refers to the total number of previous interactions.</l
                 <section id="QLearningEpisodic">
                             <input id="QLearningEpisodic-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@gin.configurable</div>
+
     <span class="def">class</span>
     <span class="name">QLearningEpisodic</span><wbr>(<span class="base"><a href="../base.html#BaseAgent">colosseum.agent.agents.base.BaseAgent</a></span>):
 
@@ -620,7 +621,8 @@ the continuous case this refers to the total number of previous interactions.</l
 
     </div>
     <a class="headerlink" href="#QLearningEpisodic"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="QLearningEpisodic-109"><a href="#QLearningEpisodic-109"><span class="linenos">109</span></a><span class="k">class</span> <span class="nc">QLearningEpisodic</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="QLearningEpisodic-108"><a href="#QLearningEpisodic-108"><span class="linenos">108</span></a><span class="nd">@gin</span><span class="o">.</span><span class="n">configurable</span>
+</span><span id="QLearningEpisodic-109"><a href="#QLearningEpisodic-109"><span class="linenos">109</span></a><span class="k">class</span> <span class="nc">QLearningEpisodic</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
 </span><span id="QLearningEpisodic-110"><a href="#QLearningEpisodic-110"><span class="linenos">110</span></a>    <span class="sd">&quot;&quot;&quot;</span>
 </span><span id="QLearningEpisodic-111"><a href="#QLearningEpisodic-111"><span class="linenos">111</span></a><span class="sd">    The q-learning algorithm with UCB exploration.</span>
 </span><span id="QLearningEpisodic-112"><a href="#QLearningEpisodic-112"><span class="linenos">112</span></a>

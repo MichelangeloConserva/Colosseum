@@ -572,6 +572,7 @@
                 <dd id="MiniGridEmptyAction.bit_length" class="function">bit_length</dd>
                 <dd id="MiniGridEmptyAction.to_bytes" class="function">to_bytes</dd>
                 <dd id="MiniGridEmptyAction.from_bytes" class="function">from_bytes</dd>
+                <dd id="MiniGridEmptyAction.as_integer_ratio" class="function">as_integer_ratio</dd>
                 <dd id="MiniGridEmptyAction.real" class="variable">real</dd>
                 <dd id="MiniGridEmptyAction.imag" class="variable">imag</dd>
                 <dd id="MiniGridEmptyAction.numerator" class="variable">numerator</dd>
@@ -621,6 +622,7 @@
                 <dd id="MiniGridEmptyDirection.bit_length" class="function">bit_length</dd>
                 <dd id="MiniGridEmptyDirection.to_bytes" class="function">to_bytes</dd>
                 <dd id="MiniGridEmptyDirection.from_bytes" class="function">from_bytes</dd>
+                <dd id="MiniGridEmptyDirection.as_integer_ratio" class="function">as_integer_ratio</dd>
                 <dd id="MiniGridEmptyDirection.real" class="variable">real</dd>
                 <dd id="MiniGridEmptyDirection.imag" class="variable">imag</dd>
                 <dd id="MiniGridEmptyDirection.numerator" class="variable">numerator</dd>
@@ -633,7 +635,8 @@
                 <section id="MiniGridEmptyNode">
                             <input id="MiniGridEmptyNode-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@dataclass(frozen=True)</div>
+
     <span class="def">class</span>
     <span class="name">MiniGridEmptyNode</span>:
 
@@ -641,7 +644,8 @@
 
     </div>
     <a class="headerlink" href="#MiniGridEmptyNode"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MiniGridEmptyNode-47"><a href="#MiniGridEmptyNode-47"><span class="linenos">47</span></a><span class="k">class</span> <span class="nc">MiniGridEmptyNode</span><span class="p">:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MiniGridEmptyNode-46"><a href="#MiniGridEmptyNode-46"><span class="linenos">46</span></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="MiniGridEmptyNode-47"><a href="#MiniGridEmptyNode-47"><span class="linenos">47</span></a><span class="k">class</span> <span class="nc">MiniGridEmptyNode</span><span class="p">:</span>
 </span><span id="MiniGridEmptyNode-48"><a href="#MiniGridEmptyNode-48"><span class="linenos">48</span></a>    <span class="sd">&quot;&quot;&quot;</span>
 </span><span id="MiniGridEmptyNode-49"><a href="#MiniGridEmptyNode-49"><span class="linenos">49</span></a><span class="sd">    The node for the MiniGridEmpty MDP.</span>
 </span><span id="MiniGridEmptyNode-50"><a href="#MiniGridEmptyNode-50"><span class="linenos">50</span></a><span class="sd">    &quot;&quot;&quot;</span>
@@ -1256,7 +1260,7 @@ The lower the value, the higher the variance. By default, it is set to 1.</li>
                     <div class="decorator">@staticmethod</div>
 
         <span class="def">def</span>
-        <span class="name">get_node_class</span><span class="signature pdoc-code multiline">(<span class="return-annotation">) -> <span class="nb">type</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n"><a href="../custom_mdp.html#CustomNode">colosseum.mdp.custom_mdp.CustomNode</a></span><span class="p">,</span> <span class="n"><a href="../river_swim/base.html#RiverSwimNode">colosseum.mdp.river_swim.base.RiverSwimNode</a></span><span class="p">,</span> <span class="n"><a href="../deep_sea/base.html#DeepSeaNode">colosseum.mdp.deep_sea.base.DeepSeaNode</a></span><span class="p">,</span> <span class="n"><a href="../frozen_lake/base.html#FrozenLakeNode">colosseum.mdp.frozen_lake.base.FrozenLakeNode</a></span><span class="p">,</span> <span class="n"><a href="../simple_grid/base.html#SimpleGridNode">colosseum.mdp.simple_grid.base.SimpleGridNode</a></span><span class="p">,</span> <span class="n"><a href="#MiniGridEmptyNode">colosseum.mdp.minigrid_empty.base.MiniGridEmptyNode</a></span><span class="p">,</span> <span class="n"><a href="../minigrid_rooms/base.html#MiniGridRoomsNode">colosseum.mdp.minigrid_rooms.base.MiniGridRoomsNode</a></span><span class="p">,</span> <span class="n"><a href="../taxi/base.html#TaxiNode">colosseum.mdp.taxi.base.TaxiNode</a></span><span class="p">]]</span>:</span></span>
+        <span class="name">get_node_class</span><span class="signature pdoc-code multiline">(<span class="return-annotation">) -> <span class="n">Type</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n"><a href="../custom_mdp.html#CustomNode">colosseum.mdp.custom_mdp.CustomNode</a></span><span class="p">,</span> <span class="n"><a href="../river_swim/base.html#RiverSwimNode">colosseum.mdp.river_swim.base.RiverSwimNode</a></span><span class="p">,</span> <span class="n"><a href="../deep_sea/base.html#DeepSeaNode">colosseum.mdp.deep_sea.base.DeepSeaNode</a></span><span class="p">,</span> <span class="n"><a href="../frozen_lake/base.html#FrozenLakeNode">colosseum.mdp.frozen_lake.base.FrozenLakeNode</a></span><span class="p">,</span> <span class="n"><a href="../simple_grid/base.html#SimpleGridNode">colosseum.mdp.simple_grid.base.SimpleGridNode</a></span><span class="p">,</span> <span class="n"><a href="#MiniGridEmptyNode">colosseum.mdp.minigrid_empty.base.MiniGridEmptyNode</a></span><span class="p">,</span> <span class="n"><a href="../minigrid_rooms/base.html#MiniGridRoomsNode">colosseum.mdp.minigrid_rooms.base.MiniGridRoomsNode</a></span><span class="p">,</span> <span class="n"><a href="../taxi/base.html#TaxiNode">colosseum.mdp.taxi.base.TaxiNode</a></span><span class="p">]]</span>:</span></span>
 
                 <label class="view-source-button" for="MiniGridEmptyMDP.get_node_class-view-source"><span>View Source</span></label>
 

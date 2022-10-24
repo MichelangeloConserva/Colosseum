@@ -128,7 +128,8 @@
                 <section id="DeepSeaEpisodic">
                             <input id="DeepSeaEpisodic-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
-            
+                    <div class="decorator">@gin.configurable</div>
+
     <span class="def">class</span>
     <span class="name">DeepSeaEpisodic</span><wbr>(<span class="base"><a href="../base_finite.html#EpisodicMDP">colosseum.mdp.base_finite.EpisodicMDP</a></span>, <span class="base"><a href="base.html#DeepSeaMDP">colosseum.mdp.deep_sea.base.DeepSeaMDP</a></span>):
 
@@ -136,7 +137,8 @@
 
     </div>
     <a class="headerlink" href="#DeepSeaEpisodic"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="DeepSeaEpisodic-11"><a href="#DeepSeaEpisodic-11"><span class="linenos">11</span></a><span class="k">class</span> <span class="nc">DeepSeaEpisodic</span><span class="p">(</span><span class="n">EpisodicMDP</span><span class="p">,</span> <span class="n">DeepSeaMDP</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="DeepSeaEpisodic-10"><a href="#DeepSeaEpisodic-10"><span class="linenos">10</span></a><span class="nd">@gin</span><span class="o">.</span><span class="n">configurable</span>
+</span><span id="DeepSeaEpisodic-11"><a href="#DeepSeaEpisodic-11"><span class="linenos">11</span></a><span class="k">class</span> <span class="nc">DeepSeaEpisodic</span><span class="p">(</span><span class="n">EpisodicMDP</span><span class="p">,</span> <span class="n">DeepSeaMDP</span><span class="p">):</span>
 </span><span id="DeepSeaEpisodic-12"><a href="#DeepSeaEpisodic-12"><span class="linenos">12</span></a>    <span class="sd">&quot;&quot;&quot;</span>
 </span><span id="DeepSeaEpisodic-13"><a href="#DeepSeaEpisodic-13"><span class="linenos">13</span></a><span class="sd">    The episodic DeepSea MDP class.</span>
 </span><span id="DeepSeaEpisodic-14"><a href="#DeepSeaEpisodic-14"><span class="linenos">14</span></a><span class="sd">    &quot;&quot;&quot;</span>

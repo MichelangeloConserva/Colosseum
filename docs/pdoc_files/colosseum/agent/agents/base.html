@@ -319,35 +319,36 @@
 </span><span id="L-202"><a href="#L-202"><span class="linenos">202</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="L-203"><a href="#L-203"><span class="linenos">203</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_actor</span><span class="o">.</span><span class="n">select_action</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
 </span><span id="L-204"><a href="#L-204"><span class="linenos">204</span></a>
-</span><span id="L-205"><a href="#L-205"><span class="linenos">205</span></a>    <span class="k">def</span> <span class="nf">step_update</span><span class="p">(</span>
-</span><span id="L-206"><a href="#L-206"><span class="linenos">206</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="L-207"><a href="#L-207"><span class="linenos">207</span></a>        <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
-</span><span id="L-208"><a href="#L-208"><span class="linenos">208</span></a>        <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span>
-</span><span id="L-209"><a href="#L-209"><span class="linenos">209</span></a>        <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
-</span><span id="L-210"><a href="#L-210"><span class="linenos">210</span></a>        <span class="n">time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="L-211"><a href="#L-211"><span class="linenos">211</span></a>    <span class="p">):</span>
-</span><span id="L-212"><a href="#L-212"><span class="linenos">212</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-213"><a href="#L-213"><span class="linenos">213</span></a><span class="sd">        adds the transition in input to the MDP model.</span>
-</span><span id="L-214"><a href="#L-214"><span class="linenos">214</span></a>
-</span><span id="L-215"><a href="#L-215"><span class="linenos">215</span></a><span class="sd">        Parameters</span>
-</span><span id="L-216"><a href="#L-216"><span class="linenos">216</span></a><span class="sd">        ----------</span>
-</span><span id="L-217"><a href="#L-217"><span class="linenos">217</span></a><span class="sd">        ts_t : dm_env.TimeStep</span>
-</span><span id="L-218"><a href="#L-218"><span class="linenos">218</span></a><span class="sd">            The TimeStep at time t.</span>
-</span><span id="L-219"><a href="#L-219"><span class="linenos">219</span></a><span class="sd">        a_t : &quot;ACTION_TYPE&quot;</span>
-</span><span id="L-220"><a href="#L-220"><span class="linenos">220</span></a><span class="sd">            The action taken by the agent at time t.</span>
-</span><span id="L-221"><a href="#L-221"><span class="linenos">221</span></a><span class="sd">        ts_tp1 : dm_env.TimeStep</span>
-</span><span id="L-222"><a href="#L-222"><span class="linenos">222</span></a><span class="sd">            The TimeStep at time t + 1.</span>
-</span><span id="L-223"><a href="#L-223"><span class="linenos">223</span></a><span class="sd">        time : int</span>
-</span><span id="L-224"><a href="#L-224"><span class="linenos">224</span></a><span class="sd">            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in</span>
-</span><span id="L-225"><a href="#L-225"><span class="linenos">225</span></a><span class="sd">            the continuous case this refers to the total number of previous interactions.</span>
-</span><span id="L-226"><a href="#L-226"><span class="linenos">226</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-227"><a href="#L-227"><span class="linenos">227</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="p">:</span>
-</span><span id="L-228"><a href="#L-228"><span class="linenos">228</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="o">.</span><span class="n">step_update</span><span class="p">(</span><span class="n">ts_t</span><span class="p">,</span> <span class="n">a_t</span><span class="p">,</span> <span class="n">ts_tp1</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
-</span><span id="L-229"><a href="#L-229"><span class="linenos">229</span></a>
-</span><span id="L-230"><a href="#L-230"><span class="linenos">230</span></a>    <span class="k">def</span> <span class="nf">agent_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-231"><a href="#L-231"><span class="linenos">231</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-232"><a href="#L-232"><span class="linenos">232</span></a><span class="sd">        is called during the agent MDP interaction at lagging time. It can be used to log additional information.</span>
-</span><span id="L-233"><a href="#L-233"><span class="linenos">233</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-205"><a href="#L-205"><span class="linenos">205</span></a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+</span><span id="L-206"><a href="#L-206"><span class="linenos">206</span></a>    <span class="k">def</span> <span class="nf">step_update</span><span class="p">(</span>
+</span><span id="L-207"><a href="#L-207"><span class="linenos">207</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="L-208"><a href="#L-208"><span class="linenos">208</span></a>        <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+</span><span id="L-209"><a href="#L-209"><span class="linenos">209</span></a>        <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span>
+</span><span id="L-210"><a href="#L-210"><span class="linenos">210</span></a>        <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+</span><span id="L-211"><a href="#L-211"><span class="linenos">211</span></a>        <span class="n">time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-212"><a href="#L-212"><span class="linenos">212</span></a>    <span class="p">):</span>
+</span><span id="L-213"><a href="#L-213"><span class="linenos">213</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-214"><a href="#L-214"><span class="linenos">214</span></a><span class="sd">        adds the transition in input to the MDP model.</span>
+</span><span id="L-215"><a href="#L-215"><span class="linenos">215</span></a>
+</span><span id="L-216"><a href="#L-216"><span class="linenos">216</span></a><span class="sd">        Parameters</span>
+</span><span id="L-217"><a href="#L-217"><span class="linenos">217</span></a><span class="sd">        ----------</span>
+</span><span id="L-218"><a href="#L-218"><span class="linenos">218</span></a><span class="sd">        ts_t : dm_env.TimeStep</span>
+</span><span id="L-219"><a href="#L-219"><span class="linenos">219</span></a><span class="sd">            The TimeStep at time t.</span>
+</span><span id="L-220"><a href="#L-220"><span class="linenos">220</span></a><span class="sd">        a_t : &quot;ACTION_TYPE&quot;</span>
+</span><span id="L-221"><a href="#L-221"><span class="linenos">221</span></a><span class="sd">            The action taken by the agent at time t.</span>
+</span><span id="L-222"><a href="#L-222"><span class="linenos">222</span></a><span class="sd">        ts_tp1 : dm_env.TimeStep</span>
+</span><span id="L-223"><a href="#L-223"><span class="linenos">223</span></a><span class="sd">            The TimeStep at time t + 1.</span>
+</span><span id="L-224"><a href="#L-224"><span class="linenos">224</span></a><span class="sd">        time : int</span>
+</span><span id="L-225"><a href="#L-225"><span class="linenos">225</span></a><span class="sd">            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in</span>
+</span><span id="L-226"><a href="#L-226"><span class="linenos">226</span></a><span class="sd">            the continuous case this refers to the total number of previous interactions.</span>
+</span><span id="L-227"><a href="#L-227"><span class="linenos">227</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-228"><a href="#L-228"><span class="linenos">228</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="p">:</span>
+</span><span id="L-229"><a href="#L-229"><span class="linenos">229</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="o">.</span><span class="n">step_update</span><span class="p">(</span><span class="n">ts_t</span><span class="p">,</span> <span class="n">a_t</span><span class="p">,</span> <span class="n">ts_tp1</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+</span><span id="L-230"><a href="#L-230"><span class="linenos">230</span></a>
+</span><span id="L-231"><a href="#L-231"><span class="linenos">231</span></a>    <span class="k">def</span> <span class="nf">agent_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-232"><a href="#L-232"><span class="linenos">232</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-233"><a href="#L-233"><span class="linenos">233</span></a><span class="sd">        is called during the agent MDP interaction at lagging time. It can be used to log additional information.</span>
+</span><span id="L-234"><a href="#L-234"><span class="linenos">234</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -550,35 +551,36 @@
 </span><span id="BaseAgent-203"><a href="#BaseAgent-203"><span class="linenos">203</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="BaseAgent-204"><a href="#BaseAgent-204"><span class="linenos">204</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_actor</span><span class="o">.</span><span class="n">select_action</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
 </span><span id="BaseAgent-205"><a href="#BaseAgent-205"><span class="linenos">205</span></a>
-</span><span id="BaseAgent-206"><a href="#BaseAgent-206"><span class="linenos">206</span></a>    <span class="k">def</span> <span class="nf">step_update</span><span class="p">(</span>
-</span><span id="BaseAgent-207"><a href="#BaseAgent-207"><span class="linenos">207</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="BaseAgent-208"><a href="#BaseAgent-208"><span class="linenos">208</span></a>        <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
-</span><span id="BaseAgent-209"><a href="#BaseAgent-209"><span class="linenos">209</span></a>        <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span>
-</span><span id="BaseAgent-210"><a href="#BaseAgent-210"><span class="linenos">210</span></a>        <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
-</span><span id="BaseAgent-211"><a href="#BaseAgent-211"><span class="linenos">211</span></a>        <span class="n">time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="BaseAgent-212"><a href="#BaseAgent-212"><span class="linenos">212</span></a>    <span class="p">):</span>
-</span><span id="BaseAgent-213"><a href="#BaseAgent-213"><span class="linenos">213</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BaseAgent-214"><a href="#BaseAgent-214"><span class="linenos">214</span></a><span class="sd">        adds the transition in input to the MDP model.</span>
-</span><span id="BaseAgent-215"><a href="#BaseAgent-215"><span class="linenos">215</span></a>
-</span><span id="BaseAgent-216"><a href="#BaseAgent-216"><span class="linenos">216</span></a><span class="sd">        Parameters</span>
-</span><span id="BaseAgent-217"><a href="#BaseAgent-217"><span class="linenos">217</span></a><span class="sd">        ----------</span>
-</span><span id="BaseAgent-218"><a href="#BaseAgent-218"><span class="linenos">218</span></a><span class="sd">        ts_t : dm_env.TimeStep</span>
-</span><span id="BaseAgent-219"><a href="#BaseAgent-219"><span class="linenos">219</span></a><span class="sd">            The TimeStep at time t.</span>
-</span><span id="BaseAgent-220"><a href="#BaseAgent-220"><span class="linenos">220</span></a><span class="sd">        a_t : &quot;ACTION_TYPE&quot;</span>
-</span><span id="BaseAgent-221"><a href="#BaseAgent-221"><span class="linenos">221</span></a><span class="sd">            The action taken by the agent at time t.</span>
-</span><span id="BaseAgent-222"><a href="#BaseAgent-222"><span class="linenos">222</span></a><span class="sd">        ts_tp1 : dm_env.TimeStep</span>
-</span><span id="BaseAgent-223"><a href="#BaseAgent-223"><span class="linenos">223</span></a><span class="sd">            The TimeStep at time t + 1.</span>
-</span><span id="BaseAgent-224"><a href="#BaseAgent-224"><span class="linenos">224</span></a><span class="sd">        time : int</span>
-</span><span id="BaseAgent-225"><a href="#BaseAgent-225"><span class="linenos">225</span></a><span class="sd">            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in</span>
-</span><span id="BaseAgent-226"><a href="#BaseAgent-226"><span class="linenos">226</span></a><span class="sd">            the continuous case this refers to the total number of previous interactions.</span>
-</span><span id="BaseAgent-227"><a href="#BaseAgent-227"><span class="linenos">227</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="BaseAgent-228"><a href="#BaseAgent-228"><span class="linenos">228</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="p">:</span>
-</span><span id="BaseAgent-229"><a href="#BaseAgent-229"><span class="linenos">229</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="o">.</span><span class="n">step_update</span><span class="p">(</span><span class="n">ts_t</span><span class="p">,</span> <span class="n">a_t</span><span class="p">,</span> <span class="n">ts_tp1</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
-</span><span id="BaseAgent-230"><a href="#BaseAgent-230"><span class="linenos">230</span></a>
-</span><span id="BaseAgent-231"><a href="#BaseAgent-231"><span class="linenos">231</span></a>    <span class="k">def</span> <span class="nf">agent_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="BaseAgent-232"><a href="#BaseAgent-232"><span class="linenos">232</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BaseAgent-233"><a href="#BaseAgent-233"><span class="linenos">233</span></a><span class="sd">        is called during the agent MDP interaction at lagging time. It can be used to log additional information.</span>
-</span><span id="BaseAgent-234"><a href="#BaseAgent-234"><span class="linenos">234</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="BaseAgent-206"><a href="#BaseAgent-206"><span class="linenos">206</span></a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+</span><span id="BaseAgent-207"><a href="#BaseAgent-207"><span class="linenos">207</span></a>    <span class="k">def</span> <span class="nf">step_update</span><span class="p">(</span>
+</span><span id="BaseAgent-208"><a href="#BaseAgent-208"><span class="linenos">208</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="BaseAgent-209"><a href="#BaseAgent-209"><span class="linenos">209</span></a>        <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+</span><span id="BaseAgent-210"><a href="#BaseAgent-210"><span class="linenos">210</span></a>        <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span>
+</span><span id="BaseAgent-211"><a href="#BaseAgent-211"><span class="linenos">211</span></a>        <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+</span><span id="BaseAgent-212"><a href="#BaseAgent-212"><span class="linenos">212</span></a>        <span class="n">time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="BaseAgent-213"><a href="#BaseAgent-213"><span class="linenos">213</span></a>    <span class="p">):</span>
+</span><span id="BaseAgent-214"><a href="#BaseAgent-214"><span class="linenos">214</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="BaseAgent-215"><a href="#BaseAgent-215"><span class="linenos">215</span></a><span class="sd">        adds the transition in input to the MDP model.</span>
+</span><span id="BaseAgent-216"><a href="#BaseAgent-216"><span class="linenos">216</span></a>
+</span><span id="BaseAgent-217"><a href="#BaseAgent-217"><span class="linenos">217</span></a><span class="sd">        Parameters</span>
+</span><span id="BaseAgent-218"><a href="#BaseAgent-218"><span class="linenos">218</span></a><span class="sd">        ----------</span>
+</span><span id="BaseAgent-219"><a href="#BaseAgent-219"><span class="linenos">219</span></a><span class="sd">        ts_t : dm_env.TimeStep</span>
+</span><span id="BaseAgent-220"><a href="#BaseAgent-220"><span class="linenos">220</span></a><span class="sd">            The TimeStep at time t.</span>
+</span><span id="BaseAgent-221"><a href="#BaseAgent-221"><span class="linenos">221</span></a><span class="sd">        a_t : &quot;ACTION_TYPE&quot;</span>
+</span><span id="BaseAgent-222"><a href="#BaseAgent-222"><span class="linenos">222</span></a><span class="sd">            The action taken by the agent at time t.</span>
+</span><span id="BaseAgent-223"><a href="#BaseAgent-223"><span class="linenos">223</span></a><span class="sd">        ts_tp1 : dm_env.TimeStep</span>
+</span><span id="BaseAgent-224"><a href="#BaseAgent-224"><span class="linenos">224</span></a><span class="sd">            The TimeStep at time t + 1.</span>
+</span><span id="BaseAgent-225"><a href="#BaseAgent-225"><span class="linenos">225</span></a><span class="sd">        time : int</span>
+</span><span id="BaseAgent-226"><a href="#BaseAgent-226"><span class="linenos">226</span></a><span class="sd">            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in</span>
+</span><span id="BaseAgent-227"><a href="#BaseAgent-227"><span class="linenos">227</span></a><span class="sd">            the continuous case this refers to the total number of previous interactions.</span>
+</span><span id="BaseAgent-228"><a href="#BaseAgent-228"><span class="linenos">228</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="BaseAgent-229"><a href="#BaseAgent-229"><span class="linenos">229</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="p">:</span>
+</span><span id="BaseAgent-230"><a href="#BaseAgent-230"><span class="linenos">230</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="o">.</span><span class="n">step_update</span><span class="p">(</span><span class="n">ts_t</span><span class="p">,</span> <span class="n">a_t</span><span class="p">,</span> <span class="n">ts_tp1</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+</span><span id="BaseAgent-231"><a href="#BaseAgent-231"><span class="linenos">231</span></a>
+</span><span id="BaseAgent-232"><a href="#BaseAgent-232"><span class="linenos">232</span></a>    <span class="k">def</span> <span class="nf">agent_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="BaseAgent-233"><a href="#BaseAgent-233"><span class="linenos">233</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="BaseAgent-234"><a href="#BaseAgent-234"><span class="linenos">234</span></a><span class="sd">        is called during the agent MDP interaction at lagging time. It can be used to log additional information.</span>
+</span><span id="BaseAgent-235"><a href="#BaseAgent-235"><span class="linenos">235</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -591,7 +593,7 @@
 <div class="attr function">
                     <div class="decorator">@abc.abstractmethod</div>
 
-        <span class="name">BaseAgent</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">seed</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">mdp_specs</span><span class="p">:</span> <span class="n"><a href="../../utils/acme/specs.html#MDPSpec">colosseum.utils.acme.specs.MDPSpec</a></span>,</span><span class="param">	mdp_model: Union[NoneType, [&lt;class &#x27;<a href="../mdp_models/bayesian_model.html#BayesianMDPModel">colosseum.agent.mdp_models.bayesian_model.BayesianMDPModel</a>&#x27;&gt;]],</span><span class="param">	<span class="n">actor</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n"><a href="../actors/base.html#BaseActor">colosseum.agent.actors.base.BaseActor</a></span><span class="p">,</span> <span class="n"><a href="../actors/Q_values_actor.html#QValuesActor">colosseum.agent.actors.Q_values_actor.QValuesActor</a></span><span class="p">]</span>,</span><span class="param">	<span class="n">optimization_horizon</span><span class="p">:</span> <span class="nb">int</span></span>)</span>
+        <span class="name">BaseAgent</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">seed</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">mdp_specs</span><span class="p">:</span> <span class="n"><a href="../../utils/acme/specs.html#MDPSpec">colosseum.utils.acme.specs.MDPSpec</a></span>,</span><span class="param">	<span class="n">mdp_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ForwardRef</span><span class="p">(</span><span class="s1">&#39;MODEL_TYPES&#39;</span><span class="p">)]</span>,</span><span class="param">	<span class="n">actor</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n"><a href="../actors/base.html#BaseActor">colosseum.agent.actors.base.BaseActor</a></span><span class="p">,</span> <span class="n"><a href="../actors/Q_values_actor.html#QValuesActor">colosseum.agent.actors.Q_values_actor.QValuesActor</a></span><span class="p">]</span>,</span><span class="param">	<span class="n">optimization_horizon</span><span class="p">:</span> <span class="nb">int</span></span>)</span>
 
                 <label class="view-source-button" for="BaseAgent.__init__-view-source"><span>View Source</span></label>
 
@@ -1067,7 +1069,8 @@ The action that the agent suggests to take given the observation and the time st
                             <div id="BaseAgent.step_update" class="classattr">
                                         <input id="BaseAgent.step_update-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
-            
+                    <div class="decorator">@abc.abstractmethod</div>
+
         <span class="def">def</span>
         <span class="name">step_update</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">_environment</span><span class="o">.</span><span class="n">TimeStep</span>,</span><span class="param">	<span class="n">a_t</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>,</span><span class="param">	<span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">_environment</span><span class="o">.</span><span class="n">TimeStep</span>,</span><span class="param">	<span class="n">time</span><span class="p">:</span> <span class="nb">int</span></span><span class="return-annotation">):</span></span>
 
@@ -1075,30 +1078,31 @@ The action that the agent suggests to take given the observation and the time st
 
     </div>
     <a class="headerlink" href="#BaseAgent.step_update"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="BaseAgent.step_update-206"><a href="#BaseAgent.step_update-206"><span class="linenos">206</span></a>    <span class="k">def</span> <span class="nf">step_update</span><span class="p">(</span>
-</span><span id="BaseAgent.step_update-207"><a href="#BaseAgent.step_update-207"><span class="linenos">207</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="BaseAgent.step_update-208"><a href="#BaseAgent.step_update-208"><span class="linenos">208</span></a>        <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
-</span><span id="BaseAgent.step_update-209"><a href="#BaseAgent.step_update-209"><span class="linenos">209</span></a>        <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span>
-</span><span id="BaseAgent.step_update-210"><a href="#BaseAgent.step_update-210"><span class="linenos">210</span></a>        <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
-</span><span id="BaseAgent.step_update-211"><a href="#BaseAgent.step_update-211"><span class="linenos">211</span></a>        <span class="n">time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="BaseAgent.step_update-212"><a href="#BaseAgent.step_update-212"><span class="linenos">212</span></a>    <span class="p">):</span>
-</span><span id="BaseAgent.step_update-213"><a href="#BaseAgent.step_update-213"><span class="linenos">213</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BaseAgent.step_update-214"><a href="#BaseAgent.step_update-214"><span class="linenos">214</span></a><span class="sd">        adds the transition in input to the MDP model.</span>
-</span><span id="BaseAgent.step_update-215"><a href="#BaseAgent.step_update-215"><span class="linenos">215</span></a>
-</span><span id="BaseAgent.step_update-216"><a href="#BaseAgent.step_update-216"><span class="linenos">216</span></a><span class="sd">        Parameters</span>
-</span><span id="BaseAgent.step_update-217"><a href="#BaseAgent.step_update-217"><span class="linenos">217</span></a><span class="sd">        ----------</span>
-</span><span id="BaseAgent.step_update-218"><a href="#BaseAgent.step_update-218"><span class="linenos">218</span></a><span class="sd">        ts_t : dm_env.TimeStep</span>
-</span><span id="BaseAgent.step_update-219"><a href="#BaseAgent.step_update-219"><span class="linenos">219</span></a><span class="sd">            The TimeStep at time t.</span>
-</span><span id="BaseAgent.step_update-220"><a href="#BaseAgent.step_update-220"><span class="linenos">220</span></a><span class="sd">        a_t : &quot;ACTION_TYPE&quot;</span>
-</span><span id="BaseAgent.step_update-221"><a href="#BaseAgent.step_update-221"><span class="linenos">221</span></a><span class="sd">            The action taken by the agent at time t.</span>
-</span><span id="BaseAgent.step_update-222"><a href="#BaseAgent.step_update-222"><span class="linenos">222</span></a><span class="sd">        ts_tp1 : dm_env.TimeStep</span>
-</span><span id="BaseAgent.step_update-223"><a href="#BaseAgent.step_update-223"><span class="linenos">223</span></a><span class="sd">            The TimeStep at time t + 1.</span>
-</span><span id="BaseAgent.step_update-224"><a href="#BaseAgent.step_update-224"><span class="linenos">224</span></a><span class="sd">        time : int</span>
-</span><span id="BaseAgent.step_update-225"><a href="#BaseAgent.step_update-225"><span class="linenos">225</span></a><span class="sd">            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in</span>
-</span><span id="BaseAgent.step_update-226"><a href="#BaseAgent.step_update-226"><span class="linenos">226</span></a><span class="sd">            the continuous case this refers to the total number of previous interactions.</span>
-</span><span id="BaseAgent.step_update-227"><a href="#BaseAgent.step_update-227"><span class="linenos">227</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="BaseAgent.step_update-228"><a href="#BaseAgent.step_update-228"><span class="linenos">228</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="p">:</span>
-</span><span id="BaseAgent.step_update-229"><a href="#BaseAgent.step_update-229"><span class="linenos">229</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="o">.</span><span class="n">step_update</span><span class="p">(</span><span class="n">ts_t</span><span class="p">,</span> <span class="n">a_t</span><span class="p">,</span> <span class="n">ts_tp1</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BaseAgent.step_update-206"><a href="#BaseAgent.step_update-206"><span class="linenos">206</span></a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+</span><span id="BaseAgent.step_update-207"><a href="#BaseAgent.step_update-207"><span class="linenos">207</span></a>    <span class="k">def</span> <span class="nf">step_update</span><span class="p">(</span>
+</span><span id="BaseAgent.step_update-208"><a href="#BaseAgent.step_update-208"><span class="linenos">208</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="BaseAgent.step_update-209"><a href="#BaseAgent.step_update-209"><span class="linenos">209</span></a>        <span class="n">ts_t</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+</span><span id="BaseAgent.step_update-210"><a href="#BaseAgent.step_update-210"><span class="linenos">210</span></a>        <span class="n">a_t</span><span class="p">:</span> <span class="s2">&quot;ACTION_TYPE&quot;</span><span class="p">,</span>
+</span><span id="BaseAgent.step_update-211"><a href="#BaseAgent.step_update-211"><span class="linenos">211</span></a>        <span class="n">ts_tp1</span><span class="p">:</span> <span class="n">dm_env</span><span class="o">.</span><span class="n">TimeStep</span><span class="p">,</span>
+</span><span id="BaseAgent.step_update-212"><a href="#BaseAgent.step_update-212"><span class="linenos">212</span></a>        <span class="n">time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="BaseAgent.step_update-213"><a href="#BaseAgent.step_update-213"><span class="linenos">213</span></a>    <span class="p">):</span>
+</span><span id="BaseAgent.step_update-214"><a href="#BaseAgent.step_update-214"><span class="linenos">214</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="BaseAgent.step_update-215"><a href="#BaseAgent.step_update-215"><span class="linenos">215</span></a><span class="sd">        adds the transition in input to the MDP model.</span>
+</span><span id="BaseAgent.step_update-216"><a href="#BaseAgent.step_update-216"><span class="linenos">216</span></a>
+</span><span id="BaseAgent.step_update-217"><a href="#BaseAgent.step_update-217"><span class="linenos">217</span></a><span class="sd">        Parameters</span>
+</span><span id="BaseAgent.step_update-218"><a href="#BaseAgent.step_update-218"><span class="linenos">218</span></a><span class="sd">        ----------</span>
+</span><span id="BaseAgent.step_update-219"><a href="#BaseAgent.step_update-219"><span class="linenos">219</span></a><span class="sd">        ts_t : dm_env.TimeStep</span>
+</span><span id="BaseAgent.step_update-220"><a href="#BaseAgent.step_update-220"><span class="linenos">220</span></a><span class="sd">            The TimeStep at time t.</span>
+</span><span id="BaseAgent.step_update-221"><a href="#BaseAgent.step_update-221"><span class="linenos">221</span></a><span class="sd">        a_t : &quot;ACTION_TYPE&quot;</span>
+</span><span id="BaseAgent.step_update-222"><a href="#BaseAgent.step_update-222"><span class="linenos">222</span></a><span class="sd">            The action taken by the agent at time t.</span>
+</span><span id="BaseAgent.step_update-223"><a href="#BaseAgent.step_update-223"><span class="linenos">223</span></a><span class="sd">        ts_tp1 : dm_env.TimeStep</span>
+</span><span id="BaseAgent.step_update-224"><a href="#BaseAgent.step_update-224"><span class="linenos">224</span></a><span class="sd">            The TimeStep at time t + 1.</span>
+</span><span id="BaseAgent.step_update-225"><a href="#BaseAgent.step_update-225"><span class="linenos">225</span></a><span class="sd">        time : int</span>
+</span><span id="BaseAgent.step_update-226"><a href="#BaseAgent.step_update-226"><span class="linenos">226</span></a><span class="sd">            The current time of the environment. In the episodic case, this refers to the in-episode time, whereas in</span>
+</span><span id="BaseAgent.step_update-227"><a href="#BaseAgent.step_update-227"><span class="linenos">227</span></a><span class="sd">            the continuous case this refers to the total number of previous interactions.</span>
+</span><span id="BaseAgent.step_update-228"><a href="#BaseAgent.step_update-228"><span class="linenos">228</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="BaseAgent.step_update-229"><a href="#BaseAgent.step_update-229"><span class="linenos">229</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="p">:</span>
+</span><span id="BaseAgent.step_update-230"><a href="#BaseAgent.step_update-230"><span class="linenos">230</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_mdp_model</span><span class="o">.</span><span class="n">step_update</span><span class="p">(</span><span class="n">ts_t</span><span class="p">,</span> <span class="n">a_t</span><span class="p">,</span> <span class="n">ts_tp1</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -1132,10 +1136,10 @@ the continuous case this refers to the total number of previous interactions.</l
 
     </div>
     <a class="headerlink" href="#BaseAgent.agent_logs"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="BaseAgent.agent_logs-231"><a href="#BaseAgent.agent_logs-231"><span class="linenos">231</span></a>    <span class="k">def</span> <span class="nf">agent_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="BaseAgent.agent_logs-232"><a href="#BaseAgent.agent_logs-232"><span class="linenos">232</span></a>        <span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BaseAgent.agent_logs-233"><a href="#BaseAgent.agent_logs-233"><span class="linenos">233</span></a><span class="sd">        is called during the agent MDP interaction at lagging time. It can be used to log additional information.</span>
-</span><span id="BaseAgent.agent_logs-234"><a href="#BaseAgent.agent_logs-234"><span class="linenos">234</span></a><span class="sd">        &quot;&quot;&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BaseAgent.agent_logs-232"><a href="#BaseAgent.agent_logs-232"><span class="linenos">232</span></a>    <span class="k">def</span> <span class="nf">agent_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="BaseAgent.agent_logs-233"><a href="#BaseAgent.agent_logs-233"><span class="linenos">233</span></a>        <span class="sd">&quot;&quot;&quot;</span>
+</span><span id="BaseAgent.agent_logs-234"><a href="#BaseAgent.agent_logs-234"><span class="linenos">234</span></a><span class="sd">        is called during the agent MDP interaction at lagging time. It can be used to log additional information.</span>
+</span><span id="BaseAgent.agent_logs-235"><a href="#BaseAgent.agent_logs-235"><span class="linenos">235</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span></pre></div>
 
 
