@@ -1,5 +1,9 @@
-import imp
+import importlib
 import setuptools
+
+spec = importlib.util.spec_from_file_location("_metadata", "colosseum/_metadata.py")
+_metadata = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(_metadata)
 
 setuptools.setup(
     name="rl-colosseum",
@@ -12,7 +16,7 @@ setuptools.setup(
     author="Michelangelo Conserva",
     author_email="mi.conserva@gmail.com",
     license="Apache License, Version 2.0",
-    version=imp.load_source("_metadata", "colosseum/_metadata.py").__version__,
+    version=_metadata.__version__,
     keywords="reinforcement-learning python machine-learning",
     packages=setuptools.find_packages(),
     include_package_data=True,
