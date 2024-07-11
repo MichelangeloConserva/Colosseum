@@ -32,7 +32,7 @@ setuptools.setup(
         "pydtmc",
         "pygame",
         "pyyaml",
-        "ray[tune]==1.9.1",
+        "ray[tune]>=1.9.1",
         "scipy>=1.7.3",
         "seaborn>=0.10",
         "sparse",
