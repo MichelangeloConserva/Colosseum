@@ -33,7 +33,7 @@ class DQNContinuous(NonTabularBsuiteAgentWrapper):
         return False
 
     @staticmethod
-    def get_hyperparameters_search_spaces() -> Dict[str, tune.sample.Domain]:
+    def get_hyperparameters_search_spaces() -> Dict[str, tune.search.sample.Domain]:
         return {
             "network_width": tune.choice([64, 128, 256]),
             "network_depth": tune.choice([2, 4]),

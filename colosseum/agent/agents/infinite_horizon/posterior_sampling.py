@@ -143,7 +143,7 @@ class PSRLContinuous(BaseAgent):
         return False
 
     @staticmethod
-    def get_hyperparameters_search_spaces() -> Dict[str, tune.sample.Domain]:
+    def get_hyperparameters_search_spaces() -> Dict[str, tune.search.sample.Domain]:
         return {
             "psi_weight": tune.uniform(0.001, 0.1),
             "omega_weight": tune.uniform(0.0001, 1),

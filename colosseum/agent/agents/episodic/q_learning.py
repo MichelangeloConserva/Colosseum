@@ -131,7 +131,7 @@ class QLearningEpisodic(BaseAgent):
         return True
 
     @staticmethod
-    def get_hyperparameters_search_spaces() -> Dict[str, tune.sample.Domain]:
+    def get_hyperparameters_search_spaces() -> Dict[str, tune.search.sample.Domain]:
         return {
             "c_1": tune.uniform(0.001, 1.1),
             "c_2": tune.uniform(0.001, 1.1),

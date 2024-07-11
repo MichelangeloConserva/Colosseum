@@ -135,7 +135,7 @@ class QLearningContinuous(BaseAgent):
         return False
 
     @staticmethod
-    def get_hyperparameters_search_spaces() -> Dict[str, tune.sample.Domain]:
+    def get_hyperparameters_search_spaces() -> Dict[str, tune.search.sample.Domain]:
         return {
             "h_weight": tune.uniform(0.001, 1.1),
             "span_approx_weight": tune.uniform(0.001, 1.1),

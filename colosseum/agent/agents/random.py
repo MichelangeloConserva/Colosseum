@@ -22,7 +22,7 @@ class RandomAgent(BaseAgent, abc.ABC):
         return True
 
     @staticmethod
-    def get_hyperparameters_search_spaces() -> Dict[str, tune.sample.Domain]:
+    def get_hyperparameters_search_spaces() -> Dict[str, tune.search.sample.Domain]:
         return {}
 
     @staticmethod

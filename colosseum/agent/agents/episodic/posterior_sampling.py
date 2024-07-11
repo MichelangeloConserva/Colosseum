@@ -53,7 +53,7 @@ class PSRLEpisodic(BaseAgent):
         return True
 
     @staticmethod
-    def get_hyperparameters_search_spaces() -> Dict[str, tune.sample.Domain]:
+    def get_hyperparameters_search_spaces() -> Dict[str, tune.search.sample.Domain]:
         return dict(
             prior_mean=tune.uniform(0.001, 2.0), transition_prior=tune.uniform(0.001, 2)
         )

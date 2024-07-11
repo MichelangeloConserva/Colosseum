@@ -42,11 +42,11 @@ class BaseAgent(abc.ABC):
 
     @staticmethod
     @abc.abstractmethod
-    def get_hyperparameters_search_spaces() -> Dict[str, tune.sample.Domain]:
+    def get_hyperparameters_search_spaces() -> Dict[str, tune.search.sample.Domain]:
         """
         Returns
         -------
-        Dict[str, tune.sample.Domain]
+        Dict[str, tune.search.sample.Domain]
             The dictionary with key value pairs corresponding to hyperparameter names and corresponding `ray.tune` samplers.
         """
 
